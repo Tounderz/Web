@@ -44,7 +44,13 @@ namespace Web.Controllers
             var users = new List<UserModel>();
             if (model.Criteria == FormFields.ID)
             {
-                users.Add(_search.ResaultSearchUserByIdAdmin(int.Parse(model.Parameter)));
+                var user = _search.ResaultSearchUserByIdAdmin(int.Parse(model.Parameter));
+                if (user == null)
+                {
+                    return BadRequest(new { message = ConstSearch.MESSAGE_ERROR });
+                }
+
+                users.Add(user);
             }
             else
             {
@@ -67,7 +73,13 @@ namespace Web.Controllers
                 var products = new List<ProductModel>();
                 if (model.Criteria == FormFields.ID)
                 {
-                    products.Add(_search.ResaultSearchProductByIdAdmin(int.Parse(model.Parameter)));
+                    var user = _search.ResaultSearchProductByIdAdmin(int.Parse(model.Parameter));
+                    if (user == null)
+                    {
+                        return BadRequest(new { message = ConstSearch.MESSAGE_ERROR });
+                    }
+
+                    products.Add(user);
                 }
                 else
                 {
