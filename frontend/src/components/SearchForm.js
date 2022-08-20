@@ -7,10 +7,11 @@ import { ERROR_ROUTE, IS_NUMBER, PAGE_FIRST, PRODUCTS_LIST_ROUTE, SEARCH_ROUTE, 
 import { fetchSearch, fetchSearchUsers, fetchSearchProductAdmin } from '../http/searchApi';
 
 const SearchForm = ({parameter}) => {
-    const {product} = useContext(Context)
-    const {error} = useContext(Context)
-    const {user} = useContext(Context)
-    const navigate = useNavigate()
+    const {product} = useContext(Context);
+    const {error} = useContext(Context);
+    const {user} = useContext(Context);
+    const {general} = useContext(Context);
+    const navigate = useNavigate();
     const searchParameter = useInput('', {minLength: {value: 1, name: 'Search'}});
 
     const search = async () => {
@@ -54,11 +55,14 @@ const SearchForm = ({parameter}) => {
                     break;
             }
         } catch (e) {
-            error.setMessageError(e.response.data.message);
-            navigate(ERROR_ROUTE)
+            error.setMessageError(e.message);
+                navigate(ERROR_ROUTE);
         }
         finally{
             searchParameter.onChange('');
+            general.setFieldNames([]);
+            general.setFieldName('');
+            general.setTypeSort('');
         }
     }
 

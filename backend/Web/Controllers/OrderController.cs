@@ -76,7 +76,7 @@ namespace Web.Controllers
             var orders = _order.OrderList(model.Login);
             if (orders == null)
             {
-                return BadRequest(new { messageError = "You don't have completed purchases!" });
+                return BadRequest(new { message = "You don't have completed purchases!" });
             }
 
             var list = _order.GetOrdersList(orders, model.Page);

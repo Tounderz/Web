@@ -1,14 +1,17 @@
 import React, { useContext } from 'react';
-import { Container } from 'react-bootstrap';
+import { Container, Row } from 'react-bootstrap';
 import { Context } from '../index';
+import '../css/Completed.css'
 
 const Completed = () => {
     const {product} = useContext(Context)
 
     return (
-        <Container className='d-flex justify-content-center align-items-center'>
-            <h1>{product.selectedOrderId ? 'Order № ' + product.selectedOrderId : 'You are not logged in'}</h1>
-        </Container>
+        <Row className='completedfonPage'>
+            <Container className='containerCompleted'>
+                <h1>{product.selectedOrderId ? 'Order № ' + product.selectedOrderId : 'You are not logged in'}</h1>
+            </Container>
+        </Row>
     );
 };
 

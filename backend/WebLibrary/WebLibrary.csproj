@@ -258,6 +258,7 @@
     <Compile Include="Abstract\IPaymentMethod.cs" />
     <Compile Include="Abstract\IProduct.cs" />
     <Compile Include="Abstract\ISearch.cs" />
+    <Compile Include="Abstract\ISort.cs" />
     <Compile Include="Abstract\IType.cs" />
     <Compile Include="ConstParameters\CategoryConst.cs" />
     <Compile Include="ConstParameters\ConstAuth.cs" />
@@ -285,7 +286,9 @@
     <Compile Include="Models\Dtos\ProductDtoModel.cs" />
     <Compile Include="Models\Dtos\PurchasesHistoryDto.cs" />
     <Compile Include="Models\Dtos\SearchDtoModel.cs" />
+    <Compile Include="Models\Dtos\SortDtoModel.cs" />
     <Compile Include="Models\Dtos\TypeDtoModel.cs" />
+    <Compile Include="Models\Dtos\UpdatePasswordDtoModel.cs" />
     <Compile Include="Models\Dtos\UserDtoModel.cs" />
     <Compile Include="Models\Dtos\UserLoginModel.cs" />
     <Compile Include="Models\Dtos\UserRegisterModel.cs" />

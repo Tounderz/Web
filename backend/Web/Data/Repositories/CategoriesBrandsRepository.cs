@@ -24,7 +24,7 @@ namespace Web.Data.Repositories
             List<CategoriesBrandsModel> categoriesBrands = new();
             foreach (var item in model.CategoriesId)
             {
-                categoriesBrands.Add(new CategoriesBrandsModel { CategoryId = item, BrandId = model.Id });
+                categoriesBrands.Add(new CategoriesBrandsModel { CategoryId = item, BrandId = model.BrandId });
             }
 
             _context.CategoriesBrands.AddRange(categoriesBrands);
@@ -50,7 +50,7 @@ namespace Web.Data.Repositories
             List<CategoriesBrandsModel> categoriesBrands = new();
             foreach (var item in model.CategoriesId)
             {
-                categoriesBrands.Add(new CategoriesBrandsModel { CategoryId = item, BrandId = model.Id });
+                categoriesBrands.Add(new CategoriesBrandsModel { CategoryId = item, BrandId = model.BrandId });
             }
 
             _context.CategoriesBrands.UpdateRange(categoriesBrands);

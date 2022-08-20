@@ -1,22 +1,22 @@
 import React, { useContext, useState } from 'react';
-import { Form, Modal } from 'react-bootstrap';
+import { Form, Modal, Button } from 'react-bootstrap';
 import { createProduct, formDataProduct } from '../../../http/productApi';
 import { useInput } from '../../../http/validateApi';
 import { Context } from '../../../index';
 import { TRUE_AND_FALSE, ZERO } from '../../../utils/const';
 
 const CreateProduct = ({show, onHide}) => {
-    const {product} = useContext(Context)
+    const {product} = useContext(Context);
     const name = useInput('', {minLength: {value: 3, name: 'Name'}});
-    const categoryId = useInput(0, {isNumberId: {name: 'Category'}})
-    const brandId = useInput(0, {isNumberId: {name: 'Brand'}})
-    const typeId = useInput(0, {isNumberId: {name: 'Type'}})
+    const categoryId = useInput(0, {isNumberId: {name: 'Category'}});
+    const brandId = useInput(0, {isNumberId: {name: 'Brand'}});
+    const typeId = useInput(0, {isNumberId: {name: 'Type'}});
     const shortDescription = useInput('', {minLength: {value: 8, name: 'Short Description'}});
-    const isFavourite = useInput(0, {isNumberId: {name: 'IsFavourite'}})
-    const available = useInput(0, {isNumberId: {name: 'Available'}})
+    const isFavourite = useInput(0, {isNumberId: {name: 'IsFavourite'}});
+    const available = useInput(0, {isNumberId: {name: 'Available'}});
     const price = useInput(0, {isPrice: {value: 3, name: 'Price'}});
-    const img = useInput(null)
-    const [messageError, setMessageError] = useState('')
+    const img = useInput(null, {isImg: { name: 'Img' }} );
+    const [messageError, setMessageError] = useState('');
 
     const click = async () => {
         try {
@@ -184,36 +184,39 @@ const CreateProduct = ({show, onHide}) => {
                         placeholder='Enter the cost of the product'
                         type='number'
                     />
+                    {(img.isDirty && img.imgError) && <div className='mt-3' style={{color: 'red'}}>{img.messageError}</div>}
                     <Form.Control
                         className='mt-3'
                         type='file'
                         onChange={e => img.saveImg(e)}
+                        onBlur={e => img.onBlur(e)}
                     />
-                    <hr/>
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <button
-                    className="btn-primary m-2"
+                <Button
+                    variant='outline-primary'
                     style={{
                         cursor: 'pointer',
-                        borderRadius: '5px'
+                        borderRadius: '5px',
+                        margin: '2px'
                     }}
                     disabled={!name.inputValid || !categoryId.inputValid || !typeId.inputValid || !brandId.inputValid || !price.inputValid}
                     onClick={click}
                 >
                     Create
-                </button>
-                <button 
-                    className="btn-danger"
+                </Button>
+                <Button
+                    variant='outline-danger'
                     style={{
                         cursor: 'pointer',
-                        borderRadius: '5px'
+                        borderRadius: '5px',
+                        margin: '2px'
                     }}
                     onClick={onHide}
                 >
                     Close
-                </button>
+                </Button>
             </Modal.Footer>
         </Modal>
     );

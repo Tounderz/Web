@@ -1,0 +1,64 @@
+.accountFonPage {
+    background-image: url(../components/img/accountFor.jpg);
+    background-repeat: no-repeat; 
+    background-size:cover;
+    background-position: center center;
+    background-attachment: fixed;
+    text-align:center;
+    position:absolute;
+    min-width:100%;
+    min-height: 100%;
+    color: #FFF;
+    text-shadow: -2px 0 0 #000000, 0 -2px 0 #000000, 2px 0 0 #000000, 0 2px 0 #000000, -2px -2px 0 #000000, 2px 2px 0 #000000, -2px 2px 0 #000000, 2px -2px 0 #000000;
+}
+
+.containerAccount {
+    margin: 3%;
+}
+
+.cardPhotoAccount {
+    width: 10rem;
+    background: none;
+}
+
+.imgAccount {
+    align-items: center;
+    border-radius: 5px;
+}
+
+.imgButtonAccount {
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 5%;
+}
+
+.colCardButtonsAccount {
+    display: flex;
+    justify-content: center;
+    align-items: right;
+}
+
+.cardButtonsAccount {
+    width: 13rem;
+    display: flex;
+    justify-content: center;
+    background: none;
+}
+
+.buttonCardAccount {
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 2px;
+}
+
+.modalFooterAccount {
+    margin-top: 25%;
+}
+
+.navLinkAccount {
+    margin-right: 10%;
+}
+
+.buttonModalFooterAccount {
+    margin-right: 10%;
+}

@@ -14,5 +14,6 @@ namespace WebLibrary.Abstract
         CategoryModel UpdateCategory(CategoryDtoModel model);
         void RemoveCategory(int id);
         void CountView(int id);
+        CategoryDtoModel FormCategoryDto(CategoryDtoModel dto);
     }
 }

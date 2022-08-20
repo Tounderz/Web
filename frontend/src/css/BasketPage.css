@@ -1,0 +1,60 @@
+.basketfonPage {
+    background-image: url(../components/img/basketFon.jpg);
+    background-repeat: no-repeat; 
+    background-size:cover;
+    background-position: center center;
+    background-attachment: fixed;
+    text-align:center;
+    align-items:initial;
+    position:absolute;
+    width:100%;
+    height: 100%;
+    color: #FFF;
+    text-shadow: -2px 0 0 #000000, 0 -2px 0 #000000, 2px 0 0 #000000, 0 2px 0 #000000, -2px -2px 0 #000000, 2px 2px 0 #000000, -2px 2px 0 #000000, 2px -2px 0 #000000;
+}
+
+.cardBasket {
+    margin: 1%;
+    width: 18rem;
+    background: none;
+}
+
+.cardImgBasket {
+    width: auto;
+    height: auto;
+}
+
+.buttonProductBasket {
+    margin-top: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.totalBasket {
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    margin-top: 4%;
+}
+
+.modalFooterBasket {
+    margin-top: 2px;
+    display: flex;
+    justify-content: center; 
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 3px;
+  }
+
+  .buttonBasket {
+    cursor: pointer;
+    border-radius: 5px;
+  }
+
+  .navLinkBasket {
+    margin-right: 20%;
+  }

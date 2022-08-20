@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Form, Modal } from 'react-bootstrap';
+import { Form, Modal, Button } from 'react-bootstrap';
 import { Context } from '../../../index';
 import { createInfoProduct } from '../../../http/infoProductApi';
 import { useInput } from '../../../http/validateApi';
@@ -56,27 +56,29 @@ const CreateInfoProduct = ({show, onHide, productId}) => {
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <button
-                    className='btn-primary m-2'
+                <Button
+                    variant='outline-primary'
                     style={{
                         cursor: 'pointer',
-                        borderRadius: '5px'
+                        borderRadius: '5px',
+                        margin: '2px'
                     }}
                     disabled={!title.inputValid || !descriprion.inputValid}
                     onClick={click}
                 >
-                    Add
-                </button>
-                <button 
-                    className="btn-danger"
+                    Create
+                </Button>
+                <Button 
+                    variant='outline-danger'
                     style={{
                         cursor: 'pointer',
-                        borderRadius: '5px'
+                        borderRadius: '5px',
+                        margin: '2px'
                     }}
                     onClick={onHide}
                 >
                     Close
-                </button>
+                </Button>
             </Modal.Footer>
         </Modal>
     );

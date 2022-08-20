@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using WebLibrary.Abstract;
 using WebLibrary.ConstParameters;
 using WebLibrary.Models;
+using WebLibrary.Models.Dtos;
 
 namespace Web.Data.ConstMethods
 {
@@ -47,6 +48,15 @@ namespace Web.Data.ConstMethods
             users = users.Skip(start).Take(ConstParameters.LIMIN_USER_ONE_PAGE).ToList();
 
             return (countPages, users);
+        }
+
+        public ViewDtoModel FormView(ViewDtoModel dto)
+        {
+            dto.ModelId = dto.ModelId > 0 ? dto.ModelId : 0;
+            dto.Page = dto.Page > 1 ? dto.Page : 1;
+            dto.Role = !string.IsNullOrEmpty(dto.Role) ? dto.Role : string.Empty;
+
+            return dto;
         }
     }
 }

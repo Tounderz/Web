@@ -4,13 +4,12 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Register from './pages/auth/Register';
 import Login from './pages/auth/Login';
 import NavBar from './components/NavBar';
-import Basket from './pages/Basket';
-import Welcome from './pages/Welcome';
+import BasketPage from './pages/BasketPage';
 import ProductPage from './pages/ProductPage';
 import TypePage from './pages/TypePage';
-import Home from './pages/Home';
+import HomePage from './pages/HomePage';
 import { USERLIST_ROUTE, BASKET_ROUTE, CATEGORY_ROUTE, 
-         LOGIN_ROUTE, REGISTER_ROUTE, SHOP_ROUTE, WELCOME_ROUTE, 
+         LOGIN_ROUTE, REGISTER_ROUTE, SHOP_ROUTE, PERSONAL_ACCOUNT_ROUTE, 
          PRODUCT_ROUTE, TYPE_ROUTE, BRAND_ROUTE, ADMIN_ROUTE, 
          ORDER_ROUTE, COMPLETED_ROUTE, BRANDS_BY_CATEGORY_ROUTE,
          CATEGORIES_BY_BRAND_ROUTE, BRAND_INFO_ROUTE,
@@ -22,7 +21,7 @@ import { USERLIST_ROUTE, BASKET_ROUTE, CATEGORY_ROUTE,
 import CategoryPage from './pages/CategoryPage';
 import BrandPage from './pages/BrandPage';
 import Admin from './pages/Admin';
-import Order from './pages/Order';
+import OrderPage from './pages/OrderPage';
 import Completed from './pages/Completed';
 import { Context } from './index';
 import { observer } from 'mobx-react-lite';
@@ -37,6 +36,7 @@ import SearchPage from './pages/SearchPage';
 import PurchasesStoryPage from './pages/PurchasesStoryPage';
 import ErrorPage from './pages/ErrorPage';
 import ProductsListPage from './pages/ProductsListPage';
+import PersonalAccountPage from './pages/PersonalAccountPage';
 
 const App = observer(() => {
   const {user} = useContext(Context)
@@ -52,7 +52,7 @@ const App = observer(() => {
     setTimeout(async () => {
       await check().then(data => {
         localStorage.setItem('accessToken', data.accessToken);
-        user.setUser(data.user);
+          user.setUser(data.user);
       }).finally(() => setLoading(false))
     }, 1000)
   })
@@ -65,17 +65,17 @@ const App = observer(() => {
     <BrowserRouter>
       <NavBar/>
       <Routes>
-        <Route exact path={SHOP_ROUTE} element={<Home/>}/>
-        <Route exact path={WELCOME_ROUTE} element={<Welcome/>}/>
+        <Route exact path={SHOP_ROUTE} element={<HomePage/>}/>
+        <Route exact path={PERSONAL_ACCOUNT_ROUTE} element={<PersonalAccountPage/>}/>
         <Route path={LOGIN_ROUTE} element={<Login/>}/>
         <Route path={REGISTER_ROUTE} element={<Register/>}/>
-        <Route path={BASKET_ROUTE} element={<Basket/>}/>
+        <Route path={BASKET_ROUTE} element={<BasketPage/>}/>
         <Route path={CATEGORY_ROUTE} element={<CategoryPage/>}/>
         <Route path={PRODUCT_ROUTE} element={<ProductPage/>}/>
         <Route path={TYPE_ROUTE} element={<TypePage/>}/>
         <Route path={BRAND_ROUTE} element={<BrandPage/>}/>
         <Route path={ADMIN_ROUTE} element={<Admin/>}/>
-        <Route path={ORDER_ROUTE} element={<Order/>}/>
+        <Route path={ORDER_ROUTE} element={<OrderPage/>}/>
         <Route path={COMPLETED_ROUTE} element={<Completed/>}/>
         <Route path={USERLIST_ROUTE} element={<UsersListPage/>}/>
         <Route path={PRODUCTS_LIST_ROUTE} element={<ProductsListPage/>}/>

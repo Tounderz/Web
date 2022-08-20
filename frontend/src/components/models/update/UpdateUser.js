@@ -1,21 +1,21 @@
 import React, { useContext, useState } from 'react';
-import { Form, Modal } from 'react-bootstrap';
+import { Form, Modal, Button } from 'react-bootstrap';
 import { formDataUser, updateUserByAdmin, updateUserByUser } from '../../../http/userApi';
 import { useInput } from '../../../http/validateApi';
 import { Context } from '../../../index';
 import { ROLE_ARRAY } from '../../../utils/const';
 
 const UpdateUser = ({show, onHide}) => {
-    const {user} = useContext(Context)
-    const name = useInput('', {minLength: {value: 3, name: 'Name'}})
-    const surname = useInput('', {minLength: {value: 3, name: 'Surname'}})
+    const {user} = useContext(Context);
+    const name = useInput('', {minLength: {value: 3, name: 'Name'}});
+    const surname = useInput('', {minLength: {value: 3, name: 'Surname'}});
     const email = useInput('', {minLength: {value: 4, name: 'surname'}, isEmail: true});
     const phone = useInput('', {isPhone: true});
     const login = useInput('', {minLength: {value: 3, name: 'Login'}});
     const role = useInput('', {minLength: {value: 4, name: 'Role'}, isRole: user.role});
-    const img = useInput(null)
-    const [messageError, setMessageError] = useState('')
-    const roleArray = []
+    const img = useInput(null, {isImg: { name: 'Img' }} );
+    const [messageError, setMessageError] = useState('');
+    const roleArray = [];
 
     for (let index = 0; index < ROLE_ARRAY.length; index++) {
         if (user.user.role === 'admin' && ROLE_ARRAY[index] !== 'admin') {
@@ -46,9 +46,8 @@ const UpdateUser = ({show, onHide}) => {
                 img.saveImg(null);                    
                 onHide();
         } catch (error) {
-            setMessageError(error.response.data.message)
+            setMessageError(error.response.data.message);
         }
-
     }
 
     let updateRole;
@@ -84,8 +83,13 @@ const UpdateUser = ({show, onHide}) => {
             centered
         >
             <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
-                    Update User
+                <Modal.Title
+                    id='contained-modal-title-center'
+                    style={{
+                        
+                    }}
+                >
+                    Update User : {user.selectedUser.login}
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -128,34 +132,43 @@ const UpdateUser = ({show, onHide}) => {
                     />
                     {updateRole}
 
+                    {(img.isDirty && img.imgError) && <div className='mt-3' style={{color: 'red'}}>{img.messageError}</div>}
                     <Form.Control
                         className='mt-3'
                         type='file'
                         onChange={e => img.saveImg(e)}
+                        onBlur={e => img.onBlur(e)}
                     />
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <button
-                    className="btn-primary m-2"
+                <Button
+                    variant='outline-primary'
                     style={{
                         cursor: 'pointer',
-                        borderRadius: '5px'
+                        borderRadius: '5px',
+                        margin: '2px'
                     }}
+                    disabled={
+                        !name.inputValid && !surname.inputValid && !email.inputValid && 
+                        !phone.inputValid && !login.inputValid && !role.inputValid && 
+                        !img.inputValid
+                    }
                     onClick={() => update()}
                 >
                     Update
-                </button>
-                <button 
-                    className="btn-danger"
+                </Button>
+                <Button
+                    variant='outline-danger'
                     style={{
                         cursor: 'pointer',
-                        borderRadius: '5px'
+                        borderRadius: '5px',
+                        margin: '2px'
                     }}
                     onClick={onHide}
                 >
                     Close
-                </button>
+                </Button>
             </Modal.Footer>
         </Modal>
     );

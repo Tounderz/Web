@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Form, Modal } from 'react-bootstrap';
+import { Form, Modal, Button } from 'react-bootstrap';
 import { Context } from '../../../index';
 import { createCategory, formDataCategory } from '../../../http/categoryApi';
 import { Multiselect } from 'multiselect-react-dropdown';
@@ -9,24 +9,24 @@ import { ZERO } from '../../../utils/const';
 const CreateCategory = ({show, onHide}) => {
     const {product} = useContext(Context)
     const name = useInput('', {minLength: {value: 3, name: 'Name'}});
-    const shortDescription = useInput('', {minLength: {value: 8, name: 'Short Description'}})
-    const info = useInput('', {minLength: {value: 8, name: 'Info'}})
-    const brandsId = useInput([], {multiSelect: {name: 'Brands'}})
-    const img = useInput(null)
-    const [messageError, setMessageError] = useState('')
+    const shortDescription = useInput('', {minLength: {value: 8, name: 'Short Description'}});
+    const info = useInput('', {minLength: {value: 8, name: 'Info'}});
+    const brandsId = useInput([], {multiSelect: {name: 'Brands'}});
+    const img = useInput(null, {isImg: { name: 'Img' }} );
+    const [messageError, setMessageError] = useState('');
     
     const click = async () => {
         try {
-            const formData = formDataCategory(ZERO, name.value, shortDescription.value, info.value, img.value, brandsId.value)
+            const formData = formDataCategory(ZERO, name.value, shortDescription.value, info.value, img.value, brandsId.value);
             await createCategory(formData);
                 name.onChange('');
                 info.onChange('');
                 shortDescription.onChange('');
                 brandsId.onSelect([]);
                 img.saveImg(null);
-                onHide()
+                onHide();
         } catch (error) {
-            setMessageError(error.response.data.message)
+            setMessageError(error.response.data.message);
         }
         
     }
@@ -70,11 +70,12 @@ const CreateCategory = ({show, onHide}) => {
                         onBlur={e => info.onBlur(e)}
                         placeholder={'Info'}
                     />
-
+                    {(img.isDirty && img.imgError) && <div className='mt-3' style={{color: 'red'}}>{img.messageError}</div>}
                     <Form.Control
                         className='mt-3'
                         type='file'
                         onChange={e => img.saveImg(e)}
+                        onBlur={e => img.onBlur(e)}
                     />
                 </Form>
                 <label className='mt-3'>Brands:</label>
@@ -92,29 +93,29 @@ const CreateCategory = ({show, onHide}) => {
                 
             </Modal.Body>
             <Modal.Footer>
-                <button 
-                    className="btn-primary m-2"
-                    variant={'outline-success'}
+                <Button 
+                    variant='outline-primary'
                     style={{
                         cursor: 'pointer',
-                        borderRadius: '5px'
+                        borderRadius: '5px',
+                        margin: '2px'
                     }}
                     disabled={!name.inputValid || !brandsId.inputValid}
                     onClick={click}
                 >
                     Create
-                </button>
-                <button 
-                    className="btn-danger"
-                    variant={'outline-success'}
+                </Button>
+                <Button 
+                    variant='outline-danger'
                     style={{
                         cursor: 'pointer',
-                        borderRadius: '5px'
+                        borderRadius: '5px',
+                        margin: '2px'
                     }}
                     onClick={onHide}
                 >
                     Close
-                </button>
+                </Button>
             </Modal.Footer>
         </Modal>
     );

@@ -31,7 +31,7 @@ namespace Web.Controllers
         public IActionResult GetUser(string login)
         {
             var user = _auth.GetByUser(login);
-            return Ok( new { user = user });
+            return Ok(new { user = user });
         }
 
         [HttpPost(ConstAuth.HTTP_POST_LOGIN)]
@@ -52,10 +52,11 @@ namespace Web.Controllers
             var refreshToken = _jwtService.GenerateRefreshToken(user.Id);
             var userDto = _auth.CreateUserDto(user);
 
-            return Ok(new { 
+            return Ok(new
+            {
                 user = userDto,
-                accessToken = accessToken 
-            }) ;
+                accessToken = accessToken
+            });
         }
 
         [HttpPost(ConstAuth.HTTP_POST_REGISTER)]
@@ -89,23 +90,24 @@ namespace Web.Controllers
             var token = _jwtService.Verify(jwtToken[7..]);
             if (token != null && !token.Header.Alg.Equals(SecurityAlgorithms.HmacSha256))
             {
-                return Unauthorized();
+                return BadRequest();
             }
 
             var user = _auth.GetByUserFromToken(token);
             var refreshTokenModel = _jwtService.GetRefreshToken(user.Id);
             if (refreshTokenModel == null)
             {
-                return Unauthorized();
+                return BadRequest();
             }
 
             var accessToken = _jwtService.GenerateJwt(user);
             var refreshToken = _jwtService.GenerateRefreshToken(user.Id);
             var userDto = _auth.CreateUserDto(user);
 
-            return Ok(new { 
+            return Ok(new
+            {
                 accessToken = accessToken,
-                user = userDto 
+                user = userDto
             });
         }
 
@@ -114,9 +116,10 @@ namespace Web.Controllers
         {
             var users = _auth.GetByUsersList();
             var list = _generalMethods.GetUsersList(users, page);
-            return Ok(new { 
+            return Ok(new
+            {
                 usersList = list.users,
-                countPages = list.countPages 
+                countPages = list.countPages
             });
         }
 

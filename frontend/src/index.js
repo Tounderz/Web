@@ -6,6 +6,7 @@ import ProductStore from './store/ProductStore';
 import UserStore from './store/UserStore';
 import ErrorStore from './store/ErrorStore';
 import AuthStore from './store/AuthStore';
+import GeneralStore from './store/GeneralStore';
 
 export const Context = createContext(null)
 
@@ -14,7 +15,8 @@ ReactDOM.render(
     product: new ProductStore(),
     user: new UserStore(),
     error: new ErrorStore(),
-    auth: new AuthStore()
+    auth: new AuthStore(),
+    general: new GeneralStore()
   }}>
   <App />
   </Context.Provider>,

@@ -1,28 +1,25 @@
 import React, { useContext, useState } from 'react';
-import { Form, Modal } from 'react-bootstrap';
+import { Button, Form, Modal } from 'react-bootstrap';
 import { Context } from '../../../index';
 import { useInput } from '../../../http/validateApi';
 import { updateUserByUser } from '../../../http/userApi';
 
 const UpdatePhoto = ({show, onHide}) => {
-    const {user} = useContext(Context)
-    const img = useInput(null)
-    const [messageError, setMessageError] = useState('')
+    const {user} = useContext(Context);
+    const img = useInput(null, {isImg: { name: 'Img' }} );
+    const [messageError, setMessageError] = useState('');
 
     const update = async () => {
-        const formData = new FormData()
-        formData.append('UserId', user.idUser)
-        formData.append('Img', img.value)
-
         try {
+            const formData = new FormData();
+                formData.append('UserId', user.user.userId);
+                formData.append('Img', img.value);
             const data = await updateUserByUser(formData);
-                if (data.user) {
-                    user.setSelectedUser(data.user);
-                    img.saveImg(null);
-                    onHide();
-                }
+                user.setSelectedUser(data.user);
+                img.saveImg(null);
+                onHide();
         } catch (error) {
-            setMessageError(error.response.data.message)
+            setMessageError(error.response.data.message);
         }
     }
 
@@ -41,34 +38,38 @@ const UpdatePhoto = ({show, onHide}) => {
             <Modal.Body>
                 <div style={{color: 'red'}}>{messageError}</div>
                 <Form>
+                    {(img.isDirty && img.imgError) && <div className='mt-3' style={{color: 'red'}}>{img.messageError}</div>}
                     <Form.Control
                         className='mt-3'
                         type='file'
                         onChange={e => img.saveImg(e)}
+                        onBlur={e => img.onBlur(e)}
                     />
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <button
-                    className="btn-primary m-2"
+                <Button
+                    variant='outline-primary'
                     style={{
                         cursor: 'pointer',
-                        borderRadius: '5px'
+                        borderRadius: '5px',
+                        margin: '2px'
                     }}
-                    onClick={() => update()}
+                    onClick={update}
                 >
                     Update
-                </button>
-                <button 
-                    className="btn-danger"
+                </Button>
+                <Button 
+                    variant='outline-danger'
                     style={{
                         cursor: 'pointer',
-                        borderRadius: '5px'
+                        borderRadius: '5px',
+                        margin: '2px'
                     }}
                     onClick={onHide}
                 >
                     Close
-                </button>
+                </Button>
             </Modal.Footer>
         </Modal>
     );

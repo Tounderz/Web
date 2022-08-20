@@ -45,7 +45,7 @@ namespace Web.HelpersJwt
                     _configuration["Jwt:Issuer"],
                     _configuration["Jwt:Audience"],
                     claims,
-                    expires: DateTime.Now.AddHours(ConstParameters.EXPIRES_ACCESS_TOKEN_HOUR),
+                    expires: DateTime.Now.AddMinutes(ConstParameters.EXPIRES_ACCESS_TOKEN_HOUR),
                     signingCredentials: credentials
                 );
 

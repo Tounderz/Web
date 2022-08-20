@@ -1,12 +1,12 @@
 import { observer } from 'mobx-react-lite';
 import React, { useContext } from 'react';
-import { ListGroup, Image, Col, Container } from 'react-bootstrap';
+import { ListGroup, Image } from 'react-bootstrap';
 import { useNavigate } from 'react-router';
 import { fetchProductsBrand } from '../http/brandApi';
 import { fetchCategoriesByBrand } from '../http/categoryApi';
 import { Context } from '../index';
 import { BRAND_ROUTE, ERROR_ROUTE, PAGE_FIRST, PICTURE } from '../utils/const';
-
+import '../css/HomePage.css'
 
 const BrandBar = observer(({brand}) => {
     const {product} = useContext(Context)
@@ -34,24 +34,17 @@ const BrandBar = observer(({brand}) => {
 
     return (
         <ListGroup.Item 
-            className="d-flex justify-content-center btn-primary" 
-            variant={'outline-success'}
+            className='listBrandItemHome'
             onClick={() => getBrand()}
-            style={{
-                cursor: 'pointer',
-                borderRadius: '7px'
-            }}
         >
-            <Container>
-                <Image width={100} height={100} 
+                <Image
                     src={PICTURE(brand.img)}
-                    className="d-block w-100"
+                    className="listBarndImgHome"
                 />
-                <Col className='d-flex justify-content-center'>
+                <h4 className='listBrandNameHome'>
                     {brand.name}
-                </Col>
-            </Container>
-        </ListGroup.Item >
+                </h4>
+        </ListGroup.Item>
     );
 });
 

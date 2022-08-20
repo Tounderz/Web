@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebLibrary.Models;
+using WebLibrary.Models.Dtos;
 
 namespace WebLibrary.Abstract
 {
@@ -12,5 +13,6 @@ namespace WebLibrary.Abstract
         string SaveImg(IFormFile img);
         (int countPages, List<ProductModel> products) GetProducts(List<ProductModel> products, int page);
         (int countPages, List<UserModel> users) GetUsersList(List<UserModel> users, int page);
+        ViewDtoModel FormView(ViewDtoModel dto);
     }
 }

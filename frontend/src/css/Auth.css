@@ -1,0 +1,53 @@
+.loginFonPage {
+  background-image: url(../components/img/authFon.jpg);
+  background-repeat: no-repeat; 
+  background-size:cover;
+  background-position: center center;
+  background-attachment: fixed;
+  text-align:center;
+  position:absolute;
+  min-width: 100%;
+  min-height: 100%;
+  color: #FFF;
+  text-shadow: -2px 0 0 #000000, 0 -2px 0 #000000, 2px 0 0 #000000, 0 2px 0 #000000, -2px -2px 0 #000000, 2px 2px 0 #000000, -2px 2px 0 #000000, 2px -2px 0 #000000;
+}
+
+.containerAuth {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.formAuth {
+  height:auto;
+  width: auto;
+}
+
+.formControlAuth {
+  text-align: center;
+  width: 25rem;
+  margin-top: 10px;
+  color: #FFF;
+  background:none;
+}
+
+.errorAuth {
+  margin-top: 5px;
+  color: red;
+}
+
+.buttonAuth {
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.checkboxLogin {
+  margin-top: 3%;
+  text-align: left;
+}
+
+.modalFooterAuth {
+  margin-top: 3%;
+  padding-left: 3%;
+  padding-right: 3%;
+}

@@ -5,6 +5,7 @@ import CreateCategory from './CreateCategory';
 import CreatePaymentMethod from './CreatePaymentMethod';
 import CreateProduct from './CreateProduct';
 import CreateType from './CreateType';
+import '../../../css/AdminPage.css'
 
 const Create = ({show, onHide}) => {
     const [categoryVisible, setCategoryVisible] = useState(false);
@@ -14,58 +15,36 @@ const Create = ({show, onHide}) => {
     const [methodVisible, setMethodVisible] = useState(false);
 
     return (        
-        <ListGroup style={
-            { 
-                cursor: 'pointer' 
-            }}
+        <ListGroup 
+            className='listGroupAdmin'
             key='id'
         >
             <ListGroup.Item 
-                className='btn-primary'
-                style={{
-                    cursor: 'pointer',
-                    borderRadius: '5px'
-                }}
+                className='listGroupItemBasket'
                 onClick={() => setCategoryVisible(true)}
             >
                 Create a Category
             </ListGroup.Item>
             <ListGroup.Item  
-                className='btn-primary'
-                style={{
-                    cursor: 'pointer',
-                    borderRadius: '5px'
-                }}
+                className='listGroupItemBasket'
                 onClick={() => setTypeVisible(true)}
             >
                  Create a Type
             </ListGroup.Item>
             <ListGroup.Item
-                className='btn-primary'
-                style={{
-                    cursor: 'pointer',
-                    borderRadius: '5px'
-                }}
+                className='listGroupItemBasket'
                 onClick={() => setBrandVisible(true)}
             >
                 Create a Brand
             </ListGroup.Item>
             <ListGroup.Item 
-                className='btn-primary'
-                style={{
-                    cursor: 'pointer',
-                    borderRadius: '5px'
-                }}
+                className='listGroupItemBasket'
                 onClick={() => setMethodVisible(true)}
             >
                 Create a Payment Method
             </ListGroup.Item>
             <ListGroup.Item 
-                className='btn-primary'
-                style={{
-                    cursor: 'pointer',
-                    borderRadius: '5px'
-                }}
+                className='listGroupItemBasket'
                 onClick={() => setProductVisible(true)}
             >
                 Create a Product

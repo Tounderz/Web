@@ -8,7 +8,7 @@ namespace WebLibrary.Models.Dtos
 {
     public class BrandDtoModel
     {
-        public int Id { get; set; }
+        public int BrandId { get; set; }
         public string Name { get; set; }
         public string Info { get; set; }
         public int[] CategoriesId { get; set; }

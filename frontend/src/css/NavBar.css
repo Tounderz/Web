@@ -1,0 +1,19 @@
+.link {
+    color: white;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.svg :hover {
+    transition: all;
+    fill: red;
+  }
+
+#collasible-nav-dropdown {
+    color: white !important;
+    cursor: pointer;
+}
+  
+#collasible-nav-dropdown:hover {
+    color: grey !important;
+}

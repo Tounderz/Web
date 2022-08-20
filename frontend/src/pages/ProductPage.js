@@ -1,12 +1,14 @@
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useState } from 'react';
-import { Card, Col, Container, Row, Image } from 'react-bootstrap';
+import { Card, Col, Container, Row, Image, Button, Table } from 'react-bootstrap';
 import { Context } from '../index';
 import ProductInfoItem from '../components/ProductInfoItem';
 import { useNavigate } from 'react-router';
 import { LOCALHOST, LOGIN_ROUTE, SHOP_ROUTE } from '../utils/const';
 import { addToCart } from '../http/basketApi';
 import CreateInfoProduct from '../components/models/create/CreateInfoProduct';
+import { SvgSelector } from '../components/Svg/SvgSelector';
+import '../css/ProductPage.css'
 
 const ProductPage = observer(() => {
     const {user} = useContext(Context)
@@ -26,78 +28,80 @@ const ProductPage = observer(() => {
     let admin;
     if (user.user.role !== 'user' && user.user.isAuth) {
         admin =(
-            <button 
-                className='btn-success'
-                variant={'outline-success'} 
+            <Button 
+                className='adminProduct'
+                variant='outline-success'
                 onClick={() => {setCreateInfoProduct(true)}}
-                style={{
-                    cursor: 'pointer',
-                    borderRadius: '5px'
-                }}
             >
                 Create Info
-            </button>
+            </Button>
         )
     }
 
     return (
-        <Container className='mt-3'>
-            <Row>
-                <Col md={3}>
-                    <Row className='d-flex flex-column align-items-center mt-3'>
-                        <Image
-                            width={300}
-                            height={300} 
-                            src={LOCALHOST + product.selectedProduct.img}
-                        />
-                    </Row>
-                </Col>
-                <Col className='d-flex flex-column align-items-center mt-5' md={5}>
-                    <h2>Modal: </h2>
-                    <h2>{product.selectedProduct.name}</h2>
-                </Col>
-                <Col 
-                    md={3}                    
-                    className='d-flex flex-column m-3'
-                >
-                    <Card
-                        className='d-flex flex-column align-items-center justify-content-around'
-                        style={{
-                            width: 350,
-                            height: 350,
-                            fontSize: 32,
-                            border: '5px solid lightgray',
-                        }}
+        <div className='fonPageProduct'>
+            <Container className='containerProduct'>
+                <Row>
+                    <Col md={3}>
+                        <Row className='rowImgProduct'>
+                            <Image
+                                className='imgProduct'
+                                src={LOCALHOST + product.selectedProduct.img}
+                            />
+                        </Row>
+                    </Col>
+                    <Col 
+                        className='colModalProduct'
+                        md={5}
                     >
-                        <h3>{product.selectedProduct.price} $</h3>
-                        <button
-                            className="btn-primary"
-                            variant={'outline-dark'}
-                            onClick={onClick}
+                        <h2>Modal: </h2>
+                        <h2>{product.selectedProduct.name}</h2>
+                    </Col>
+                    <Col 
+                        md={3}                    
+                        className='colCartProduct'
+                    >
+                        <Card
+                            className='cardProduct'
                         >
-                            In the basket
-                        </button>
-                    </Card>
-                </Col>
-            </Row>
-            <Row className='d-flex flex-column m-3'>
-                <h2>
-                    Specifications:
-                </h2>
-                {product.infoProduct.map((info, id) => (
-                    <Row 
-                        key={info.id} 
-                        style={{
-                            background: id % 2 === 0 ? 'lightgray' : 'transparent', padding: 10
-                        }}
-                        >
-                            <ProductInfoItem info={info} id={id + 1}/>
-                    </Row>
-                ))}
-            </Row>
-            {admin}
-            <CreateInfoProduct show={createInfoProduct} onHide={() => setCreateInfoProduct(false)} productId={product.selectedProduct.id}/>
-        </Container>
+                            <h1 className='addToCartProduct'>Price: {product.selectedProduct.price} $</h1>
+                            <Button
+                                className='button-addToCartProduct'
+                                variant='link'
+                                disabled={!product.selectedProduct.available}
+                                onClick={onClick}
+                            >
+                                <SvgSelector id='addToCart'/>
+                            </Button>
+                        </Card>
+                    </Col>
+                </Row>
+                <Row className='rowSpecificationsProduct'>
+                    <h2>
+                        Specifications:
+                    </h2>
+                    <Table 
+                        key='id'
+                        className='tableProduct'
+                    >
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Title</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {product.infoProduct.map((info, id) => (
+                                <ProductInfoItem info={info} id={id + 1}/>
+                            ))}
+                        </tbody>
+                    </Table>
+                </Row>
+                {admin}
+                <CreateInfoProduct show={createInfoProduct} onHide={() => setCreateInfoProduct(false)} productId={product.selectedProduct.id}/>
+            </Container>
+        </div>
     );
 });
 

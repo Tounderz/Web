@@ -83,6 +83,18 @@ namespace Web.Data.Repositories
             _context.SaveChanges();
         }
 
+        public CategoryDtoModel FormCategoryDto(CategoryDtoModel dto)
+        {
+            dto.Id = dto.Id > 0 ? dto.Id : 0;
+            dto.Name = !string.IsNullOrEmpty(dto.Name) ? dto.Name : string.Empty;
+            dto.ShortDescription = !string.IsNullOrEmpty(dto.ShortDescription) ? dto.ShortDescription : string.Empty;
+            dto.Info = !string.IsNullOrEmpty(dto.Info) ? dto.Info : string.Empty;
+            dto.BrandsId = dto.BrandsId.Length > 0 ? dto.BrandsId : Array.Empty<int>();
+            dto.Img = dto.Img.Length != 0 ? dto.Img : null;
+
+            return dto;
+        }
+
         private bool CheckCategoryName(string name)
         {
             if (name == string.Empty)

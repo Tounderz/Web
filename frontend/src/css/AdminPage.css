@@ -1,0 +1,51 @@
+.adminFonPage {
+    background-image: url(../components/img/adminFon.jpg);
+    background-repeat: no-repeat; 
+    background-size:cover;
+    background-position: center center;
+    background-attachment: fixed;
+    display: flex;
+    text-align:center;
+    align-items:initial;
+    position:absolute;
+    min-width:100%;
+    min-height: 100%;
+    color: #FFF;
+    text-shadow: -2px 0 0 #000000, 0 -2px 0 #000000, 2px 0 0 #000000, 0 2px 0 #000000, -2px -2px 0 #000000, 2px 2px 0 #000000, -2px 2px 0 #000000, 2px -2px 0 #000000;
+}
+
+.listGroupAdmin {
+    margin-top: 5%;
+    margin-left: 3%;
+}
+
+.listGroupItemBasket {
+    cursor: pointer;
+    border-radius: 7px;
+    color: #FFF;
+    border-color: #FFF;
+    background: none;
+}
+
+.listGroupItemBasket:hover{
+    background-color: #000080;
+}
+
+.rowAdminButtons {
+    margin: 3%;
+}
+
+.buttonUserListAdmin {
+    cursor: pointer;
+    border-radius: 5px;
+    width: 100px;
+    height: 40px;
+}
+
+.buttonProductListAdmin {
+    cursor: pointer;
+    border-radius: 5px;
+    width: 150px;
+    height: 40px;
+    margin-left: 3%;
+}

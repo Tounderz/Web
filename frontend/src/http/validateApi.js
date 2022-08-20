@@ -1,33 +1,32 @@
 import { useEffect, useState } from "react";
-import { ZERO } from "../utils/const";
 
 export const useInput = (intialValue, validations) => {
-    const [value, setValue] = useState(intialValue)
-    const [isDirty, setDirty] = useState(false)
-    const valid = useValidation(value, validations)
+    const [value, setValue] = useState(intialValue);
+    const [isDirty, setDirty] = useState(false);
+    const valid = useValidation(value, validations);
 
     const onChange = (e) => {
-        setValue(e.target?.value || '')
+        setValue(e.target?.value || '');
     }
 
     const onSelect = (e) => {
-        setValue(e.map(item => {return item.id}))
+        setValue(e.map(item => {return item.id}));
     }
 
     const onRemove = (e) => {
-        setValue(e.map(item => {return item.id}))
+        setValue(e.map(item => {return item.id}));
     }
 
     const saveImg = (e) => {
         if (!e.target.files.length) {
-            setValue(ZERO)
+            setValue(null);
         } else {
-            setValue(e.target.files[0])
+            setValue(e.target.files[0]);
         }
     }
 
     const onBlur = (e) => {
-        setDirty(true)
+        setDirty(true);
     }
 
     return {
@@ -43,17 +42,18 @@ export const useInput = (intialValue, validations) => {
 }
 
 const useValidation = (value, validations) => {
-    const [minLengthError, setMinLengthError] = useState(false)
-    const [emailError, setEmailError] = useState(false)
-    const [phoneError, setPhoneError] = useState(false)
-    const [passwordSecurityError, setPasswordSecurityError] = useState(false)
-    const [confirmPasswordError, setConfirmPasswordError] = useState(false)
-    const [multiSelectError, setMultiSelectError] = useState(false)
-    const [isNumberError, setIsNumberError] = useState(false)
-    const [priceError, setPriceError] = useState(false)
-    const [isRoleError, setIsRoleError] = useState(false)
-    const [messageError, setMessageError] = useState('')
-    const [inputValid, setInputValid] = useState(false)
+    const [minLengthError, setMinLengthError] = useState(false);
+    const [emailError, setEmailError] = useState(false);
+    const [phoneError, setPhoneError] = useState(false);
+    const [passwordSecurityError, setPasswordSecurityError] = useState(false);
+    const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+    const [multiSelectError, setMultiSelectError] = useState(false);
+    const [isNumberError, setIsNumberError] = useState(false);
+    const [priceError, setPriceError] = useState(false);
+    const [isRoleError, setIsRoleError] = useState(false);
+    const [imgError, setImgError] = useState(false);
+    const [messageError, setMessageError] = useState('');
+    const [inputValid, setInputValid] = useState(false);
 
     useEffect(() => {
         for (const validation in validations) {
@@ -96,6 +96,10 @@ const useValidation = (value, validations) => {
                     value === validations[validation] ? setIsRoleError(true) : setIsRoleError(false);
                     setMessageError(`You can't assign a role like yours`);
                     break;
+                case 'isImg':
+                    value === null ? setImgError(true) : setImgError(false);
+                    setMessageError(`The '${validations[validation].name}' field can't to empty.`);
+                    break;
                 default:
                     break;
             }
@@ -103,12 +107,14 @@ const useValidation = (value, validations) => {
     }, [validations, value])
 
     useEffect(() => {
-        if (minLengthError || emailError || phoneError || passwordSecurityError || confirmPasswordError || multiSelectError || isNumberError || priceError || isRoleError) {
+        if (minLengthError || emailError || phoneError || 
+            passwordSecurityError || confirmPasswordError || multiSelectError || 
+            isNumberError || priceError || isRoleError || imgError) {
             setInputValid(false)
         } else {
             setInputValid(true)
         }
-    }, [minLengthError, emailError, phoneError, passwordSecurityError, confirmPasswordError, multiSelectError, isNumberError, priceError, isRoleError])
+    }, [minLengthError, emailError, phoneError, passwordSecurityError, confirmPasswordError, multiSelectError, isNumberError, priceError, isRoleError, imgError])
 
     return {
         minLengthError,
@@ -120,6 +126,7 @@ const useValidation = (value, validations) => {
         isNumberError,
         priceError,
         isRoleError,
+        imgError,
         messageError,
         inputValid
     }

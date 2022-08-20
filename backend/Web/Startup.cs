@@ -1,5 +1,3 @@
-using System;
-using System.IO;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -7,10 +5,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.Net.Http.Headers;
 using Web.Data;
 using Web.Data.ConstMethods;
 using Web.Data.Repositories;
@@ -61,7 +57,8 @@ namespace Web
             services.AddScoped<IOrder, OrderRepository>();
             services.AddScoped<IPaymentMethod, PaymentMethodRepository>();
             services.AddScoped<ICategoriesBrands, CategoriesBrandsRepository>();
-            services.AddScoped<ISearch, SearchRepository>();
+            services.AddScoped<ISearch, SearchRepository>(); 
+            services.AddScoped<ISort, SortRepository>();
             services.AddScoped<IJwt, JwtService>();
             services.AddScoped<IGeneralMethods, GeneralMethods>();
 

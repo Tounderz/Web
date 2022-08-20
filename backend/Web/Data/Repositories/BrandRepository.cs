@@ -45,7 +45,7 @@ namespace Web.Data.Repositories
 
         public BrandModel UpdateBrand(BrandDtoModel model)
         {
-            var brand = Brands.FirstOrDefault(i => i.Id == model.Id);
+            var brand = Brands.FirstOrDefault(i => i.Id == model.BrandId);
             if (brand == null || !CheckBrandName(model.Name))
             {
                 return null;

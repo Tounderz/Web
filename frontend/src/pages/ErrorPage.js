@@ -1,16 +1,22 @@
 import React, { useContext } from 'react';
 import { Context } from '../index';
+import { observer } from 'mobx-react-lite';
+import '../css/ErrorPage.css'
 
-const ErrorPage = () => {
+const ErrorPage = observer(() => {
     const {error} = useContext(Context)
 
     return (
-        <h1 
-            className='d-flex justify-content-center align-items-center mt-3'
-        >
-            {error.messageError}
-        </h1>
+        <div className='errorFonPage'>
+            <h1
+                style={{
+                    marginTop: '10%'
+                }}
+            >
+                {error.messageError}
+            </h1>
+        </div>
     );
-};
+});
 
 export default ErrorPage;

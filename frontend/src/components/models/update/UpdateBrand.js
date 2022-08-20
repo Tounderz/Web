@@ -1,18 +1,18 @@
 import Multiselect from 'multiselect-react-dropdown';
 import React, { useContext, useState } from 'react';
-import { Form, Modal } from 'react-bootstrap';
+import { Form, Modal, Button } from 'react-bootstrap';
 import { updateBrand, formDataBrand } from '../../../http/brandApi';
 import { useInput } from '../../../http/validateApi';
 import { Context } from '../../../index';
 
 const UpdateBrand = ({show, onHide}) => {
-    const {product} = useContext(Context)
+    const {product} = useContext(Context);
     const brandId = useInput(0, {isNumberId: {name: 'Brand'}});
     const name = useInput('', {minLength: {value: 3, name: 'Name'}});
-    const img = useInput(null)
+    const img = useInput(null, {isImg: { name: 'Img' }} );
     const categoriesId = useInput([], {multiSelect: {name: 'Categories'}})
     const info = useInput('', {minLength: {value: 3, name: 'Info'}});
-    const [messageError, setMessageError] = useState('')
+    const [messageError, setMessageError] = useState('');
 
     const click = async () => {
         try {
@@ -25,9 +25,8 @@ const UpdateBrand = ({show, onHide}) => {
                 img.saveImg(null);
                 onHide();
         } catch (error) {
-            setMessageError(error.response.data.message)
+            setMessageError(error.response.data.message);
         }
-        
     }
 
     return (
@@ -78,10 +77,12 @@ const UpdateBrand = ({show, onHide}) => {
                         onBlur={e => info.onBlur(e)}
                         placeholder={`Update 'Info': ${product.brands.filter(item => {return item.id === Number(brandId.value)}).map(item => item.info)}`}
                     />
+                    {(img.isDirty && img.imgError) && <div className='mt-3' style={{color: 'red'}}>{img.messageError}</div>}
                     <Form.Control
                         className='mt-3'
                         type='file'
                         onChange={e => img.saveImg(e)}
+                        onBlur={e => img.onBlur(e)}
                     />
 
                     <label className='mt-3'>Categories:</label>
@@ -98,29 +99,29 @@ const UpdateBrand = ({show, onHide}) => {
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <button
-                    className="btn-primary m-2"
-                    variant={'outline-success'}
+                <Button
+                    variant='outline-primary'
                     style={{
                         cursor: 'pointer',
-                        borderRadius: '5px'
+                        borderRadius: '5px',
+                        margin: '2px'
                     }}
-                    disabled={!brandId.inputValid || (!name.inputValid && !info.inputValid && !categoriesId.inputValid)}
+                    disabled={!brandId.inputValid || (!name.inputValid && !info.inputValid && !categoriesId.inputValid && !img.inputValid)}
                     onClick={click}
                 >
                     Update
-                </button>
-                <button 
-                    className="btn-danger"
-                    variant={'outline-success'}
+                </Button>
+                <Button 
+                    variant='outline-danger'
                     style={{
                         cursor: 'pointer',
-                        borderRadius: '5px'
+                        borderRadius: '5px',
+                        margin: '2px'
                     }}
                     onClick={onHide}
                 >
                     Close
-                </button>
+                </Button>
             </Modal.Footer>
         </Modal>
     );

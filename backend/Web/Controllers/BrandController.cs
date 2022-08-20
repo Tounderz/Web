@@ -75,10 +75,11 @@ namespace Web.Controllers
 
             var (countPages, products) = _generalMethods.GetProducts(productList, view.Page);
 
-            return Ok(new { 
+            return Ok(new
+            {
                 products = products,
                 categoriesId,
-                countPages = countPages 
+                countPages = countPages
             });
         }
 
@@ -101,11 +102,12 @@ namespace Web.Controllers
             var typesId = productList.Select(i => i.TypeId).ToList();
             var (countPages, products) = _generalMethods.GetProducts(productList, categoriesBrandsDto.Page);
 
-            return Ok(new { 
+            return Ok(new
+            {
                 products = products,
                 typesId = typesId,
                 categoriesByBrand = categoriesBrandsDto.CategoriesId,
-                countPages = countPages 
+                countPages = countPages
             });
         }
 
@@ -119,7 +121,7 @@ namespace Web.Controllers
                 return BadRequest(new { message = "There is a brand with this name!" });
             }
 
-            brandDto.Id = brand.Id;
+            brandDto.BrandId = brand.Id;
             var categoriesBrands = brandDto.CategoriesId.Length > 0 ? _categoriesBrands.CreateCategoriesByBrand(brandDto) : null;
             if (categoriesBrands == null)
             {
@@ -139,8 +141,8 @@ namespace Web.Controllers
                 return BadRequest(new { message = "There is a brand with this name!" });
             }
 
-            brandDto.Id = brand.Id;
-            var categoriesBrands = brandDto.CategoriesId.Length > 0 ? _categoriesBrands.UpdateCategoriesByBrand(brandDto) : _categoriesBrands.CategoriesBrands.Where(i => i.BrandId == brandDto.Id).ToList();
+            brandDto.BrandId = brand.Id;
+            var categoriesBrands = brandDto.CategoriesId.Length > 0 ? _categoriesBrands.UpdateCategoriesByBrand(brandDto) : _categoriesBrands.CategoriesBrands.Where(i => i.BrandId == brandDto.BrandId).ToList();
             if (categoriesBrands == null)
             {
                 return BadRequest(new { message = "It is required to select the category(s) for this brand!" });
@@ -163,7 +165,7 @@ namespace Web.Controllers
         {
             var brandDto = new BrandDtoModel
             {
-                Id = int.Parse(Request.Form.FirstOrDefault(i => i.Key == FormFields.ID).Value),
+                BrandId = int.Parse(Request.Form.FirstOrDefault(i => i.Key == FormFields.MODEL_ID).Value),
                 Name = !string.IsNullOrEmpty(Request.Form.FirstOrDefault(i => i.Key == FormFields.NAME).Value) ?
                        Request.Form.FirstOrDefault(i => i.Key == FormFields.NAME).Value : string.Empty,
                 Info = !string.IsNullOrEmpty(Request.Form.FirstOrDefault(i => i.Key == FormFields.INFO).Value) ?
@@ -181,7 +183,7 @@ namespace Web.Controllers
         {
             var view = new ViewDtoModel
             {
-                ModelId = int.Parse(Request.Form.FirstOrDefault(i => i.Key == FormFields.ID).Value),
+                ModelId = int.Parse(Request.Form.FirstOrDefault(i => i.Key == "ModelId").Value),
                 Role = Request.Form.FirstOrDefault(i => i.Key == FormFields.ROLE).Value,
                 Page = int.Parse(Request.Form.FirstOrDefault(i => i.Key == FormFields.PAGE).Value) > 0 ?
                      int.Parse(Request.Form.FirstOrDefault(i => i.Key == FormFields.PAGE).Value) : ConstParameters.START_PAGE,

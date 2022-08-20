@@ -76,10 +76,11 @@ namespace Web.Controllers
             var brandsId = _categoriesBrands.CategoriesBrands.Where(i => i.CategoryId == model.ModelId).Select(i => i.BrandId).ToList();
             var (countPages, products) = _generalMethods.GetProducts(productList, model.Page);
 
-            return Ok(new { 
+            return Ok(new
+            {
                 products = products,
                 brandsId = brandsId,
-                countPages = countPages 
+                countPages = countPages
             });
         }
 
@@ -87,7 +88,7 @@ namespace Web.Controllers
         public IActionResult GetProductsCategoryByBrand()
         {
             var model = GetBrandsByCategoryDtoModel();
-            if (model.CategoryId == 0 || model.BrandsId.Length == 0 )
+            if (model.CategoryId == 0 || model.BrandsId.Length == 0)
             {
                 return BadRequest(new { message = ConstParameters.INVALID_CREDENTIALS_ERROR });
             }
@@ -99,11 +100,14 @@ namespace Web.Controllers
                 return BadRequest(new { message = "There are no products according to the selected criteria!" });
             }
 
+            var typesId = productList.Select(i => i.TypeId).ToList();
             var (countPages, products) = _generalMethods.GetProducts(productList, model.Page);
 
-            return Ok(new { 
+            return Ok(new
+            {
                 products = products,
-                countPages = countPages 
+                typesId = typesId,
+                countPages = countPages
             });
         }
 
@@ -180,7 +184,7 @@ namespace Web.Controllers
         {
             var view = new ViewDtoModel
             {
-                ModelId = int.Parse(Request.Form.FirstOrDefault(i => i.Key == FormFields.ID).Value),
+                ModelId = int.Parse(Request.Form.FirstOrDefault(i => i.Key == FormFields.MODEL_ID).Value),
                 Role = Request.Form.FirstOrDefault(i => i.Key == FormFields.ROLE).Value,
                 Page = Request.Form.FirstOrDefault(i => i.Key == FormFields.PAGE).Value != string.Empty ?
                      int.Parse(Request.Form.FirstOrDefault(i => i.Key == FormFields.PAGE).Value) : ConstParameters.START_PAGE,

@@ -9,10 +9,11 @@ import { fetchTypes } from '../http/typeApi';
 import { fetchBrandsByCategory } from '../http/brandApi';
 
 const CategoryDropdown = observer(({category}) => {
-    const {product} = useContext(Context)
-    const {user} = useContext(Context)
-    const {error} = useContext(Context)
-    const navigate = useNavigate()
+    const {product} = useContext(Context);
+    const {user} = useContext(Context);
+    const {error} = useContext(Context);
+    const {general} = useContext(Context);
+    const navigate = useNavigate();
 
     const getCategory = async () => {
         try {
@@ -32,6 +33,10 @@ const CategoryDropdown = observer(({category}) => {
         } catch (e) {
             error.setMessageError(e.response.data.message)
             navigate(ERROR_ROUTE)
+        } finally {
+            general.setFieldNames([]);
+            general.setFieldName('');
+            general.setTypeSort('');
         }
     }
 

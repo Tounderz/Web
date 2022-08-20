@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Form, Modal } from 'react-bootstrap';
+import { Form, Modal, Button } from 'react-bootstrap';
 import { removeBrand } from '../../../http/brandApi';
 import { useInput } from '../../../http/validateApi';
 import { Context } from '../../../index';
@@ -46,29 +46,29 @@ const RemoveBrand = ({show, onHide}) => {
                     </Form.Select>
             </Modal.Body>
             <Modal.Footer>
-                <button
-                    className="btn-primary m-2"
-                    variant={'outline-success'}
+                <Button
+                    variant='outline-primary'
                     style={{
                         cursor: 'pointer',
-                        borderRadius: '5px'
+                        borderRadius: '5px',
+                        margin: '2px'
                     }}
                     disabled={!brandId.inputValid}
                     onClick={click}
                 >
                     Remove
-                </button>
-                <button 
-                    className="btn-danger"
-                    variant={'outline-success'}
+                </Button>
+                <Button 
+                    variant='outline-danger'
                     style={{
                         cursor: 'pointer',
-                        borderRadius: '5px'
+                        borderRadius: '5px',
+                        margin: '2px'
                     }}
                     onClick={onHide}
                 >
                     Close
-                </button>
+                </Button>
             </Modal.Footer>
         </Modal>
     );

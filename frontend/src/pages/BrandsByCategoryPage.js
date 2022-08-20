@@ -5,6 +5,7 @@ import ProductItem from '../components/ProductItem';
 import { fetchProductsCategoryByBrand } from '../http/categoryApi';
 import { PAGE_FIRST } from '../utils/const';
 import TypeItem from '../components/TypeItem';
+import '../css/BrandPage.css'
 
 const BrandsByCategoryPage = () => {
     const {product} = useContext(Context)
@@ -25,27 +26,25 @@ const BrandsByCategoryPage = () => {
     }
 
     return (
-        <Row className='px-4'>
-            <h3 className='d-flex justify-content-center align-items-center'>{product.selectedBrand.name}</h3>
-            <Col md={2} className='mt-3'>
-                <Row className='mt-3'>
-                    <ListGroup>
-                        <ListGroup.Item 
-                            className='d-flex justify-content-center btn-success'
-                            key='id'
-                            disabled
-                            style={{ 
-                                color: 'gray',
-                                borderRadius: '5px',
-                            }}
-                        >
-                            Types:
-                        </ListGroup.Item>
-                        {product.types.map(type => 
-                            <TypeItem key={type.id} type={type} brandsId={product.brandsByCategory}/>
-                        )}
-                    </ListGroup >
-                </Row>
+        <Row className='brandFonPage'>
+            <Col md={2} className='colBrandsByCategory'>
+                <ListGroup className='listGroupBrand'>
+                    <ListGroup.Item 
+                        key='id'
+                        disabled
+                        style={{ 
+                            borderColor: 'white',
+                            borderRadius: '5px',
+                            background:'none',
+                            color: 'white',
+                        }}
+                    >
+                        Types:
+                    </ListGroup.Item>
+                    {product.types.map(type => 
+                        <TypeItem key={type.id} type={type} brandsId={product.brandsByCategory}/>
+                    )}
+                </ListGroup >
             </Col>
             <Col md={9}>
                 <Row>
@@ -55,7 +54,7 @@ const BrandsByCategoryPage = () => {
                 </Row>
             </Col>
             <Row>
-                <Pagination className='d-flex justify-content-center align-items-center mt-3' size='sm'>
+                <Pagination className='pagination' size='sm'>
                     {pages.map(item =>
                         <Pagination.Item
                             key={item}

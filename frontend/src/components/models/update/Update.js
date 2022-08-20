@@ -4,6 +4,7 @@ import UpdateBrand from './UpdateBrand';
 import UpdateCategory from './UpdateCategory';
 import UpdatePaymentMethod from './UpdatePaymentMethod';
 import UpdateType from './UpdateType';
+import '../../../css/AdminPage.css'
 
 const Update = ({show, onHide}) => {
     const [categoryUpdateVisible, setCategoryUpdateVisible] = useState(false);
@@ -12,49 +13,31 @@ const Update = ({show, onHide}) => {
     const [methodUpdateVisible, setMethodUpdateVisible] = useState(false);
 
     return (
-        <ListGroup style={
-            { 
-                cursor: 'pointer' 
-            }}
+        <ListGroup
+            className='listGroupAdmin'
             key='id'
         >
             <ListGroup.Item 
-                className='btn-primary'
-                style={{
-                    cursor: 'pointer',
-                    borderRadius: '5px'
-                }}
+                className='listGroupItemBasket'
                 onClick={() => setCategoryUpdateVisible(true)}
             >
                 Update a Category
             </ListGroup.Item>
             <ListGroup.Item  
-                className='btn-primary'
-                style={{
-                    cursor: 'pointer',
-                    borderRadius: '5px'
-                }}
+                className='listGroupItemBasket'
                 onClick={() => setTypeUpdateVisible(true)}
             >
                 Update a Type
             </ListGroup.Item>
             <ListGroup.Item
-                className='btn-primary'
-                style={{
-                    cursor: 'pointer',
-                    borderRadius: '5px'
-                }}
+                className='listGroupItemBasket'
                 onClick={() => setBrandUpdateVisible(true)}
             >
                 Update a Brand
             </ListGroup.Item>
 
             <ListGroup.Item
-                className='btn-primary'
-                style={{
-                    cursor: 'pointer',
-                    borderRadius: '5px'
-                }}
+                className='listGroupItemBasket'
                 onClick={() => setMethodUpdateVisible(true)}
             >
                 Update a Payment Method

@@ -34,9 +34,9 @@ const TypeItem = observer(({type, brandsId}) => {
                 {
                     cursor: 'pointer',
                     borderRadius: '5px',
+                    background:'none',
+                    color: 'white'
                 }}
-                border={'light'}
-            variant={'outline-success'} 
             onClick={getType}
         >
             {type.name}

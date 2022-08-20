@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Modal, Form } from 'react-bootstrap';
+import { Modal, Form, Button } from 'react-bootstrap';
 import { removeCategory } from '../../../http/categoryApi';
 import { useInput } from '../../../http/validateApi';
 import { Context } from '../../../index';
@@ -46,29 +46,29 @@ const RemoveCategory = ({show, onHide}) => {
                 </Form.Select>
             </Modal.Body>
             <Modal.Footer>
-                <button
-                    className="btn-primary m-2"
-                    variant={'outline-success'}
+                <Button
+                    variant='outline-primary'
                     style={{
                         cursor: 'pointer',
-                        borderRadius: '5px'
+                        borderRadius: '5px',
+                        margin: '2px'
                     }}
                     disabled={!categoryId.inputValid}
                     onClick={() => click()}
                 >
                     Remove
-                </button>
-                <button 
-                    className="btn-danger"
-                    variant={'outline-success'}
+                </Button>
+                <Button 
+                    variant='outline-danger'
                     style={{
                         cursor: 'pointer',
-                        borderRadius: '5px'
+                        borderRadius: '5px',
+                        margin: '2px'
                     }}
                     onClick={onHide}
                 >
                     Close
-                </button>
+                </Button>
             </Modal.Footer>
         </Modal>
     );

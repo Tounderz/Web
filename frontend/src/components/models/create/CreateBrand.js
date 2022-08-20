@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Form, Modal } from 'react-bootstrap';
+import { Form, Modal, Button } from 'react-bootstrap';
 import { Context } from '../../../index';
 import { createBrand, formDataBrand } from '../../../http/brandApi';
 import Multiselect from 'multiselect-react-dropdown';
@@ -9,18 +9,18 @@ import { ZERO } from '../../../utils/const';
 const CreateBrand = ({show, onHide}) => {
     const {product} = useContext(Context)
     const name = useInput('', {minLength: {value: 3, name: 'Name'}});
-    const categoriesId = useInput([], {multiselect: {name: 'Categories'}})
-    const info = useInput('', {minLength: {value: 8, name: "Info"}})
-    const img = useInput(null)
+    const categoriesId = useInput([], {multiselect: {name: 'Categories'}});
+    const info = useInput('', {minLength: {value: 8, name: "Info"}});
+    const img = useInput(null, {isImg: { name: 'Img' }} );
 
     const click = async () => {
-        const formData = formDataBrand(ZERO, name.value, info.value, categoriesId.value, img.value)
+        const formData = formDataBrand(ZERO, name.value, info.value, categoriesId.value, img.value);
         await createBrand(formData).then(data => {
-            name.onChange('')
-            categoriesId.onChange([])
-            info.onSelect('')
-            img.saveImg(null)
-            onHide()
+            name.onChange('');
+            categoriesId.onChange([]);
+            info.onSelect('');
+            img.saveImg(null);
+            onHide();
         })
     }
 
@@ -55,10 +55,12 @@ const CreateBrand = ({show, onHide}) => {
                         placeholder={'Info'}
                     />
 
+                    {(img.isDirty && img.imgError) && <div className='mt-3' style={{color: 'red'}}>{img.messageError}</div>}
                     <Form.Control
                         className='mt-3'
                         type='file'
                         onChange={e => img.saveImg(e)}
+                        onBlur={e => img.onBlur(e)}
                     />
                 {(categoriesId.isDirty && categoriesId.multiSelectError) && <div className='mt-3' style={{color: 'red'}}>{categoriesId.messageError}</div>}
                 <label className='mt-3'>Categories:</label>
@@ -75,29 +77,29 @@ const CreateBrand = ({show, onHide}) => {
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <button
-                    className="btn-primary m-2"
-                    variant={'outline-success'}
+                <Button
+                    variant='outline-primary'
                     style={{
                         cursor: 'pointer',
-                        borderRadius: '5px'
+                        borderRadius: '5px',
+                        margin: '2px'
                     }}
                     disabled={!name.inputValid || !categoriesId.inputValid}
                     onClick={click}
                 >
                     Create
-                </button>
-                <button 
-                    className="btn-danger"
-                    variant={'outline-success'}
+                </Button>
+                <Button 
+                    variant='outline-danger'
                     style={{
                         cursor: 'pointer',
-                        borderRadius: '5px'
+                        borderRadius: '5px',
+                        margin: '2px'
                     }}
                     onClick={onHide}
                 >
                     Close
-                </button>
+                </Button>
             </Modal.Footer>
         </Modal>
     );

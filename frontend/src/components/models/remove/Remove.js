@@ -4,6 +4,7 @@ import RemoveBrand from './RemoveBrand';
 import RemoveCategory from './RemoveCategory';
 import RemovePaymentMethod from './RemovePaymentMethod';
 import RemoveType from './RemoveType';
+import '../../../css/AdminPage.css'
 
 const Remove = ({show, onHide}) => {
     const [categoryRemoveVisible, setCategoryRemoveVisible] = useState(false);
@@ -12,48 +13,30 @@ const Remove = ({show, onHide}) => {
     const [methodRemoveVisible, setMethodRemoveVisible] = useState(false);
 
     return (
-        <ListGroup style={
-            { 
-                cursor: 'pointer' 
-            }}
+        <ListGroup
+            className='listGroupAdmin'
             key='id'
         >
             <ListGroup.Item 
-                className='btn-primary'
-                style={{
-                    cursor: 'pointer',
-                    borderRadius: '5px'
-                }}
+                className='listGroupItemBasket'
                 onClick={() => setCategoryRemoveVisible(true)}
             >
                 Remove a Category
             </ListGroup.Item>
             <ListGroup.Item  
-                className='btn-primary'
-                style={{
-                    cursor: 'pointer',
-                    borderRadius: '5px'
-                }}
+                className='listGroupItemBasket'
                 onClick={() => setTypeRemoveVisible(true)}
             >
                 Remove a Type
             </ListGroup.Item>
             <ListGroup.Item
-                className='btn-primary'
-                style={{
-                    cursor: 'pointer',
-                    borderRadius: '5px'
-                }}
+                className='listGroupItemBasket'
                 onClick={() => setBrandRemoveVisible(true)}
             >
                 Remove a Brand
             </ListGroup.Item>
             <ListGroup.Item
-                className='btn-primary'
-                style={{
-                    cursor: 'pointer',
-                    borderRadius: '5px'
-                }}
+                className='listGroupItemBasket'
                 onClick={() => setMethodRemoveVisible(true)}
             >
                 Remove a Payment Method

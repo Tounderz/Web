@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Col, Row } from 'react-bootstrap';
+import { Button, Col, Row } from 'react-bootstrap';
 import { Context } from '../index';
 import { useNavigate } from "react-router";
 import Remove from '../components/models/remove/Remove';
@@ -8,6 +8,7 @@ import Update from '../components/models/update/Update';
 import { PAGE_FIRST, PRODUCTS_LIST_ROUTE, USERLIST_ROUTE } from '../utils/const';
 import { fetchUsers } from '../http/userApi';
 import { fetchProducts } from '../http/productApi';
+import '../css/AdminPage.css'
 
 const Admin = () => {
     const {user} = useContext(Context)
@@ -32,7 +33,7 @@ const Admin = () => {
     }
 
     return (
-        <Row className='mt-2 m-3'>
+        <Row className='adminFonPage'>
             <Col md={2}>
                 <Create show={create} onHide={() => setCreate(false)}/>
             </Col>
@@ -42,36 +43,21 @@ const Admin = () => {
             <Col md={2}>
                 <Remove show={remove} onHide={() => setRemove(false)}/>
             </Col>
-            <Row className='mt-2 m-3'>
-            <button 
-                className='btn-primary'
-                variant={'outline-success'}
-                style={{
-                    cursor: 'pointer',
-                    borderRadius: '5px',
-                    width: '100px',
-                    height: '40px',
-                    marginTop: '15px'
-                }}
-                onClick={userList}
-            >
-                User list
-            </button>
-            <button
-                className='btn-primary'
-                variant={'outline-success'}
-                style={{
-                    cursor: 'pointer',
-                    borderRadius: '5px',
-                    width: '150px',
-                    height: '40px',
-                    marginTop: '15px',
-                    margin: '15px'
-                }}
-                onClick={productList}
-            >
-                Product List
-            </button>
+            <Row className='rowAdminButtons'>
+                <Button 
+                    className='buttonUserListAdmin'
+                    variant='outline-success'
+                    onClick={userList}
+                >
+                    User list
+                </Button>
+                <Button
+                    className='buttonProductListAdmin'
+                    variant='outline-primary'
+                    onClick={productList}
+                >
+                    Product List
+                </Button>
             </Row>
         </Row>
     )

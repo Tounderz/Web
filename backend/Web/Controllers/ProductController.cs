@@ -160,8 +160,8 @@ namespace Web.Controllers
         {
             var view = new ViewDtoModel
             {
-                ModelId = Request.Form.FirstOrDefault(i => i.Key == FormFields.ID).Value != string.Empty ?
-                     int.Parse(Request.Form.FirstOrDefault(i => i.Key == FormFields.ID).Value) : 0,
+                ModelId = Request.Form.FirstOrDefault(i => i.Key == FormFields.MODEL_ID).Value != string.Empty ?
+                     int.Parse(Request.Form.FirstOrDefault(i => i.Key == FormFields.MODEL_ID).Value) : 0,
                 Role = Request.Form.FirstOrDefault(i => i.Key == FormFields.ROLE).Value,
             };
 

@@ -1,8 +1,7 @@
-import axiosApi from './axiosApi';
 import { createRequest } from './interceptor';
 
 export const fetchSearch = async (parameter, page) => {
-    const {data} = await axiosApi.post(`/search/result`, { Parameter: parameter, Page: page } );
+    const {data} = await createRequest().post(`/search/result`, { Parameter: parameter, Page: page } );
     return data;
 }
 

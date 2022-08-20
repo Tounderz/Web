@@ -8,31 +8,33 @@ import BrandDropdown from "./BrandDropdown";
 import CategoryDropdown from "./CategoryDropdown";
 import UserBar from "./UserBar";
 import SearchForm from "./SearchForm";
+import { SvgSelector } from "./Svg/SvgSelector";
+import '../css/NavBar.css'
 
-const Nav = observer(() => {
-    const {product} = useContext(Context)
+const NavBar = observer(() => {
+    const {product} = useContext(Context);
+    const {general} = useContext(Context)
 
     const onClick = () => {
-        product.setSelectedCategory({})
-        product.setSelectedBrand({})
+        product.setSelectedCategory({});
+        product.setSelectedBrand({});
+        general.setFieldNames([]);
+        general.setFieldName('');
+        general.setTypeSort('');
     }
 
     return (
-        <nav className='navbar navbar-expand-sm navbar-dark bg-dark mb-4'>
-            <div className='container-fluid'>
+        <nav className='navbar navbar-expand-sm navbar-dark bg-dark'> 
+            <div className='container-fluid'>          
                 <Link 
-                    className='navbar-brand'
+                    className='link'
                     to={SHOP_ROUTE}
                     onClick={onClick}
                 >
-                    Home
+                    <SvgSelector id='homePage'/>
                 </Link>
                 <NavDropdown
-                    style={{
-                        color: 'white',
-                        cursor: 'pointer',
-                    }}
-                    title='All Categories'
+                    title='Categories'
                     id='collasible-nav-dropdown'
                 >
                     {product.categories.map(category => (
@@ -41,11 +43,7 @@ const Nav = observer(() => {
                 </NavDropdown>
 
                 <NavDropdown
-                    style={{
-                        color: 'white !important',
-                        cursor: 'pointer',
-                    }}
-                    title='All Brands'
+                    title='Brands'
                     id='collasible-nav-dropdown'
                 >
                     {product.brands.map(brand => (
@@ -54,13 +52,15 @@ const Nav = observer(() => {
                 </NavDropdown>
                 
 
-                <nav className="d-inline-flex mt-2 mt-md-0 ms-md-auto">
+                <nav 
+                    className="d-inline-flex mt-2 mt-md-0 ms-md-auto"
+                >
                     <SearchForm key='id' parameter='product'/>
                     <UserBar/>
                 </nav> 
-            </div>
+            </div> 
         </nav>
     );
 });
 
-export default Nav;
+export default NavBar;

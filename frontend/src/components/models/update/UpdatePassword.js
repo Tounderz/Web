@@ -1,19 +1,19 @@
 import React, { useContext, useState } from 'react';
-import { Form, Modal } from 'react-bootstrap';
+import { Form, Modal, Button } from 'react-bootstrap';
 import { Context } from '../../../index';
 import { useInput } from '../../../http/validateApi';
 import { updatePassword } from '../../../http/userApi';
 
 const UpdatePassword = ({show, onHide}) => {
-    const {user} = useContext(Context)
+    const {user} = useContext(Context);
     const oldPassword = useInput('', {minLength: {value: 6, name: 'password'}});
     const newPassword = useInput('', {minLength: {value: 6, name: 'newPassword'}, isConfirmPassword: oldPassword.value});
     const confirmPassword = useInput('', {minLength: {value: 6, name: 'confirmPassword'}, isConfirmPassword: newPassword.value});
-    const [messageError, setMessageError] = useState('')
+    const [messageError, setMessageError] = useState('');
 
     const update = async () => {
         try {
-            const data = await updatePassword(oldPassword.value, newPassword.value, user.idUser)
+            const data = await updatePassword(oldPassword.value, newPassword.value, user.idUser);
                 user.setSelectedUser(data.user);
                 oldPassword.onChange('');
                 newPassword.onChange('');
@@ -21,7 +21,7 @@ const UpdatePassword = ({show, onHide}) => {
                 setMessageError('')
                 onHide();
         } catch (error) {
-            setMessageError(error.response.data.message)
+            setMessageError(error.response.data.message);
         }
     }
 
@@ -73,26 +73,29 @@ const UpdatePassword = ({show, onHide}) => {
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <button
-                    className="btn-primary m-2"
+                <Button
+                    variant='outline-primary'
                     style={{
                         cursor: 'pointer',
-                        borderRadius: '5px'
+                        borderRadius: '5px',
+                        margin: '2px'
                     }}
+                    disabled={!oldPassword.inputValid || !newPassword.inputValid || !confirmPassword.inputValid}
                     onClick={() => update()}
                 >
                     Update
-                </button>
-                <button 
-                    className="btn-danger"
+                </Button>
+                <Button 
+                    variant='outline-danger'
                     style={{
                         cursor: 'pointer',
-                        borderRadius: '5px'
+                        borderRadius: '5px',
+                        margin: '2px'
                     }}
                     onClick={onHide}
                 >
                     Close
-                </button>
+                </Button>
             </Modal.Footer>
         </Modal>
     );

@@ -1,11 +1,12 @@
 import React, { useContext, useState } from "react";
-import { REGISTER_ROUTE, WELCOME_ROUTE } from "../../utils/const";
+import { REGISTER_ROUTE, PERSONAL_ACCOUNT_ROUTE } from "../../utils/const";
 import { NavLink } from 'react-router-dom';
-import { Card, Container, FormControl, ModalFooter } from "react-bootstrap";
+import { Button, Container, Form, ModalFooter, Row } from "react-bootstrap";
 import { Context } from "../../index";
 import { useNavigate } from "react-router";
 import { fetchUser, signIn } from "../../http/userApi";
 import { useInput } from "../../http/validateApi";
+import '../../css/Auth.css'
 
 const Login = () => {
     const {user} = useContext(Context)
@@ -19,65 +20,64 @@ const Login = () => {
     const click = async () => {
         try {
             const data = await signIn(login.value, password.value);
-                const accessToken = data?.accessToken;
+                const accessToken = data.accessToken;
                 localStorage.setItem('accessToken', accessToken);
                 user.setUser(data.user);
             const dataUser = await fetchUser(user.user.login);
                 user.setSelectedUser(dataUser.user);
                 login.onChange('');
                 password.onChange('');
-            navigate(WELCOME_ROUTE);
+            navigate(PERSONAL_ACCOUNT_ROUTE);
         } catch (error) {
             setMessage(error.response.data.message);
         }
     }
 
     return (
-        <Container className='d-flex justify-content-center align-items-center' >
-            <Card
-                style={{
-                    width: 500
-                    }}
-                    className='p-5'
+        <Row className='loginFonPage'>
+            <Container className='containerAuth'>
+                <Form
+                    className='formAuth'
                 >
-                <h1 className="h3 mb-3 fw-normal">Please sign in</h1>
-                <div style={{color: 'red'}}>{message}</div>
-                {(login.isDirty && login.minLengthError) && <div className='mt-3' style={{color: 'red'}}>{login.messageError}</div>}
-                <FormControl
-                    className='mt-3'
-                    placeholder='Login'
-                    value={login.value}
-                    onChange={e => login.onChange(e)}
-                    onBlur={e => login.onBlur(e)}
-                />
+                    <h1 style={{ textName: 'italic' }}>Please Sign In</h1>
+                    <div className='errorAuth'>{message}</div>
+                    {(login.isDirty && login.minLengthError) && <div className='errorAuth'>{login.messageError}</div>}
+                    
+                    <Form.Control
+                        className='formControlAuth'
+                        placeholder='Login'
+                        value={login.value}
+                        onChange={e => login.onChange(e)}
+                        onBlur={e => login.onBlur(e)}
+                    />
 
-                {((password.isDirty && password.minLengthError)) && <div className='mt-3' style={{color: 'red'}}>{password.messageError}</div>}
-                <FormControl
-                    className='mt-3'
-                    type="password"
-                    placeholder="Password"
-                    value={password.value}
-                    onChange={e => password.onChange(e)}
-                    onBlur={e => password.onBlur(e)}
-                />
-                <div>Remembre me <input type="checkbox" value="remember-me"/></div>
-                <ModalFooter className='d-flex justify-content-betwwen mt-3 pl-3 pr-3'>
-                    Not an account? <NavLink to={REGISTER_ROUTE}>Register</NavLink>
-                    <button 
-                        disabled={!login.inputValid || !password.inputValid}
-                        className="btn-primary"
-                        variant={'outline-success'}
-                        onClick={click}
-                        style={{
-                            cursor: 'pointer',
-                            borderRadius: '5px',
-                        }}
+                    {((password.isDirty && password.minLengthError)) && <div className='errorAuth'>{password.messageError}</div>}
+                    <Form.Control
+                        className='formControlAuth'
+                        type="password"
+                        placeholder="Password"
+                        value={password.value}
+                        onChange={e => password.onChange(e)}
+                        onBlur={e => password.onBlur(e)}
+                    />
+
+                    <div className='checkboxLogin'>Remembre me <input type="checkbox" value="remember-me"/></div>
+                    <ModalFooter 
+                        className='modalFooterAuth'
                     >
-                        Sign in
-                    </button>
-                </ModalFooter>
-            </Card>
-        </Container>
+                        Not an account? <NavLink to={REGISTER_ROUTE}>Sign Up</NavLink>
+                        <Button 
+                            className='buttonAuth'
+                            variant='outline-primary'
+                            disabled={!login.inputValid || !password.inputValid}
+                            onClick={click}
+                        >
+                            Sign in
+                        </Button>
+                    </ModalFooter>
+                </Form>
+            </Container>
+        </Row>
     );
 }
 

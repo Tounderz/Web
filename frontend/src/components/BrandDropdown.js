@@ -8,10 +8,11 @@ import { Context } from '../index';
 import { BRAND_ROUTE, ERROR_ROUTE, PAGE_FIRST } from '../utils/const';
 
 const BrandDropdown = observer(({brand}) => {
-    const {product} = useContext(Context)
-    const {user} = useContext(Context)
-    const {error} = useContext(Context)
-    const navigate = useNavigate()
+    const {product} = useContext(Context);
+    const {user} = useContext(Context);
+    const {error} = useContext(Context);
+    const {general} = useContext(Context);
+    const navigate = useNavigate();
 
     const getBrand = async () => {
         try {
@@ -24,11 +25,15 @@ const BrandDropdown = observer(({brand}) => {
             const dataCatgories = await fetchCategoriesByBrand(product.selectedCategory);
                 product.setCategoriesByBrand(dataCatgories.categoriesByBrand);
 
-            navigate(BRAND_ROUTE)
+                navigate(BRAND_ROUTE)
         } catch (e) {
             error.setMessageError(e.response.data.message);
-            navigate(ERROR_ROUTE);
-        }  
+                navigate(ERROR_ROUTE);
+        } finally {
+            general.setFieldNames([]);
+            general.setFieldName('');
+            general.setTypeSort('');
+        }
     }
 
     return (

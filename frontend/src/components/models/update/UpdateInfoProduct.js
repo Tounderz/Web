@@ -1,14 +1,14 @@
 import React, { useContext, useState } from 'react';
-import { Form, Modal } from 'react-bootstrap';
+import { Form, Modal, Button } from 'react-bootstrap';
 import { Context } from '../../../index';
 import { updateInfoProduct } from '../../../http/infoProductApi';
 import { useInput } from '../../../http/validateApi';
 
 const UpdateInfoProduct = ({info, show, onHide}) => {
-    const {product} = useContext(Context)
+    const {product} = useContext(Context);
     const title = useInput('', {minLength: {value: 3, name: 'Title'}});
     const descriprion = useInput('', {minLength: {value: 3, name: 'Descriprion'}});
-    const [messageError, setMessageError] = useState('')
+    const [messageError, setMessageError] = useState('');
 
     const click = async () => {
         try {
@@ -54,26 +54,28 @@ const UpdateInfoProduct = ({info, show, onHide}) => {
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <button
-                    className="btn-primary m-2"
+                <Button
+                    variant='outline-primary'
                     style={{
                         cursor: 'pointer',
-                        borderRadius: '5px'
+                        borderRadius: '5px',
+                        margin: '2px'
                     }}
                     onClick={click}
                 >
                     Update
-                </button>
-                <button 
-                    className="btn-danger"
+                </Button>
+                <Button 
+                    variant='outline-danger'
                     style={{
                         cursor: 'pointer',
-                        borderRadius: '5px'
+                        borderRadius: '5px',
+                        margin: '2px'
                     }}
                     onClick={onHide}
                 >
                     Close
-                </button>
+                </Button>
             </Modal.Footer>
         </Modal>
     );

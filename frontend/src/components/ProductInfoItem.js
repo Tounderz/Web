@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Col, Form, InputGroup } from 'react-bootstrap';
+import { Button, Col } from 'react-bootstrap';
 import { removeInfoProduct } from '../http/infoProductApi';
 import { Context } from '../index';
 import UpdateInfoProduct from './models/update/UpdateInfoProduct';
@@ -13,39 +13,49 @@ const ProductInfoItem = ({id, info}) => {
     if (user.user.role !== 'user' && user.user.isAuth) {
         admin = (
             <Col style={{ textAlign: 'right' }}>
-                <button
-                    className="btn-primary" 
-                    variant={'outline-success'} 
+                <Button
+                    variant='outline-primary'
                     onClick={() => {setUpdateInfoVisible(true)}}
                     style={{
                         cursor: 'pointer',
-                        borderRadius: '5px'
+                        borderRadius: '5px',
+                        marginRight: '5px'
                     }}
                 >
                     Update
-                </button>
-                
-                <button
-                    className="btn-danger m-1" 
-                    variant={'outline-success'} 
+                </Button>
+                /
+                <Button
+                    variant='outline-danger'
                     onClick={async () => await removeInfoProduct(info.id)}
                     style={{
                         cursor: 'pointer',
-                        borderRadius: '5px'
+                        borderRadius: '5px',
+                        marginLeft: '5px'
                     }}
                 >
                     Remove
-                </button>
+                </Button>
                 <UpdateInfoProduct info={info} show={updateInfoVisible} onHide={() => setUpdateInfoVisible(false)}/>
             </Col>
         )
     }
 
     return (
-        <InputGroup className="mb-3">
-            <Form.Label style={{'fontSize': '20px'}}>{id}: {info.title} - {info.description}</Form.Label>
-            {admin}
-        </InputGroup>
+        <tr key='id' className="mb-3">
+            <td style={ { width: '50px' } }> 
+                {id} :
+            </td>
+            <td style={ { width: '300px' } }>
+                {info.title}
+            </td>
+            <td style={ { width: '500px' } }>
+            {info.description}
+            </td>
+            <td style={ { width: '200px' } }>
+                {admin}
+            </td>         
+        </tr>
     );
 };
 

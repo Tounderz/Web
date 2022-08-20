@@ -67,7 +67,7 @@ export const updatePassword = async (oldPassword, newPassword, idUser) => {
     const formData = new FormData();
         formData.append('OldPassword', oldPassword);
         formData.append('NewPassword', newPassword);
-        formData.append('IdUser', idUser);
+        formData.append('UserId', idUser);
     const {data} = await createRequest().post('/auth/updatePassword', formData, CONFIG_MULTIPART)
     return data
 }

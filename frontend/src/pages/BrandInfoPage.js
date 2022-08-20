@@ -5,6 +5,7 @@ import { fetchProductsBrand } from '../http/brandApi';
 import { fetchCategoriesByBrand } from '../http/categoryApi';
 import { Context } from '../index';
 import { BRAND_ROUTE, LOCALHOST, NO_IMAGE, PAGE_FIRST } from '../utils/const';
+import '../css/InfoPage.css'
 
 const BrandInfoPage = () => {
     const {product} = useContext(Context)
@@ -31,21 +32,35 @@ const BrandInfoPage = () => {
     }
 
     return (
-        <Row className='px-4'>
-            <Col md={6} className='mt-3'>
-                <h3 className='d-flex justify-content-center align-items-center' style={{color: 'green'}}>Brand: {product.selectedBrand.name}</h3>
-                <Image width={640} height={640} 
+        <Row className='rowInfo'>
+            <Col 
+                md={6} 
+                className='colInfoPage'
+            >
+                <h3 
+                    className='textInfo'
+                >
+                    {product.selectedBrand.name}
+                </h3>
+                <Image
                     key={product.selectedBrand.id}
                     src={img}
-                    className="d-block w-100"
+                    className='imgInfoPage'
                 />
             </Col>
-            <Col md={6} className='mt-3'>
-                <h3 className='d-flex justify-content-center align-items-center' style={{color: 'black'}}>Info</h3>
+            <Col 
+                md={6} 
+                className='colInfoPage'
+            >
+                <h3 
+                    className='textInfo'
+                >
+                    Info
+                </h3>
                 {product.selectedBrand.info}
             </Col>
             <Nav.Link 
-                className='d-flex justify-content-center align-items-center'
+                className='navLinkInfo'
                 onClick={click}
             >
                 Back to {product.selectedBrand.name}

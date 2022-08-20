@@ -1,9 +1,10 @@
 import React, { useContext } from 'react';
-import { Card, Col } from 'react-bootstrap'
+import { Button, Card, Col } from 'react-bootstrap'
 import { Context } from '../index';
 import { useNavigate } from 'react-router';
 import { PICTURE, PRODUCT_ROUTE } from '../utils/const';
 import { fetchInfoProduct } from '../http/infoProductApi';
+import '../css/ProductItem.css'
 
 const ProductItem = ({prod}) => {
     const{product} = useContext(Context)
@@ -26,15 +27,16 @@ const ProductItem = ({prod}) => {
     return (
         <Col 
             md={3} 
-            className='mt-3'
+            className='colProductItem'
+            onClick={() => getProduct()}
         >
-            <Card style={
-                {
-                    maxwidth: '18rem', 
-                }} 
-                border={'light'}
+            <Card 
+                className='cardProductItem'
             >
-                <Card.Img width={250} height={250} src={PICTURE(prod.img)}/>
+                <Card.Img 
+                    className='cardImgProductItem'
+                    src={PICTURE(prod.img)}
+                />
                 <div>
                     <div>
                         Brand: {product.brands.filter(brand => {return brand.id === prod.brandId}).map(brand => brand.name)}
@@ -48,23 +50,18 @@ const ProductItem = ({prod}) => {
                     <div>
                         Price: {prod.price}$
                     </div>
-                    <div className='d-flex justify-content-center align-items-center'>
+                    <div className='availableProductItem'>
                         {available}
                     </div>
                     
                 </div>
-                <button
-                    className="btn-primary" 
-                    variant={'outline-success'} 
+                <Button
+                    variant='outline-primary' 
+                    className='buttonProductItem'
                     onClick={() => getProduct()}
-                    style={{
-                        cursor: 'pointer',
-                        borderRadius: '5px',
-                        marginTop: '15px'
-                    }}
                 >
                     Detail
-                </button>
+                </Button>
             </Card>
         </Col>       
     );

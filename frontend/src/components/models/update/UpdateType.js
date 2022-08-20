@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Form, Modal } from 'react-bootstrap';
+import { Form, Modal, Button } from 'react-bootstrap';
 import { updateType } from '../../../http/typeApi';
 import { useInput } from '../../../http/validateApi';
 import { Context } from '../../../index';
@@ -82,28 +82,29 @@ const UpdateType = ({show, onHide}) => {
                 </Form.Select>
             </Modal.Body>
             <Modal.Footer>
-                <button
-                    className="btn-primary m-2"
-                    variant={'outline-success'}
+                <Button
+                    variant='outline-primary'
                     style={{
                         cursor: 'pointer',
-                        borderRadius: '5px'
+                        borderRadius: '5px',
+                        margin: '2px'
                     }}
+                    disabled={!typeId.inputValid || (!name.inputValid && !categoryId.inputValid)}
                     onClick={click}
                 >
                     Update
-                </button>
-                <button
-                    className="btn-danger"
-                    variant={'outline-success'}
+                </Button>
+                <Button
+                    variant='outline-danger'
                     style={{
                         cursor: 'pointer',
-                        borderRadius: '5px'
+                        borderRadius: '5px',
+                        margin: '2px'
                     }}
                     onClick={onHide}
                 >
                     Close
-                </button>
+                </Button>
             </Modal.Footer>
         </Modal>
     );

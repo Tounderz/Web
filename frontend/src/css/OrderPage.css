@@ -1,0 +1,47 @@
+.orderFonPage {
+    background-image: url(../components/img/orderFon.jpg);
+    background-repeat: no-repeat; 
+    background-size:cover;
+    background-position: center center;
+    background-attachment: fixed;
+    text-align:center;
+    justify-content: center;
+    position:absolute;
+    width:100%;
+    height: 100%;
+    color: #FFF;
+    text-shadow: -2px 0 0 #000000, 0 -2px 0 #000000, 2px 0 0 #000000, 0 2px 0 #000000, -2px -2px 0 #000000, 2px 2px 0 #000000, -2px 2px 0 #000000, 2px -2px 0 #000000;
+}
+
+.containerOrder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cardOrder {
+    padding: 5%;
+    width:50rem;
+}
+
+.errorOrder {
+    margin-top: 2%;
+    color: red;
+}
+
+.formControlOrder {
+    margin-top: 2%;
+}
+
+.modalFooterOrder {
+    display: flex;
+    justify-content:center;
+    margin-top: 2%;
+    padding-left: 3%;
+    padding-right: 3%;
+}
+
+.buttonOrder {
+    border-radius: 5px;
+    cursor: pointer;
+}

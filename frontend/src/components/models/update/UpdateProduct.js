@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Form, Modal } from 'react-bootstrap';
+import { Form, Modal, Button } from 'react-bootstrap';
 import {  formDataProduct, updateProduct } from '../../../http/productApi';
 import { Context } from '../../../index';
 import { useInput } from '../../../http/validateApi';
@@ -15,7 +15,7 @@ const UpdateProduct = ({show, onHide}) => {
     const price = useInput(0, {isPrice: {value: 3, name: 'Price'}});
     const isFavourite = useInput(0, {isNumberId: {name: 'IsFavourite'}})
     const available = useInput(0, {isNumberId: {name: 'Available'}})
-    const img = useInput(null)
+    const img = useInput(null, {isImg: { name: 'Img' }} )
     const [messageError, setMessageError] = useState('')
     
     const update = async () => {
@@ -115,102 +115,110 @@ const UpdateProduct = ({show, onHide}) => {
                         ))}
                 </Form.Select> 
                 {(name.isDirty && name.minLengthError) && <div className='mt-3' style={{color: 'red'}}>{name.messageError}</div>}
-                    <Form.Control
-                        value={name.value}
-                        onChange={e => name.onChange(e)}
-                        onBlur={e => name.onBlur(e)}
-                        className='mt-3'
-                        placeholder={`Update Name: '${product.selectedProduct.name}'`}
-                    />
-                    {(shortDescription.isDirty && shortDescription.minLengthError) && <div className='mt-3' style={{color: 'red'}}>{shortDescription.messageError}</div>}
-                    <Form.Control
-                        value={shortDescription.value}
-                        onChange={e => shortDescription.onChange(e)}
-                        onBlur={e => shortDescription.onBlur(e)}
-                        className='mt-3'
-                        placeholder={`Update Short Description: '${product.selectedProduct.shortDescription}'`}
-                    />
+                <Form.Control
+                    value={name.value}
+                    onChange={e => name.onChange(e)}
+                    onBlur={e => name.onBlur(e)}
+                    className='mt-3'
+                    placeholder={`Update Name: '${product.selectedProduct.name}'`}
+                />
+                {(shortDescription.isDirty && shortDescription.minLengthError) && <div className='mt-3' style={{color: 'red'}}>{shortDescription.messageError}</div>}
+                <Form.Control
+                    value={shortDescription.value}
+                    onChange={e => shortDescription.onChange(e)}
+                    onBlur={e => shortDescription.onBlur(e)}
+                    className='mt-3'
+                    placeholder={`Update Short Description: '${product.selectedProduct.shortDescription}'`}
+                />
                
-                    {(isFavourite.isDirty && isFavourite.isNumberError) && <div className='mt-3' style={{color: 'red'}}>{isFavourite.messageError}</div>}
-                    <Form.Select 
-                        className='mt-3'
-                        onChange={e =>isFavourite.onChange(e)}
-                        onBlur={e => isFavourite.onBlur(e)}
+                {(isFavourite.isDirty && isFavourite.isNumberError) && <div className='mt-3' style={{color: 'red'}}>{isFavourite.messageError}</div>}
+                <Form.Select 
+                    className='mt-3'
+                    onChange={e =>isFavourite.onChange(e)}
+                    onBlur={e => isFavourite.onBlur(e)}
+                >
+                    <option 
+                        key={0}
+                        value={0}
                     >
-                        <option 
-                            key={0}
-                            value={0}
+                        IsFavourite
+                    </option>
+                    {TRUE_AND_FALSE.map((item, id) => (
+                        <option
+                            key={id + 1}
+                            value={id + 1}
                         >
-                            IsFavourite
+                            {item}
                         </option>
-                        {TRUE_AND_FALSE.map((item, id) => (
-                            <option
-                                key={id + 1}
-                                value={id + 1}
-                            >
-                                {item}
-                            </option>
-                        ))}
-                    </Form.Select>
-                    {(available.isDirty && available.isNumberError) && <div className='mt-3' style={{color: 'red'}}>{available.messageError}</div>}
-                    <Form.Select 
-                        className='mt-3'
-                        onChange={e =>available.onChange(e)}
-                        onBlur={e => available.onBlur(e)}
+                    ))}
+                </Form.Select>
+                {(available.isDirty && available.isNumberError) && <div className='mt-3' style={{color: 'red'}}>{available.messageError}</div>}
+                <Form.Select 
+                    className='mt-3'
+                    onChange={e =>available.onChange(e)}
+                    onBlur={e => available.onBlur(e)}
+                >
+                    <option 
+                        key={0}
+                        value={0}
                     >
-                        <option 
-                            key={0}
-                            value={0}
+                        Available
+                    </option>
+                    {TRUE_AND_FALSE.map((item, id) => (
+                        <option
+                            key={id + 1}
+                            value={id + 1}
                         >
-                            Available
+                            {item}
                         </option>
-                        {TRUE_AND_FALSE.map((item, id) => (
-                            <option
-                                key={id + 1}
-                                value={id + 1}
-                            >
-                                {item}
-                            </option>
-                        ))}
-                    </Form.Select>
-                    {(price.isDirty && price.priceError) && <div className='mt-3' style={{color: 'red'}}>{price.messageError}</div>}
-                    <Form.Control
-                        value={price.value}
-                        onChange={e => price.onChange(e)}
-                        onBlur={e => price.onBlur(e)}
-                        className='mt-3'
-                        placeholder='Enter the cost of the product'
-                        type='number'
-                    />
+                    ))}
+                </Form.Select>
+                {(price.isDirty && price.priceError) && <div className='mt-3' style={{color: 'red'}}>{price.messageError}</div>}
+                <Form.Control
+                    value={price.value}
+                    onChange={e => price.onChange(e)}
+                    onBlur={e => price.onBlur(e)}
+                    className='mt-3'
+                    placeholder='Enter the cost of the product'
+                    type='number'
+                />
+                {(img.isDirty && img.imgError) && <div className='mt-3' style={{color: 'red'}}>{img.messageError}</div>}
                 <Form.Control
                     className='mt-3'
                     type='file'
                     onChange={e => img.saveImg(e)}
+                    onBlur={e => img.onBlur(e)}
                 />
             </Form>
         </Modal.Body>
         <Modal.Footer>
-            <button
-                className="btn-primary m-2"
+            <Button
+                variant='outline-primary'
                 style={{
                     cursor: 'pointer',
-                    borderRadius: '5px'
+                    borderRadius: '5px',
+                    margin: '2px'
                 }}
-                disabled={!name.inputValid && !categoryId.inputValid && !typeId.inputValid && !brandId.inputValid && !price.inputValid && !isFavourite.inputValid && !available.inputValid && !shortDescription.inputValid}
+                disabled={
+                    !name.inputValid && !categoryId.inputValid && !typeId.inputValid && 
+                    !brandId.inputValid && !price.inputValid && !isFavourite.inputValid && 
+                    !available.inputValid && !shortDescription.inputValid && !img.inputValid
+                }
                 onClick={update}
             >
                 Update
-            </button>
-            <button 
-                className="btn-danger"
+            </Button>
+            <Button 
+                variant='outline-danger'
                 style={{
                     cursor: 'pointer',
-                    borderRadius: '5px'
+                    borderRadius: '5px',
+                    margin: '2px'
                 }}
                 onClick={onHide}
             >
                 Close
-            </button>
+            </Button>
         </Modal.Footer>
     </Modal>
     );

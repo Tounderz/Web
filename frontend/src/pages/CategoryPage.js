@@ -1,15 +1,17 @@
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useState } from 'react';
-import { Card, Col, ListGroup, Pagination, Row } from 'react-bootstrap';
+import { Button, Card, Col, ListGroup, Pagination, Row } from 'react-bootstrap';
 import { Context } from '../index';
 import ProductItem from '../components/ProductItem';
 import TypeItem from '../components/TypeItem';
 import { fetchProductsCategory, fetchProductsCategoryByBrand } from '../http/categoryApi';
-import { BRANDS_BY_CATEGORY_ROUTE, CATEGORY_INFO_ROUTE, ERROR_ROUTE, PAGE_FIRST, ZERO } from '../utils/const';
+import { BRANDS_BY_CATEGORY_ROUTE, CATEGORY_INFO_ROUTE, ERROR_ROUTE, PAGE_FIRST } from '../utils/const';
 import Multiselect from 'multiselect-react-dropdown';
 import { useNavigate } from 'react-router';
-import { fetchProductsType } from '../http/typeApi';
+import { fetchTypesByBrand } from '../http/typeApi';
 import { useInput } from '../http/validateApi';
+import '../css/CategoryPage.css'
+import { SvgSelector } from '../components/Svg/SvgSelector';
 
 const CategoryPage = observer(() => {
     const {product} = useContext(Context);
@@ -35,9 +37,10 @@ const CategoryPage = observer(() => {
             const dataProducts = await fetchProductsCategoryByBrand(product.selectedCategory.id, brandsId.value, PAGE_FIRST);
                 product.setProducts(dataProducts.products);
                 product.setCountPages(dataProducts.countPages);
+                product.setSelectedType(dataProducts.typesId);
 
-            const dataType = await fetchProductsType(ZERO, brandsId.value, PAGE_FIRST);
-                product.setTypes(dataType.types);
+            const dataTypes = await fetchTypesByBrand(product.selectedType);
+                product.setTypes(dataTypes.typesByBrand)
 
             navigate(BRANDS_BY_CATEGORY_ROUTE)
         } catch (e) {
@@ -57,21 +60,17 @@ const CategoryPage = observer(() => {
     }
 
     return (
-        <Row className='px-4'>
-            <Col md={2}>
+        <Row className='categoryFonPage'>
+            <Col 
+                className='colMultiCategory'
+                md={2}
+            >
                 <Card
-                    style={{
-                        maxwidth: '18rem',
-                    }}
-                    border={'light'}
+                    className='cardMultiCategory'
                 >
                     <Multiselect
-                        style={{
-                            borderRadius: '10px',
-                            background: 'red',
-                        }}
+                        className='multiselectCategory'
                         placeholder='Brands:'
-                        className='mt-1'
                         displayValue='name'
                         value='id'
                         options={product.brandsByCategory}
@@ -80,61 +79,61 @@ const CategoryPage = observer(() => {
                         onBlur={e => brandsId.onBlur(e)}
                         showCheckbox
                     />
-                    <button
-                        className='btn-primary mt-1'
-                        variant={'outline-success'}
-                        onClick={viewBrand}
-                        style={{
-                            cursor: 'pointer',
-                            borderRadius: '5px'
-                        }}
+                    <Button
+                        className='buttonMultiCategory'
+                        variant='outline-primary'
                         disabled={brandsId.value.length === 0}
+                        onClick={viewBrand}
                     >
                         View Brand
-                    </button>
+                    </Button>
                 </Card>
-                <Row className='mt-3'>
-                    <ListGroup>
+                <Row
+                    className='rowListGroupCategory'
+                >
+                    <ListGroup className='listGroupCategory'>
                         <ListGroup.Item 
-                            className='d-flex justify-content-center btn-success'
                             disabled
                             key='id'
                             style={{ 
-                                color: 'gray',
+                                borderColor: 'white',
                                 borderRadius: '5px',
+                                background:'none',
+                                color: 'white',
                             }}
                         >
                             Types:
-                        </ListGroup.Item>
+                        </ListGroup.Item >
                         {product.types.map(type => 
                             <TypeItem key={type.id} type={type} brandsId={brandsId.value}/>
                         )}
                     </ListGroup >
                 </Row>
             </Col>
-            <Col md={9}>
+            <Col md={8}>
                 <Row>
                     {product.products.map(item => (
                         <ProductItem key={item.id} prod={item}/>
                     ))}
                 </Row>
             </Col>
-            <Col md={1}>
-                <button
-                    className='btn-success mt-1'
-                    variant={'outline-success'}
+            <Col md={2}>
+                <Button
+                    className='buttonInfoCategory'
+                    // variant='outline-info'
+                    variant='link'
                     onClick={infoCategory}
-                    style={{
-                        cursor: 'pointer',
-                        borderRadius: '5px',
-                        maxwidth: '18rem', 
-                    }}
                 >
-                    Info Category: {product.selectedCategory.name}
-                </button>
+                    {/* Info */}
+                    {/* Info Category: {product.selectedCategory.name} */}
+                    <SvgSelector id='info'/>
+                </Button>
             </Col>
             <Row>
-                <Pagination className='d-flex justify-content-center align-items-center mt-3' size='sm'>
+                <Pagination 
+                    className='pagination'
+                    size='sm'
+                >
                     {pages.map(item =>
                         <Pagination.Item
                             key={item}

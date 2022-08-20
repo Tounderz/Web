@@ -1,16 +1,21 @@
 import React, { useContext, useState } from 'react';
-import { Container, Nav, Pagination, Row, Table } from "react-bootstrap";
+import { Button, Col, Nav, Pagination, Row, Table } from "react-bootstrap";
 import { Context } from '../index';
 import { fetchProduct, fetchProducts, removeProduct } from '../http/productApi';
 import SearchForm from '../components/SearchForm';
-import { ADMIN_ROUTE, PAGE_FIRST } from "../utils/const";
+import { ADMIN_ROUTE, FIELD_NAMES_PRODUCTS, PAGE_FIRST } from "../utils/const";
 import UpdateProduct from '../components/models/update/UpdateProduct';
 import { observer } from 'mobx-react-lite';
 import { useNavigate } from 'react-router';
+import SortForm from '../components/SortForm';
+import { sortProducts } from '../http/sortApi';
+import '../css/Table.css'
 
 const ProductsListPage = observer(() => {
     const {product} = useContext(Context);
+    const {general} = useContext(Context);
     const [productUpdateVisible, setProductUpdateVisible] = useState(false);
+    const [sortVisible, setSortVisible] = useState(false);
     const navigate = useNavigate();
     const pages = [];
     const [page, setPage] = useState(PAGE_FIRST);
@@ -28,9 +33,15 @@ const ProductsListPage = observer(() => {
     }
 
     const paginationClick = async (item) => {
-        const data = await fetchProducts(item);
-            product.setProducts(data.products);
-            setPage(item);
+        if (general.typeSort !== '' || general.fieldName !== '') {
+            const data = await sortProducts(general.fieldName, general.typeSort, item);
+                product.setProducts(data.products);
+                setPage(item);
+        } else {
+            const data = await fetchProducts(item);
+                product.setProducts(data.products);
+                setPage(item);
+        }
     };
 
 
@@ -39,16 +50,45 @@ const ProductsListPage = observer(() => {
             pages.push(index + 1);
         }
     }
-    
 
+    const sortClick = () => {
+        general.setFieldNames(FIELD_NAMES_PRODUCTS);
+            setSortVisible(true);
+    }
+
+    const clickAdmin = () => {
+        general.setFieldNames([]);
+        general.setFieldName('');
+        general.setTypeSort('');
+        navigate(ADMIN_ROUTE);
+    }
+    
     return (
-        <Container className="table-responsive mt-5">
-            <SearchForm key='id' parameter='productAdmin'/>
+        <Row className='tableFonPage'>
+        <Col 
+            md={11}
+            className='containerTable'
+        >
+            <Row>
+                <Col md={9}>
+                    <SearchForm 
+                        key='id'
+                        parameter='productAdmin'
+                    />
+                </Col>
+                <Col md={3}>
+                    <Button 
+                        className='buttonSortTable'
+                        variant='outline-primary'
+                        onClick={sortClick}
+                    >
+                        Sort
+                    </Button>
+                </Col>
+            </Row>
             <Table
-                className='table table-bordered border-dark'
-                style={{
-                    marginTop: '15px'
-                }}
+                className='tableTable'
+                size='sm'
             >
                 <thead>
                     <tr key="id">
@@ -76,29 +116,22 @@ const ProductsListPage = observer(() => {
                             <th scope="col">{prod.price}</th>
                             <th scope="col">{prod.available}</th>
                             <th scope="col">{prod.countView}</th>
-                            <td>
-                                <button
-                                    className="btn-primary m-2"
-                                    variant={"outline-success"}
-                                    style={{
-                                        cursor: "pointer",
-                                        borderRadius: "5px",
-                                    }}
+                            <td className='buttonsTable'>
+                                <Button
+                                    className='buttonTable'
+                                    variant='outline-primary'
                                     onClick={() => productUpdate(prod.id)}
                                 >
                                     Update
-                                </button>
-                                <button
-                                    className="btn-danger "
-                                    variant={"outline-success"}
-                                    style={{
-                                        cursor: "pointer",
-                                        borderRadius: "5px",
-                                    }}
+                                </Button>
+                                /
+                                <Button
+                                    className='buttonTable'
+                                    variant='outline-danger'
                                     onClick={() => productRemove(prod.id)}
                                 >
                                     Remove
-                                </button>
+                                </Button>
                             </td>
                         </tr>
                      ))}
@@ -106,7 +139,7 @@ const ProductsListPage = observer(() => {
             </Table>
             <Row>
                 <Pagination
-                    className='d-flex justify-content-center align-items-center mt-3'
+                    className='pagination'
                     size="sm"
                 >
                     {pages.map((item) => (
@@ -119,10 +152,12 @@ const ProductsListPage = observer(() => {
                         </Pagination.Item>
                     ))}
                 </Pagination>
-                <Nav.Link onClick={() => navigate(ADMIN_ROUTE)}>Admin panel</Nav.Link>
+                <Nav.Link onClick={clickAdmin}>Admin panel</Nav.Link>
             </Row>
             <UpdateProduct show={productUpdateVisible} onHide={() => setProductUpdateVisible(false)}/>
-        </Container>
+            <SortForm show={sortVisible} onHide={() => setSortVisible(false)} parameter='product'/>
+        </Col>
+        </Row>
     );
 });
 

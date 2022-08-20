@@ -9,6 +9,7 @@ namespace WebLibrary.ConstParameters
     public static class FormFields
     {
         public const string ID = "Id";
+        public const string MODEL_ID = "ModelId";
         public const string NAME = "Name";
         public const string CATEGORY_ID = "CategoryId";
         public const string CATEGORIES_ID = "CategoriesId";

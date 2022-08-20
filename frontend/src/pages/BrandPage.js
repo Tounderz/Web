@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite';
 import Multiselect from 'multiselect-react-dropdown';
 import React, { useContext, useState } from 'react';
-import { Card, Col, Pagination, Row } from 'react-bootstrap';
+import { Button, Card, Col, Pagination, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router';
 import ProductItem from '../components/ProductItem';
 import { fetchProductsBrand, fetchProductsBrandByCategory } from '../http/brandApi';
@@ -9,6 +9,8 @@ import { fetchTypesByBrand } from '../http/typeApi';
 import { useInput } from '../http/validateApi';
 import { Context } from '../index';
 import { BRAND_INFO_ROUTE, CATEGORIES_BY_BRAND_ROUTE, ERROR_ROUTE, PAGE_FIRST } from '../utils/const';
+import '../css/BrandPage.css'
+import { SvgSelector } from '../components/Svg/SvgSelector';
 
 const BrandPage = observer(() => {
     const {product} = useContext(Context)
@@ -59,70 +61,58 @@ const BrandPage = observer(() => {
     }
 
     return (
-        <Row className='px-4'>          
+        <Row className='brandFonPage'>         
             <Col 
                 md={2}
-                className='mt-3'
+                className='colMultiBrand'
             >
-            <Card
-                style={{
-                    maxwidth: '18rem', 
-                }} 
-                border={'light'}
-            >
-                <Multiselect
-                    style={{ 
-                        borderRadius: '10px',
-                        background: 'red',
-                    }}
-                    placeholder='Categories:'
-                    className='mt-1'
-                    displayValue='name'
-                    value='id'
-                    options={product.categoriesByBrand}
-                    onSelect={e => categoriesId.onSelect(e)}
-                    onRemove={e => categoriesId.onRemove(e)}
-                    onBlur={e => categoriesId.onBlur(e)}
-                    showCheckbox
-                />
-                    <button
-                        className="btn-primary mt-1"
-                        variant={'outline-success'}
-                        onClick={viewCategory}
-                        style={{
-                            cursor: 'pointer',
-                            borderRadius: '5px'
-                        }}
+                <Card
+                    className='cardBrand'
+                >
+                    <Multiselect
+                        className='multiBrand'
+                        placeholder='Categories:'
+                        displayValue='name'
+                        value='id'
+                        options={product.categoriesByBrand}
+                        onSelect={e => categoriesId.onSelect(e)}
+                        onRemove={e => categoriesId.onRemove(e)}
+                        onBlur={e => categoriesId.onBlur(e)}
+                        showCheckbox
+                    />
+                    <Button
+                        className='buttonBrand'
+                        variant='outline-primary'
                         disabled={categoriesId.value.length === 0}
+                        onClick={viewCategory}
                     >
                         View Category
-                    </button>
+                    </Button>
                 </Card>
             </Col>
-            <Col md={9}>
-                {/* <h3>{product.selectedBrand.name}</h3> */}
+            <Col 
+                md={8}
+            >
                 <Row>
                     {product.products.map(item => (
                         <ProductItem key={item.id} prod={item}/>
                     ))}
                 </Row>
             </Col>
-            <Col md={1}>
-                <button
-                    className="btn-success mt-1"
-                    variant={'outline-success'}
+            <Col md={2}>
+                <Button
+                    className='buttonInfoBrand'
+                    variant='link'
                     onClick={infoBrand}
-                    style={{
-                        cursor: 'pointer',
-                        borderRadius: '5px',
-                        maxwidth: '18rem', 
-                    }}
                 >
-                    Info Brand: {product.selectedBrand.name}
-                </button>
+                    <SvgSelector id='info'/>
+                    {/* Info */}
+                    {/* Info Brand: {product.selectedBrand.name} */}
+                </Button>
             </Col>
+            
             <Row>
-                <Pagination className='d-flex justify-content-center align-items-center mt-3' size='sm'>
+                <Pagination className='pagination' size='sm'>
                     {pages.map(item =>
                         <Pagination.Item
                             key={item}
@@ -133,7 +123,7 @@ const BrandPage = observer(() => {
                         </Pagination.Item>
                     )}
                 </Pagination>
-            </Row>          
+            </Row> 
         </Row>
     );
 });

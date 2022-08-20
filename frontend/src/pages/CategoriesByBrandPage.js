@@ -29,18 +29,18 @@ const CategoriesByBrandPage = () => {
     }
 
     return (
-        <Row className='px-4'>
-            <h3 className='d-flex justify-content-center align-items-center'>{product.selectedBrand.name}</h3>
-            <Col md={2} className='mt-3'>
-                <ListGroup>
+        <Row className='categoryFonPage'>
+            <Col md={2} className='colCategoriesByBrand'>
+                <ListGroup className='listGroupCategory'>
                     <ListGroup.Item 
-                        className='d-flex justify-content-center btn-success'
+                        style={{ 
+                            borderColor: 'white',
+                            borderRadius: '5px',
+                            background:'none',
+                            color: 'white',
+                        }}
                         disabled
                         key='id'
-                        style={{ 
-                            color: 'gray',
-                            borderRadius: '5px',
-                        }}
                     >
                         Types:
                     </ListGroup.Item>
@@ -57,7 +57,7 @@ const CategoriesByBrandPage = () => {
                 </Row>
             </Col>
             <Row>
-                <Pagination className='d-flex justify-content-center align-items-center mt-3' size='sm'>
+                <Pagination className='pagination' size='sm'>
                     {pages.map(item =>
                         <Pagination.Item
                             key={item}
