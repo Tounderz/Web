@@ -9,8 +9,9 @@ import { PAGE_FIRST, PRODUCTS_LIST_ROUTE, USERLIST_ROUTE } from '../utils/const'
 import { fetchUsers } from '../http/userApi';
 import { fetchProducts } from '../http/productApi';
 import '../css/AdminPage.css'
+import { observer } from 'mobx-react-lite';
 
-const Admin = () => {
+const Admin = observer(() => {
     const {user} = useContext(Context);
     const {product} = useContext(Context);
     const {page} = useContext(Context);
@@ -22,31 +23,33 @@ const Admin = () => {
     const [remove, setRemove] = useState(false);
     const navigate = useNavigate();
 
+    const cleanSearchAndSort = () => {
+        search.setSearchBy('');
+        search.setSelectedSearchParameter('');
+        sort.setFieldNames([]);
+        sort.setFieldName('');
+        sort.setTypeSort('');
+        error.setMessageError('');
+    }
+
+    const pageParameters = (countPages) => {
+        page.setCurrentPage(PAGE_FIRST);
+        page.setCountPages(countPages);
+    }
+
     const userList = async () => {
         const data = await fetchUsers(PAGE_FIRST);
             user.setUsersList(data.usersList);
-            page.setCurrentPage(PAGE_FIRST);
-            page.setCountPages(data.countPages);
-            search.setSearchBy('');
-            search.setSelectedSearchParameter('');
-            sort.setFieldNames([]);
-            sort.setFieldName('');
-            sort.setTypeSort('');
-            error.setMessageError('');
+            pageParameters(data.countPages);
+            cleanSearchAndSort();
             navigate(USERLIST_ROUTE)
     }
 
     const productList = async () => {
         const data = await fetchProducts(PAGE_FIRST);
             product.setProducts(data.products);
-            page.setCurrentPage(PAGE_FIRST);
-            page.setCountPages(data.countPages);
-            search.setSearchBy('');
-            search.setSelectedSearchParameter('');
-            sort.setFieldNames([]);
-            sort.setFieldName('');
-            sort.setTypeSort('');
-            error.setMessageError('');
+            pageParameters(data.countPages);
+            cleanSearchAndSort();
             navigate(PRODUCTS_LIST_ROUTE)
     }
 
@@ -79,6 +82,6 @@ const Admin = () => {
             </Row>
         </Row>
     )
-};
+});
 
 export default Admin;

@@ -15,7 +15,6 @@ const CategoryItem = observer(({categoryItem}) => {
     const {brand} = useContext(Context);
     const {type} = useContext(Context);
     const {user} = useContext(Context);
-    const {sort} = useContext(Context);
     const {page} = useContext(Context);
     const {error} = useContext(Context);
     const navigate = useNavigate();
@@ -39,10 +38,6 @@ const CategoryItem = observer(({categoryItem}) => {
         } catch (e) {
             error.setMessageError(e.message)
             navigate(ERROR_ROUTE)
-        } finally {
-            sort.setFieldNames([]);
-            sort.setFieldName('');
-            sort.setTypeSort('');
         }
     }
 

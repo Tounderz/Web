@@ -11,7 +11,6 @@ const SearchForm = observer(() => {
     const {product} = useContext(Context);
     const {search} = useContext(Context);
     const {error} = useContext(Context);
-    const {sort} = useContext(Context);
     const {page} = useContext(Context);
     const navigate = useNavigate();
     const searchParameter = useInput('', {minLength: {value: 1, name: 'Search'}});
@@ -29,9 +28,6 @@ const SearchForm = observer(() => {
                 navigate(ERROR_ROUTE);
         } finally {
             searchParameter.onChange('');
-            sort.setFieldNames([]);
-            sort.setFieldName('');
-            sort.setTypeSort('');
         }
     }
 

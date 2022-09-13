@@ -26,20 +26,12 @@ const UserBar = observer(() => {
     const {brand} = useContext(Context);
     const {category} = useContext(Context);
     const {type} = useContext(Context);
-    const {sort} = useContext(Context);
     const navigate = useNavigate();
-
-    const sortClear = () => {
-        sort.setFieldNames([]);
-        sort.setFieldName('');
-        sort.setTypeSort('');
-    }
 
     const logOut = async () => {
         const data = await logout();
             user.setUser(data.user);
             localStorage.removeItem('accessToken');
-            sortClear();
 
             navigate(SHOP_ROUTE);
     }
@@ -49,7 +41,7 @@ const UserBar = observer(() => {
             cart.setBaskets(data.baskets);
             cart.setTotalAmount(data.sum);
             page.setCountPages(data.countPages);
-            sortClear();
+
             navigate(BASKET_ROUTE);
     }
 
@@ -66,7 +58,6 @@ const UserBar = observer(() => {
             category.setSelectedCategory({})
             type.setSelectedType({})
             product.setSelectedProduct({})
-            sortClear();
 
             navigate(ADMIN_ROUTE);
     }
@@ -74,7 +65,6 @@ const UserBar = observer(() => {
     const cabinet = async () => {
         const data = await fetchUser(user.user.login);
             user.setSelectedUser(data.user);
-            sortClear();
 
         navigate(PERSONAL_ACCOUNT_ROUTE);
     }
@@ -86,14 +76,12 @@ const UserBar = observer(() => {
                 <Link
                     className='sign navbar-brand'
                     to={LOGIN_ROUTE}
-                    onClick={sortClear}
                 >
                     Sign In
                 </Link>
                 <Link
                     className='sign navbar-brand'
                     to={REGISTER_ROUTE}
-                    onClick={sortClear}
                 >
                     Sign Up
                 </Link>

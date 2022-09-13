@@ -3,7 +3,7 @@ import { Button, Form, Modal } from 'react-bootstrap';
 import { Context } from '../index';
 import { sortProducts, sortUsers } from '../http/sortApi';
 import { useInput } from '../http/validateApi';
-import { ERROR_ROUTE, PAGE_FIRST, PRODUCTS_LIST_ROUTE, TYPES_SORT, USERLIST_ROUTE } from '../utils/const';
+import { PAGE_FIRST, PRODUCTS_LIST_ROUTE, TYPES_SORT, USERLIST_ROUTE } from '../utils/const';
 import { useNavigate } from 'react-router';
 
 const SortForm = ({show, onHide, parameter}) => {
@@ -12,45 +12,68 @@ const SortForm = ({show, onHide, parameter}) => {
     const {user} = useContext(Context);
     const {sort} = useContext(Context);
     const {page} = useContext(Context);
+    const {search} = useContext(Context);
     const navigate = useNavigate();
     const fieldName = useInput('', {minLength: {value: 2, name: 'Field Name'}});
     const typeSort = useInput('', {minLength: {value: 2, name: 'Type Sort'}});
 
     const sortClick = async () => {
-        try {
-            let data;
+            cleanSearch();
             switch(parameter) {
                 case 'product':
-                    data = await sortProducts(fieldName.value, typeSort.value, PAGE_FIRST);
-                        product.setProducts(data.products);
-                        page.setCurrentPage(PAGE_FIRST);
-                        page.setCountPages(data.countPages);
-                        sort.setFieldName(fieldName.value);
-                        sort.setTypeSort(typeSort.value);
-                        onHide();
-                        
+                    try {
+                        const data = await sortProducts(fieldName.value, typeSort.value, PAGE_FIRST);
+                            product.setProducts(data.products);
+                            page.setCurrentPage(PAGE_FIRST);
+                            page.setCountPages(data.countPages);
+                            sort.setFieldName(fieldName.value);
+                            sort.setTypeSort(typeSort.value);
+                            onHide();
+                    } catch (e) {
+                        cleaningUpDueToAnErrorProduct();
+                        error.setMessageError(e.message);
+                    }
                         navigate(PRODUCTS_LIST_ROUTE);
                     break;
                 case 'user':
-                    data = await sortUsers(fieldName.value, typeSort.value, PAGE_FIRST);
-                        user.setUsersList(data.usersList);
-                        page.setCurrentPage(PAGE_FIRST);
-                        page.setCountPages(data.countPages);
-                        sort.setFieldName(fieldName.value);
-                        sort.setTypeSort(typeSort.value);
-                        onHide();
-
+                    try {
+                        const data = await sortUsers(fieldName.value, typeSort.value, PAGE_FIRST);
+                            user.setUsersList(data.usersList);
+                            page.setCurrentPage(PAGE_FIRST);
+                            page.setCountPages(data.countPages);
+                            sort.setFieldName(fieldName.value);
+                            sort.setTypeSort(typeSort.value);
+                            onHide();
+                    } catch (e) {
+                        cleaningUpDueToAnErrorUser();
+                        error.setMessageError(e.message);
+                    }
                         navigate(USERLIST_ROUTE);
                     break;
                 default:
                     break;
             }
-        } catch (e) {
-            error.setMessageError(e.message);
-            navigate(ERROR_ROUTE)
-        }
+        
     }
 
+    const cleaningUpDueToAnErrorProduct = () => {
+        product.setProducts([]);
+        page.setCurrentPage([]);
+        page.setCountPages(0);
+        onHide();
+    }
+
+    const cleaningUpDueToAnErrorUser = () => {
+        user.setUsersList([]);
+        page.setCurrentPage([]);
+        page.setCountPages(0);
+        onHide();
+    }
+
+    const cleanSearch = () => {
+        search.setSearchBy('');
+        search.setSelectedSearchParameter('');
+    }
     return (
         <Modal
             show={show}

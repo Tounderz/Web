@@ -13,14 +13,10 @@ import '../css/NavBar.css'
 const NavBar = observer(() => {
     const {category} = useContext(Context);
     const {brand} = useContext(Context);
-    const {sort} = useContext(Context);
 
     const onClick = () => {
         category.setSelectedCategory({});
         brand.setSelectedBrand({});
-        sort.setFieldNames([]);
-        sort.setFieldName('');
-        sort.setTypeSort('');
     }
 
     return (
