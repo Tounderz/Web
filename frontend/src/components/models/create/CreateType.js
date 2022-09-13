@@ -3,9 +3,10 @@ import { Form, Modal, Button } from 'react-bootstrap';
 import { Context } from '../../../index';
 import { createType } from '../../../http/typeApi';
 import { useInput } from '../../../http/validateApi';
+import '../../../css/create/CreateType.css'
 
 const CreateType = ({show, onHide}) => {
-    const {product} = useContext(Context)
+    const {category} = useContext(Context);
     const name = useInput('', {minLength: {value: 3, name: 'Name'}});
     const categoryId = useInput(0, {isNumberId: {name: 'Category'}});
     const [messageError, setMessageError] = useState('')
@@ -16,8 +17,8 @@ const CreateType = ({show, onHide}) => {
                 name.onChange('');
                 categoryId.onChange(0);
                 onHide();
-        } catch (error) {
-            setMessageError(error.response.data.message)
+        } catch (e) {
+            setMessageError(e.message)
         }
     }
 
@@ -28,15 +29,21 @@ const CreateType = ({show, onHide}) => {
             centered
         >
             <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
+                <Modal.Title 
+                    id='contained-modal-title-vcenter'
+                >
                     New Type
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <div style={{color: 'red'}}>{messageError}</div>
                 <Form>
-                    {(name.isDirty && name.minLengthError) && <div className='mt-3' style={{color: 'red'}}>{name.messageError}</div>}
+                    {(name.isDirty && name.minLengthError) && 
+                        <div className='error-message'>
+                            {name.messageError}
+                        </div>}
                     <Form.Control
+                        className='form-control-create-type'
                         value={name.value}
                         onChange={e => name.onChange(e)}
                         onBlur={e => name.onBlur(e)}
@@ -44,16 +51,19 @@ const CreateType = ({show, onHide}) => {
                     />
                 </Form>
                 
-                {(categoryId.isDirty && categoryId.isNumberError) && <div className='mt-3' style={{color: 'red'}}>{categoryId.messageError}</div>}
+                {(categoryId.isDirty && categoryId.isNumberError) && 
+                    <div className='error-message'>
+                        {categoryId.messageError}
+                    </div>}
                 <Form.Select 
-                    className='mt-3' 
+                    className='form-control-create-type' 
                     onChange={e => categoryId.onChange(e)}
                     onBlur={e => categoryId.onBlur(e)}
                 >
                     <option value={0}>
                         Select a category
                     </option>
-                    {product.categories.map(item => (
+                    {category.categories.map(item => (
                         <option
                             key={item.id}
                             value={item.id}
@@ -65,24 +75,16 @@ const CreateType = ({show, onHide}) => {
             </Modal.Body>
             <Modal.Footer>
                 <Button
+                    className='button-create-type'
                     variant='outline-primary'
-                    style={{
-                        cursor: 'pointer',
-                        borderRadius: '5px',
-                        margin: '2px'
-                    }}
                     disabled={!name.inputValid || !categoryId.inputValid}
                     onClick={click}
                 >
                     Create
                 </Button>
                 <Button
+                    className='button-create-type'
                     variant='outline-danger'
-                    style={{
-                        cursor: 'pointer',
-                        borderRadius: '5px',
-                        margin: '2px'
-                    }}
                     onClick={onHide}
                 >
                     Close

@@ -70,22 +70,6 @@
     fill: red;
   }
 
-  /* .buttonInfoCategory {
-    cursor: pointer;
-    border-radius: 5px;
-    background: none;
-    border: none;
-    max-width: 100%;
-    margin-top: 15px
-  } */
-
-  .pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 3px;
-  }
-
   .colCategoriesByBrand {
     margin-top: 1%;
     margin-left: 1%;

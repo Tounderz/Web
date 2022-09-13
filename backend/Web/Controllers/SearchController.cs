@@ -41,21 +41,7 @@ namespace Web.Controllers
         [HttpPost(ConstSearch.HTTP_POST_SEARCH_RESULT_USERS)]
         public IActionResult SearchUsers(SearchDtoModel model)
         {
-            var users = new List<UserModel>();
-            if (model.Criteria == FormFields.ID)
-            {
-                var user = _search.ResaultSearchUserByIdAdmin(int.Parse(model.Parameter));
-                if (user == null)
-                {
-                    return BadRequest(new { message = ConstSearch.MESSAGE_ERROR });
-                }
-
-                users.Add(user);
-            }
-            else
-            {
-                users = _search.ResaultSearchUsers(model.Parameter);
-            }
+            var users = _search.ResaultSearchUsers(model);
 
             if (users == null || users.Count < 1)
             {
@@ -70,30 +56,16 @@ namespace Web.Controllers
         [HttpPost(ConstSearch.HTTP_POST_SEARCH_RESULT_PRODUCT)]
         public IActionResult SearchProductAdmin(SearchDtoModel model)
         {
-                var products = new List<ProductModel>();
-                if (model.Criteria == FormFields.ID)
-                {
-                    var user = _search.ResaultSearchProductByIdAdmin(int.Parse(model.Parameter));
-                    if (user == null)
-                    {
-                        return BadRequest(new { message = ConstSearch.MESSAGE_ERROR });
-                    }
+            var products = _search.ResaultSearchProductByAdmin(model);
 
-                    products.Add(user);
-                }
-                else
-                {
-                    products = _search.ResaultSearchProductAdmin(model.Parameter);
-                }
+            if (products == null || products.Count < 1)
+            {
+                return BadRequest(new { message = ConstSearch.MESSAGE_ERROR });
+            }
 
-                if (products == null || products.Count < 1)
-                {
-                    return BadRequest(new { message = ConstSearch.MESSAGE_ERROR });
-                }
-
-                var list = _search.GetProductsList(products, model.Page);
+            var list = _search.GetProductsList(products, model.Page);
                 
-                return Ok(new { products = list.products, countPages = list.countPages });
+            return Ok(new { products = list.products, countPages = list.countPages });
         }
     }
 }

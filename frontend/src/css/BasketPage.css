@@ -43,18 +43,11 @@
     justify-content: center; 
 }
 
-.pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 3px;
-  }
-
-  .buttonBasket {
+.buttonBasket {
     cursor: pointer;
     border-radius: 5px;
-  }
+}
 
-  .navLinkBasket {
+.navLinkBasket {
     margin-right: 20%;
-  }
+}

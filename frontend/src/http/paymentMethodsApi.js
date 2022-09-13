@@ -1,8 +1,7 @@
-import axiosApi from './axiosApi';
 import { createRequest } from './interceptor';
 
 export const fetchPaymentMethods = async () => {
-    const {data} = await axiosApi.get(`/paymentMethods/list`);
+    const {data} = await createRequest().get(`/paymentMethods/list`);
     return data;
 }
 

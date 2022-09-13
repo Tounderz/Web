@@ -5,8 +5,8 @@ import { Context } from '../index';
 import UpdateInfoProduct from './models/update/UpdateInfoProduct';
 
 const ProductInfoItem = ({id, info}) => {
-    const {user} = useContext(Context)
-    const [updateInfoVisible, setUpdateInfoVisible] = useState(false)
+    const {user} = useContext(Context);
+    const [updateInfoVisible, setUpdateInfoVisible] = useState(false);
 
     let admin;
 

@@ -9,30 +9,34 @@ import { CATEGORY_ROUTE, LOCALHOST, NO_IMAGE, PAGE_FIRST } from '../utils/const'
 import '../css/InfoPage.css'
 
 const CategoryInfoPage = () => {
-    const {product} = useContext(Context)
-    const {user} = useContext(Context)
-    const navigate = useNavigate()
+    const {product} = useContext(Context);
+    const {category} = useContext(Context);
+    const {type} = useContext(Context);
+    const {page} = useContext(Context);
+    const {brand} = useContext(Context);
+    const {user} = useContext(Context);
+    const navigate = useNavigate();
 
     const click = async () => {
-        const dataType = await fetchTypes(product.selectedCategory.id, user.user.role, PAGE_FIRST);
-            product.setTypes(dataType.types);
+        const dataType = await fetchTypes(category.selectedCategory.id, user.user.role, PAGE_FIRST);
+            type.setTypes(dataType.types);
 
-        const dataProducts = await fetchProductsCategory(product.selectedCategory.id, user.user.role, PAGE_FIRST);
+        const dataProducts = await fetchProductsCategory(category.selectedCategory.id, user.user.role, page.currentPage);
             product.setProducts(dataProducts.products);
-            product.setSelectedBrand(dataProducts.brandsId);
-            product.setCountPages(dataProducts.countPages);            
+            brand.setSelectedBrand(dataProducts.brandsId);
+            page.setCountPages(dataProducts.countPages);            
 
-        const dataBrands = await fetchBrandsByCategory(product.selectedBrand)
-            product.setBrandsByCategory(dataBrands.brandsByCategory)
+        const dataBrands = await fetchBrandsByCategory(brand.selectedBrand)
+            brand.setBrandsByCategory(dataBrands.brandsByCategory)
 
         navigate(CATEGORY_ROUTE)
     }
 
     let img;
-    if (product.selectedCategory.img === null) {
+    if (category.selectedCategory.img === null) {
         img = (NO_IMAGE)
     } else {
-        img = (LOCALHOST + product.selectedCategory.img)
+        img = (LOCALHOST + category.selectedCategory.img)
     }
 
     return (
@@ -44,11 +48,11 @@ const CategoryInfoPage = () => {
                 <h3
                     className='textInfo'
                 >
-                    {product.selectedCategory.name}
+                    {category.selectedCategory.name}
                 </h3>
                 <Image
                     className='imgInfoPage'
-                    key={product.selectedCategory.id}
+                    key={category.selectedCategory.id}
                     src={img}
                 />
             </Col>
@@ -57,13 +61,13 @@ const CategoryInfoPage = () => {
                 className='colInfoPage'
             >
                 <h3 className='textInfo'>Info</h3>
-                {product.selectedCategory.info}
+                {category.selectedCategory.info}
             </Col>
             <Nav.Link
                 className='navLinkInfo'
                 onClick={click}
             >
-                Back to {product.selectedCategory.name}
+                Back to {category.selectedCategory.name}
             </Nav.Link>
         </Row>
     );

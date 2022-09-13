@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Form, Modal, Button } from 'react-bootstrap';
 import { createPaymentMethods } from '../../../http/paymentMethodsApi';
 import { useInput } from '../../../http/validateApi';
+import '../../../css/create/CreatePaymentMethod.css'
 
 const CreatePaymentMethod = ({show, onHide}) => {
     const name = useInput('', {minLength: {value: 3, name: 'Name'}});
@@ -12,8 +13,8 @@ const CreatePaymentMethod = ({show, onHide}) => {
             createPaymentMethods(name.value)
                 name.onChange('')
                 onHide()
-        } catch (error) {
-            setMessageError(error.response.data.message)
+        } catch (e) {
+            setMessageError(e.message)
         }
         
     }
@@ -25,15 +26,21 @@ const CreatePaymentMethod = ({show, onHide}) => {
             centered
         >
             <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
+                <Modal.Title 
+                    id='contained-modal-title-vcenter'
+                >
                     New Payment Method
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <div style={{color: 'red'}}>{messageError}</div>
+                <div className='error-message'>{messageError}</div>
                 <Form>
-                    {(name.isDirty && name.minLengthError) && <div className='mt-3' style={{color: 'red'}}>{name.messageError}</div>}
+                    {(name.isDirty && name.minLengthError) && 
+                        <div className='error-message'>
+                            {name.messageError}
+                        </div>}
                     <Form.Control
+                        className='form-control-create-method'
                         value={name.value}
                         onChange={e => name.onChange(e)}
                         onBlur={e => name.onBlur(e)}
@@ -43,24 +50,16 @@ const CreatePaymentMethod = ({show, onHide}) => {
             </Modal.Body>
             <Modal.Footer>
                 <Button
+                    className='button-create-method'
                     variant='outline-primary'
-                    style={{
-                        cursor: 'pointer',
-                        borderRadius: '5px',
-                        margin: '2px'
-                    }}
                     disabled={!name.inputValid}
                     onClick={click}
                 >
                     Create
                 </Button>
                 <Button 
+                    className='button-create-method'
                     variant='outline-danger'
-                    style={{
-                        cursor: 'pointer',
-                        borderRadius: '5px',
-                        margin: '2px'
-                    }}
                     onClick={onHide}
                 >
                     Close

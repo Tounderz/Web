@@ -6,22 +6,26 @@ import { useNavigate } from 'react-router';
 import {  fetchProductsType } from '../http/typeApi';
 import { observer } from 'mobx-react-lite';
 
-const TypeItem = observer(({type, brandsId}) => {
-    const {product} = useContext(Context)
-    const {error} = useContext(Context)
-    const navigate = useNavigate()
+const TypeItem = observer(({typeItem, brandsId}) => {
+    const {product} = useContext(Context);
+    const {type} = useContext(Context);
+    const {brand} = useContext(Context);
+    const {error} = useContext(Context);
+    const {page} = useContext(Context);
+    const navigate = useNavigate();
 
     const getType = async () => {
         try {
-            product.setSelectedType(type);
-            const data = await fetchProductsType(type.id, brandsId, PAGE_FIRST);
+            type.setSelectedType(typeItem);
+            const data = await fetchProductsType(typeItem.id, brandsId, PAGE_FIRST);
                 product.setProducts(data.products);
-                product.setCountPages(data.countPages);
-                product.setBrandsByType(brandsId);
+                page.setCurrentPage(PAGE_FIRST);
+                page.setCountPages(data.countPages);
+                brand.setBrandsByType(brandsId);
         
             navigate(TYPE_ROUTE)
         } catch (e) {
-            error.setMessageError(e.response.data.message)
+            error.setMessageError(e.message)
             navigate(ERROR_ROUTE)
         }
     }
@@ -39,7 +43,7 @@ const TypeItem = observer(({type, brandsId}) => {
                 }}
             onClick={getType}
         >
-            {type.name}
+            {typeItem.name}
         </ListGroup.Item>
     );
 });

@@ -1,28 +1,24 @@
-import React, { useContext, useState } from 'react';
-import { Col, ListGroup, Pagination, Row } from 'react-bootstrap';
+import React, { useContext } from 'react';
+import { Col, ListGroup, Row } from 'react-bootstrap';
 import { Context } from '../index';
 import ProductItem from '../components/ProductItem';
 import { fetchProductsCategoryByBrand } from '../http/categoryApi';
-import { PAGE_FIRST } from '../utils/const';
 import TypeItem from '../components/TypeItem';
 import '../css/BrandPage.css'
+import PageBar from '../components/PageBar';
+import { observer } from 'mobx-react-lite';
 
-const BrandsByCategoryPage = () => {
-    const {product} = useContext(Context)
-    const pages = []
-    const [page, setPage] = useState(PAGE_FIRST)
+const BrandsByCategoryPage = observer(() => {
+    const {product} = useContext(Context);
+    const {category} = useContext(Context);
+    const {brand} = useContext(Context);
+    const {type} = useContext(Context);
+    const {page} = useContext(Context);
 
-    const paginationClick = async (item) => {
-        const data =await fetchProductsCategoryByBrand(product.selectedCategory.id, product.brandsByCategory, item);
+    const paginationClick = async () => {
+        const data = await fetchProductsCategoryByBrand(category.selectedCategory.id, brand.brandsByCategory, page.currentPage);
             product.setProducts(data.products);
-        
-        setPage(item)
-    }
-
-    if (product.countPages > 1) {
-        for (let index = 0; index < product.countPages; index++) {
-            pages.push(index + 1);
-        }
+            page.setCountPages(data.countPages);
     }
 
     return (
@@ -41,8 +37,8 @@ const BrandsByCategoryPage = () => {
                     >
                         Types:
                     </ListGroup.Item>
-                    {product.types.map(type => 
-                        <TypeItem key={type.id} type={type} brandsId={product.brandsByCategory}/>
+                    {type.types.map(typeItem => 
+                        <TypeItem key={typeItem.id} typeItem={typeItem} brandsId={brand.brandsByCategory}/>
                     )}
                 </ListGroup >
             </Col>
@@ -53,21 +49,11 @@ const BrandsByCategoryPage = () => {
                     ))}
                 </Row>
             </Col>
-            <Row>
-                <Pagination className='pagination' size='sm'>
-                    {pages.map(item =>
-                        <Pagination.Item
-                            key={item}
-                            active={item === page}
-                            onClick={() => paginationClick(item)}
-                        >
-                            {item}
-                        </Pagination.Item>
-                    )}
-                </Pagination>
+            <Row onClick={() => paginationClick()}>
+                <PageBar/>
             </Row>          
         </Row>
     );
-};
+});
 
 export default BrandsByCategoryPage;

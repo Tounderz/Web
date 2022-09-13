@@ -10,37 +10,45 @@ import { useInput } from '../http/validateApi';
 import '../css/OrderPage.css'
 
 const OrderPage = observer(() => {
-    const {product} = useContext(Context)
-    const {user} = useContext(Context)
+    const {product} = useContext(Context);
+    const {order} = useContext(Context);
+    const {user} = useContext(Context);
+    const {error} = useContext(Context);
+    const {paymentMethod} = useContext(Context);
     const city = useInput('', {minLength: {value: 3, name: 'City'}});
     const street = useInput('', {minLength: {value: 3, name: 'Street'}});
     const house = useInput(0, {isNumberId: {name: 'House'}});
     const flat = useInput(0, {isNumberId: {name: 'Flat'}});
     const commentsOrder = useInput('', {minLength: {value: 3, name: 'Comments Order'}});
-    const paymentMethod = useInput(0, {isNumberId: {name: 'Payment Method'}});
+    const method = useInput(0, {isNumberId: {name: 'Payment Method'}});
     const navigate = useNavigate()
 
     const click = async () => {
-        if (product.selectedProduct.id) {
-            const data = await orderDetail(
-                user.user.login, product.selectedProduct.id, product.selectedProduct.price, 
-                city.value, street.value, house.value, flat.value, 
-                commentsOrder.value, paymentMethod.value
-            );
-                product.setSelectedOrderId(data.orderId);
-
-            await removeToCartItem(product.selectedProduct.id, user.user.login);
-        } else {
-            const data = await orderAllItemsBasket(
-                user.user.login, city.value, street.value, 
-                house.value, flat.value, commentsOrder.value, paymentMethod.value
-            );
-                product.setSelectedOrderId(data.orderId);
-
-            await cleanToCart(user.user.login)
+        try {
+            if (product.selectedProduct.id) {
+                const data = await orderDetail(
+                    user.user.login, product.selectedProduct.id, product.selectedProduct.price, 
+                    city.value, street.value, house.value, flat.value, 
+                    commentsOrder.value, method.value
+                );
+                    order.setSelectedOrderId(data.orderId);
+    
+                await removeToCartItem(product.selectedProduct.id, user.user.login);
+            } else {
+                const data = await orderAllItemsBasket(
+                    user.user.login, city.value, street.value, 
+                    house.value, flat.value, commentsOrder.value, method.value
+                );
+                    order.setSelectedOrderId(data.orderId);
+    
+                await cleanToCart(user.user.login)
+            }
+    
+            navigate(COMPLETED_ROUTE)
+        } catch (e) {
+            error.setMessageError(e.message);
         }
-
-        navigate(COMPLETED_ROUTE)
+        
     }
 
     return (
@@ -48,6 +56,7 @@ const OrderPage = observer(() => {
             <Container className='containerOrder'>
                 <Card className='cardOrder'>
                     <h1>Completed orders</h1>
+                    <div className='error'>{error.messageError}</div>
                     {(city.isDirty && city.minLengthError) && <div className='error'>{city.messageError}</div>}
                     <FormControl
                         className='formControlOrder'
@@ -93,16 +102,16 @@ const OrderPage = observer(() => {
                         onBlur={e => commentsOrder.onBlur(e)}
                     />
 
-                    {(paymentMethod.isDirty && paymentMethod.isNumberError) && <div className='error'>{paymentMethod.messageError}</div>}
+                    {(method.isDirty && method.isNumberError) && <div className='error'>{method.messageError}</div>}
                     <Form.Select 
                         className='formControlOrder'
-                        onChange={e => paymentMethod.onChange(e)}
-                        onBlur={e => paymentMethod.onBlur(e)}
+                        onChange={e => method.onChange(e)}
+                        onBlur={e => method.onBlur(e)}
                     >
                         <option value=''>
                             Payment Method
                         </option>
-                        {product.paymentMethods.map(item => (
+                        {paymentMethod.paymentMethods.map(item => (
                             <option key={item.id} value={item.name}>{item.name}</option>
                         ))}
                     </Form.Select>
@@ -113,7 +122,7 @@ const OrderPage = observer(() => {
                         <Button
                             className='buttonOrder'
                             variant='outline-primary'
-                            disabled={!city.inputValid || !street.inputValid || !house.inputValid || !flat.inputValid || !paymentMethod.inputValid}
+                            disabled={!city.inputValid || !street.inputValid || !house.inputValid || !flat.inputValid || !method.inputValid}
                             onClick={click}
                         >
                             Place an order

@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite';
 import Multiselect from 'multiselect-react-dropdown';
-import React, { useContext, useState } from 'react';
-import { Button, Card, Col, Pagination, Row } from 'react-bootstrap';
+import React, { useContext } from 'react';
+import { Button, Card, Col, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router';
 import ProductItem from '../components/ProductItem';
 import { fetchProductsBrand, fetchProductsBrandByCategory } from '../http/brandApi';
@@ -11,53 +11,47 @@ import { Context } from '../index';
 import { BRAND_INFO_ROUTE, CATEGORIES_BY_BRAND_ROUTE, ERROR_ROUTE, PAGE_FIRST } from '../utils/const';
 import '../css/BrandPage.css'
 import { SvgSelector } from '../components/Svg/SvgSelector';
+import PageBar from '../components/PageBar';
 
 const BrandPage = observer(() => {
-    const {product} = useContext(Context)
-    const {user} = useContext(Context)
-    const {error} = useContext(Context)
-    const navigate = useNavigate()
-    const pages = []
-    const [page, setPage] = useState(PAGE_FIRST)
-    const categoriesId = useInput([])
+    const {product} = useContext(Context);
+    const {brand} = useContext(Context);
+    const {category} = useContext(Context);
+    const {type} = useContext(Context);
+    const {user} = useContext(Context);
+    const {error} = useContext(Context);
+    const {page} = useContext(Context);
+    const navigate = useNavigate();
+    const categoriesId = useInput([]);
 
-    const paginationClick = async (item) => {
-        product.setCountPages(PAGE_FIRST);
-        const data = await fetchProductsBrand(product.selectedBrand.id, user.user.role, item);
+    const paginationClick = async () => {
+        const data = await fetchProductsBrand(brand.selectedBrand.id, user.user.role, page.currentPage);
             product.setProducts(data.products);
-            product.setCountPages(data.countPages);
-
-        setPage(item)
+            page.setCountPages(data.countPages);
     }
 
     const viewCategory = async () => {
         try {
-            product.setCategoriesByBrand(categoriesId.value);
-
-            const dataProducts = await fetchProductsBrandByCategory(product.selectedBrand.id, product.categoriesByBrand, PAGE_FIRST);
+            category.setCategoriesByBrand(categoriesId.value);
+            const dataProducts = await fetchProductsBrandByCategory(brand.selectedBrand.id, category.categoriesByBrand, PAGE_FIRST);
                 product.setProducts(dataProducts.products);
-                product.setCountPages(dataProducts.countPages);
-                product.setCategoriesByBrand(dataProducts.categoriesByBrand);
-                product.setSelectedType(dataProducts.typesId);
+                page.setCountPages(dataProducts.countPages);
+                page.setCurrentPage(PAGE_FIRST);
+                category.setCategoriesByBrand(dataProducts.categoriesByBrand);
+                type.setSelectedType(dataProducts.typesId);
 
-            const dataTypes = await fetchTypesByBrand(product.selectedType)
-                product.setTypes(dataTypes.typesByBrand)
+            const dataTypes = await fetchTypesByBrand(type.selectedType)
+                type.setTypes(dataTypes.typesByBrand)
         
             navigate(CATEGORIES_BY_BRAND_ROUTE)
         } catch (e) {
-            error.setMessageError(e.response.data.message);
+            error.setMessageError(e.message);
             navigate(ERROR_ROUTE)
         }
     }
 
     const infoBrand = () => {
         navigate(BRAND_INFO_ROUTE)
-    }
-
-    if (product.countPages > 1) {
-        for (let index = 0; index < product.countPages; index++) {
-            pages.push(index + 1);
-        }
     }
 
     return (
@@ -74,7 +68,7 @@ const BrandPage = observer(() => {
                         placeholder='Categories:'
                         displayValue='name'
                         value='id'
-                        options={product.categoriesByBrand}
+                        options={category.categoriesByBrand}
                         onSelect={e => categoriesId.onSelect(e)}
                         onRemove={e => categoriesId.onRemove(e)}
                         onBlur={e => categoriesId.onBlur(e)}
@@ -106,23 +100,10 @@ const BrandPage = observer(() => {
                     onClick={infoBrand}
                 >
                     <SvgSelector id='info'/>
-                    {/* Info */}
-                    {/* Info Brand: {product.selectedBrand.name} */}
                 </Button>
             </Col>
-            
-            <Row>
-                <Pagination className='pagination' size='sm'>
-                    {pages.map(item =>
-                        <Pagination.Item
-                            key={item}
-                            active={item === page}
-                            onClick={() => paginationClick(item)}
-                        >
-                            {item}
-                        </Pagination.Item>
-                    )}
-                </Pagination>
+            <Row onClick={() => paginationClick()}>
+                <PageBar/>
             </Row> 
         </Row>
     );

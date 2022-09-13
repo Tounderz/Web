@@ -3,10 +3,11 @@ import { Form, Modal, Button } from 'react-bootstrap';
 import { Context } from '../../../index';
 import { removePaymentMethods } from '../../../http/paymentMethodsApi';
 import { useInput } from '../../../http/validateApi';
+import '../../../css/remove/RemovePaymentMethod.css'
 
 const RemovePaymentMethod = ({show, onHide}) => {
-    const {product} = useContext(Context)
-    const methodId = useInput(0, {isNumberId: {name: 'Payment Method'}})
+    const {paymentMethod} = useContext(Context);
+    const methodId = useInput(0, {isNumberId: {name: 'Payment Method'}});
 
     const click = async () => {
         await removePaymentMethods(methodId.value);
@@ -21,21 +22,26 @@ const RemovePaymentMethod = ({show, onHide}) => {
             centered
         >
             <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
+                <Modal.Title 
+                    id='contained-modal-title-vcenter'
+                >
                     Remove a Payment Method
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                {(methodId.isDirty && methodId.isNumberError) && <div className='mt-3' style={{color: 'red'}}>{methodId.messageError}</div>}
+                {(methodId.isDirty && methodId.isNumberError) && 
+                    <div className='error-message'>
+                        {methodId.messageError}
+                    </div>}
                 <Form.Select 
-                    className='mt-3'
+                    className='form-method-remove'
                     onChange={e => methodId.onChange(e)}
                     onBlur={e => methodId.onBlur(e)}
                 >
                     <option value=''>
                         Select a Payment Method
                     </option>
-                    {product.paymentMethods.map(item => (
+                    {paymentMethod.paymentMethods.map(item => (
                         <option
                             value={item.id}
                             key={item.id}
@@ -47,24 +53,16 @@ const RemovePaymentMethod = ({show, onHide}) => {
             </Modal.Body>
             <Modal.Footer>
                 <Button
+                    className='button-method-remove'
                     variant='outline-primary'
-                    style={{
-                        cursor: 'pointer',
-                        borderRadius: '5px',
-                        margin: '2px'
-                    }}
                     disabled={!methodId.inputValid}
                     onClick={click}
                 >
                     Remove
                 </Button>
                 <Button 
+                    className='button-method-remove'
                     variant='outline-danger'
-                    style={{
-                        cursor: 'pointer',
-                        borderRadius: '5px',
-                        margin: '2px'
-                    }}
                     onClick={onHide}
                 >
                     Close

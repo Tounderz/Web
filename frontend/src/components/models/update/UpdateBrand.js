@@ -4,9 +4,11 @@ import { Form, Modal, Button } from 'react-bootstrap';
 import { updateBrand, formDataBrand } from '../../../http/brandApi';
 import { useInput } from '../../../http/validateApi';
 import { Context } from '../../../index';
+import '../../../css/update/UpdateBrand.css'
 
 const UpdateBrand = ({show, onHide}) => {
-    const {product} = useContext(Context);
+    const {brand} = useContext(Context);
+    const {category} = useContext(Context);
     const brandId = useInput(0, {isNumberId: {name: 'Brand'}});
     const name = useInput('', {minLength: {value: 3, name: 'Name'}});
     const img = useInput(null, {isImg: { name: 'Img' }} );
@@ -24,8 +26,8 @@ const UpdateBrand = ({show, onHide}) => {
                 categoriesId.onSelect([]);
                 img.saveImg(null);
                 onHide();
-        } catch (error) {
-            setMessageError(error.response.data.message);
+        } catch (e) {
+            setMessageError(e.message);
         }
     }
 
@@ -36,22 +38,30 @@ const UpdateBrand = ({show, onHide}) => {
             centered
         >
             <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
+                <Modal.Title 
+                    id='contained-modal-title-vcenter'
+                >
                     Update a Brand
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <div style={{color: 'red'}}>{messageError}</div>
-                {(brandId.isDirty && brandId.isNumberError) && <div className='mt-3' style={{color: 'red'}}>{brandId.messageError}</div>}
+                <div className='error-message'>
+                    {messageError}
+                </div>
+                {(brandId.isDirty && brandId.isNumberError) && 
+                    <div className='error-message'>
+                        {brandId.messageError}
+                    </div>}
                 <Form.Select
-                    className='mt-3'
+                    className='form-update-brand'
+                    
                     onChange={e => brandId.onChange(e)}
                     onBlur={e => brandId.onBlur(e)}
                 >
                     <option value={0}>
                         Select a Brand
                     </option>
-                    {product.brands.map(item => (
+                    {brand.brands.map(item => (
                         <option
                             value={item.id}
                             key={item.id}
@@ -60,37 +70,51 @@ const UpdateBrand = ({show, onHide}) => {
                         </option>
                     ))}
                 </Form.Select>
+
                 <Form>
-                {(name.isDirty && name.minLengthError) && <div className='mt-3' style={{color: 'red'}}>{name.messageError}</div>}
+                {(name.isDirty && name.minLengthError) && 
+                    <div className='error-message'>
+                        {name.messageError}
+                    </div>}
                     <Form.Control
-                        className='mt-3'
+                        className='form-update-brand'
                         value={name.value}
                         onChange={e => name.onChange(e)}
                         onBlur={e => name.onBlur(e)}
-                        placeholder={`Update 'Name': ${product.brands.filter(item => {return item.id === Number(brandId.value)}).map(item => item.name)}`}
+                        placeholder={`Update 'Name': ${brand.brands.filter(item => {return item.id === Number(brandId.value)}).map(item => item.name)}`}
                     />
-                    {(info.isDirty && info.minLengthError) && <div className='mt-3' style={{color: 'red'}}>{info.messageError}</div>}
+                    {(info.isDirty && info.minLengthError) && 
+                        <div className='error-message'>
+                            {info.messageError}
+                        </div>}
                     <Form.Control
-                        className='mt-3'
+                        className='form-update-brand'
                         value={info.value}
                         onChange={e => info.onChange(e)}
                         onBlur={e => info.onBlur(e)}
-                        placeholder={`Update 'Info': ${product.brands.filter(item => {return item.id === Number(brandId.value)}).map(item => item.info)}`}
+                        placeholder={`Update 'Info': ${brand.brands.filter(item => {return item.id === Number(brandId.value)}).map(item => item.info)}`}
                     />
-                    {(img.isDirty && img.imgError) && <div className='mt-3' style={{color: 'red'}}>{img.messageError}</div>}
+                    {(img.isDirty && img.imgError) && 
+                        <div className='error-message'>
+                            {img.messageError}
+                        </div>}
                     <Form.Control
-                        className='mt-3'
+                        className='form-update-brand'
                         type='file'
                         onChange={e => img.saveImg(e)}
                         onBlur={e => img.onBlur(e)}
                     />
 
-                    <label className='mt-3'>Categories:</label>
+                    {(categoriesId.isDirty && categoriesId.multiSelectError) && 
+                        <div className='error-message'>
+                            {categoriesId.messageError}
+                        </div>}
                     <Multiselect 
-                        className=' mt-1'
+                        className='form-update-brand'
+                        placeholder='Categories: '
                         displayValue='name'
                         value='id'
-                        options={product.categories}
+                        options={category.categories}
                         onSelect={e => categoriesId.onSelect(e)}
                         onRemove={e => categoriesId.onRemove(e)}
                         onBlur={e => categoriesId.onBlur(e)}
@@ -100,24 +124,22 @@ const UpdateBrand = ({show, onHide}) => {
             </Modal.Body>
             <Modal.Footer>
                 <Button
+                    className='button-update-brand'
                     variant='outline-primary'
-                    style={{
-                        cursor: 'pointer',
-                        borderRadius: '5px',
-                        margin: '2px'
-                    }}
-                    disabled={!brandId.inputValid || (!name.inputValid && !info.inputValid && !categoriesId.inputValid && !img.inputValid)}
+                    disabled={
+                        !brandId.inputValid || (
+                            !name.inputValid && 
+                            !info.inputValid && 
+                            !categoriesId.inputValid && 
+                            !img.inputValid)
+                        }
                     onClick={click}
                 >
                     Update
                 </Button>
-                <Button 
+                <Button
+                    className='button-update-brand'
                     variant='outline-danger'
-                    style={{
-                        cursor: 'pointer',
-                        borderRadius: '5px',
-                        margin: '2px'
-                    }}
                     onClick={onHide}
                 >
                     Close

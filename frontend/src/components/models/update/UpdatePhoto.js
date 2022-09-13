@@ -3,6 +3,7 @@ import { Button, Form, Modal } from 'react-bootstrap';
 import { Context } from '../../../index';
 import { useInput } from '../../../http/validateApi';
 import { updateUserByUser } from '../../../http/userApi';
+import '../../../css/update/UpdatePhoto.css'
 
 const UpdatePhoto = ({show, onHide}) => {
     const {user} = useContext(Context);
@@ -18,8 +19,8 @@ const UpdatePhoto = ({show, onHide}) => {
                 user.setSelectedUser(data.user);
                 img.saveImg(null);
                 onHide();
-        } catch (error) {
-            setMessageError(error.response.data.message);
+        } catch (e) {
+            setMessageError(e.message);
         }
     }
 
@@ -31,16 +32,21 @@ const UpdatePhoto = ({show, onHide}) => {
             centered
         >
             <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
+                <Modal.Title 
+                    id='contained-modal-title-vcenter'
+                >
                     Update Photo
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <div style={{color: 'red'}}>{messageError}</div>
+                <div className='error-message'>{messageError}</div>
                 <Form>
-                    {(img.isDirty && img.imgError) && <div className='mt-3' style={{color: 'red'}}>{img.messageError}</div>}
+                    {(img.isDirty && img.imgError) && 
+                        <div className='error-message'>
+                            {img.messageError}
+                        </div>}
                     <Form.Control
-                        className='mt-3'
+                        className='form-update-photo'
                         type='file'
                         onChange={e => img.saveImg(e)}
                         onBlur={e => img.onBlur(e)}
@@ -49,23 +55,16 @@ const UpdatePhoto = ({show, onHide}) => {
             </Modal.Body>
             <Modal.Footer>
                 <Button
+                    className='button-update-photo'
                     variant='outline-primary'
-                    style={{
-                        cursor: 'pointer',
-                        borderRadius: '5px',
-                        margin: '2px'
-                    }}
+                    disabled={!img.inputValid}
                     onClick={update}
                 >
                     Update
                 </Button>
-                <Button 
+                <Button
+                    className='button-update-photo'
                     variant='outline-danger'
-                    style={{
-                        cursor: 'pointer',
-                        borderRadius: '5px',
-                        margin: '2px'
-                    }}
                     onClick={onHide}
                 >
                     Close

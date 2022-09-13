@@ -60,23 +60,14 @@
   fill: red;
 }
 
-#collasible-nav-dropdown {
-  color: white !important;
-  cursor: pointer;
+.error-message {
+  color: red;
+  margin-top: 2%;
 }
 
-#collasible-nav-dropdown:hover {
-  color: grey !important;
+#contained-modal-title-vcenter {
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  text-align: center;
 }
-
-/* .fonPage {
-  text-align:center;
-  position:absolute;
-  left: 1%;
-  top: 35%;
-  transform: translateY(-50%);
-  width:100%;
-  bottom:10%;
-  color: white;
-  text-shadow: -2px 0 0 #000000, 0 -2px 0 #000000, 2px 0 0 #000000, 0 2px 0 #000000, -2px -2px 0 #000000, 2px 2px 0 #000000, -2px 2px 0 #000000, 2px -2px 0 #000000;
-} */

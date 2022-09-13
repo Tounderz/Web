@@ -3,10 +3,11 @@ import { Form, Modal, Button } from 'react-bootstrap';
 import { removeBrand } from '../../../http/brandApi';
 import { useInput } from '../../../http/validateApi';
 import { Context } from '../../../index';
+import '../../../css/remove/RemoveBrand.css'
 
 const RemoveBrand = ({show, onHide}) => {
-    const {product} = useContext(Context)
-    const brandId = useInput(0, {isNumberId: {name: 'Brand'}})
+    const {brand} = useContext(Context);
+    const brandId = useInput(0, {isNumberId: {name: 'Brand'}});
 
     const click = async () => {
         await removeBrand(brandId.value);
@@ -21,21 +22,26 @@ const RemoveBrand = ({show, onHide}) => {
             centered
         >
             <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
+                <Modal.Title 
+                    id='contained-modal-title-vcenter'
+                >
                     Remove a Brand
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-            {(brandId.isDirty && brandId.isNumberError) && <div className='mt-3' style={{color: 'red'}}>{brandId.messageError}</div>}
+            {(brandId.isDirty && brandId.isNumberError) && 
+                <div className='error-message'>
+                    {brandId.messageError}
+                </div>}
                     <Form.Select
-                        className='mt-2 mb-2'
+                        className='form-brand-remove'
                         onChange={e => brandId.onChange(e)}
                         onBlur={e => brandId.onBlur(e)}
                     >
                         <option key={0} value=''>
                             Select a brand
                         </option>
-                            {product.brands.map(brand => (
+                            {brand.brands.map(brand => (
                                 <option
                                     key={brand.id}
                                     value={brand.id}
@@ -47,24 +53,16 @@ const RemoveBrand = ({show, onHide}) => {
             </Modal.Body>
             <Modal.Footer>
                 <Button
+                    className='button-brand-remove'
                     variant='outline-primary'
-                    style={{
-                        cursor: 'pointer',
-                        borderRadius: '5px',
-                        margin: '2px'
-                    }}
                     disabled={!brandId.inputValid}
                     onClick={click}
                 >
                     Remove
                 </Button>
                 <Button 
+                    className='button-brand-remove'
                     variant='outline-danger'
-                    style={{
-                        cursor: 'pointer',
-                        borderRadius: '5px',
-                        margin: '2px'
-                    }}
                     onClick={onHide}
                 >
                     Close

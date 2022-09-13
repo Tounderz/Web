@@ -1,5 +1,4 @@
 import { CONFIG_MULTIPART } from "../utils/const";
-import axiosApi from "./axiosApi";
 import { createRequest } from "./interceptor";
 
 export const formDataUser = (id, name, surname, email, phone, login, password, role, img) => {
@@ -18,12 +17,12 @@ export const formDataUser = (id, name, surname, email, phone, login, password, r
 }
 
 export const register = async (formData) => {
-    const {data} = await axiosApi.post(`/auth/register`, formData, CONFIG_MULTIPART)
+    const {data} = await createRequest().post(`/auth/register`, formData, CONFIG_MULTIPART)
     return data
 }
 
 export const signIn = async (login, password) => {
-    const {data}  = await axiosApi.post(`/auth/login`, {Login: login, Password: password})
+    const {data}  = await createRequest().post(`/auth/login`, {Login: login, Password: password})
     return data
 }
 
@@ -34,7 +33,7 @@ export const check = async () => {
 
 export const logout = async () => {
     localStorage.removeItem('accessToken');
-    const {data} = await axiosApi.post('/auth/logout')
+    const {data} = await createRequest().post('/auth/logout')
     return data
 }
 

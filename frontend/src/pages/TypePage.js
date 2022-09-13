@@ -1,55 +1,40 @@
 import { observer } from 'mobx-react-lite';
-import React, { useContext, useState } from 'react';
-import { Nav, Pagination, Row } from 'react-bootstrap';
+import React, { useContext } from 'react';
+import { Col, Nav, Row } from 'react-bootstrap';
 import { Context } from '../index';
 import ProductItem from '../components/ProductItem';
 import { useNavigate } from 'react-router';
-import { PAGE_FIRST, SHOP_ROUTE } from '../utils/const';
+import { SHOP_ROUTE } from '../utils/const';
 import { fetchProductsType } from '../http/typeApi';
 import '../css/TypePage.css'
+import PageBar from '../components/PageBar';
 
 const TypePage = observer(() => {
     const {product} = useContext(Context);
-    const navigate = useNavigate()
-    const pages = []
-    const [page, setPage] = useState(PAGE_FIRST)
+    const {page} = useContext(Context);
+    const {type} = useContext(Context);
+    const {brand} = useContext(Context);
+    const navigate = useNavigate();
 
-    const paginationClick = async (item) => {
-        const data = await fetchProductsType(product.selectedType.id, product.BrandsByType, item);
+
+    const paginationClick = async () => {
+        const data = await fetchProductsType(type.selectedType.id, brand.brandsByType, page.currentPage);
             product.setProducts(data.products);
-            setPage(item)
-    }
-
-    if (product.countPages > 1) {
-        for (let index = 0; index < product.countPages; index++) {
-            pages.push(index + 1);
-        }
     }
 
     return (
         <Row className='typeFonPage'>
-            <Row>
-                {product.products.map(item => (
-                    <ProductItem key={item.id} prod={item}/>
-                ))}
+            <Col md={9}>
+                <Row>
+                    {product.products.map(item => (
+                        <ProductItem key={item.id} prod={item}/>
+                    ))}
+                </Row>
+            </Col>
+            <Row onClick={() => paginationClick()}>
+                <PageBar/>
             </Row>
-            <Row>
-                <Pagination
-                    className='pagination'
-                    size='sm'
-                >
-                    {pages.map(item =>
-                        <Pagination.Item
-                            key={item}
-                            active={item === page}
-                            onClick={() => paginationClick(item)}
-                        >
-                            {item}
-                        </Pagination.Item>
-                    )}
-                </Pagination>
-                <Nav.Link onClick={() => navigate(SHOP_ROUTE)}>Back to top</Nav.Link>
-            </Row>
+            <Nav.Link onClick={() => navigate(SHOP_ROUTE)}>Back to top</Nav.Link>
         </Row>
     );
 });

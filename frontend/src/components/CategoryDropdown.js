@@ -7,42 +7,48 @@ import { CATEGORY_ROUTE, ERROR_ROUTE, PAGE_FIRST } from '../utils/const';
 import { fetchProductsCategory } from '../http/categoryApi';
 import { fetchTypes } from '../http/typeApi';
 import { fetchBrandsByCategory } from '../http/brandApi';
+import '../css/NavBar.css'
 
-const CategoryDropdown = observer(({category}) => {
+const CategoryDropdown = observer(({categoryItem}) => {
     const {product} = useContext(Context);
+    const {category} = useContext(Context);
+    const {brand} = useContext(Context);
+    const {type} = useContext(Context);
     const {user} = useContext(Context);
     const {error} = useContext(Context);
-    const {general} = useContext(Context);
+    const {sort} = useContext(Context);
+    const {page} = useContext(Context);
     const navigate = useNavigate();
 
     const getCategory = async () => {
         try {
-            const dataType = await fetchTypes(category.id, user.user.role, PAGE_FIRST);
-                product.setTypes(dataType.types);
+            const dataType = await fetchTypes(categoryItem.id, user.user.role, PAGE_FIRST);
+                type.setTypes(dataType.types);
             
-            const dataProducts = await fetchProductsCategory(category.id, user.user.role, PAGE_FIRST);
+            const dataProducts = await fetchProductsCategory(categoryItem.id, user.user.role, PAGE_FIRST);
                 product.setProducts(dataProducts.products);
-                product.setSelectedBrand(dataProducts.brandsId);
-                product.setCountPages(dataProducts.countPages);
-                product.setSelectedCategory(category);
+                brand.setSelectedBrand(dataProducts.brandsId);
+                page.setCurrentPage(PAGE_FIRST);
+                page.setCountPages(dataProducts.countPages);
+                category.setSelectedCategory(categoryItem);
 
-            const dataBrands = await fetchBrandsByCategory(product.selectedBrand);
-                product.setBrandsByCategory(dataBrands.brandsByCategory);
+            const dataBrands = await fetchBrandsByCategory(brand.selectedBrand);
+                brand.setBrandsByCategory(dataBrands.brandsByCategory);
 
             navigate(CATEGORY_ROUTE)
         } catch (e) {
-            error.setMessageError(e.response.data.message)
+            error.setMessageError(e.message)
             navigate(ERROR_ROUTE)
         } finally {
-            general.setFieldNames([]);
-            general.setFieldName('');
-            general.setTypeSort('');
+            sort.setFieldNames([]);
+            sort.setFieldName('');
+            sort.setTypeSort('');
         }
     }
 
     return (
         <Dropdown.Item onClick={() => getCategory()}>
-            {category.name}
+            {categoryItem.name}
         </Dropdown.Item>
     );
 });

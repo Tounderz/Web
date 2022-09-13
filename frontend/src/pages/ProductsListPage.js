@@ -1,24 +1,30 @@
 import React, { useContext, useState } from 'react';
-import { Button, Col, Nav, Pagination, Row, Table } from "react-bootstrap";
+import { Button, Col, Nav, Row, Table } from "react-bootstrap";
 import { Context } from '../index';
-import { fetchProduct, fetchProducts, removeProduct } from '../http/productApi';
-import SearchForm from '../components/SearchForm';
-import { ADMIN_ROUTE, FIELD_NAMES_PRODUCTS, PAGE_FIRST } from "../utils/const";
+import { fetchProduct, fetchProducts } from '../http/productApi';
+import { ADMIN_ROUTE, FIELD_NAMES_PRODUCTS } from "../utils/const";
 import UpdateProduct from '../components/models/update/UpdateProduct';
 import { observer } from 'mobx-react-lite';
 import { useNavigate } from 'react-router';
 import SortForm from '../components/SortForm';
 import { sortProducts } from '../http/sortApi';
 import '../css/Table.css'
+import ConfirmRemoval from '../components/models/remove/ConfirmRemoval';
+import PageBar from '../components/PageBar';
+import SearchFormProductAndUserList from '../components/SearchFormProductAndUserList';
+import { fetchSearchProductAdmin } from '../http/searchApi';
 
 const ProductsListPage = observer(() => {
     const {product} = useContext(Context);
-    const {general} = useContext(Context);
+    const {sort} = useContext(Context);
+    const {remove} = useContext(Context);
+    const {error} = useContext(Context);
+    const {page} = useContext(Context);
+    const {search} = useContext(Context);
     const [productUpdateVisible, setProductUpdateVisible] = useState(false);
     const [sortVisible, setSortVisible] = useState(false);
+    const [removeVisible, setRemoveVisible] = useState(false);
     const navigate = useNavigate();
-    const pages = [];
-    const [page, setPage] = useState(PAGE_FIRST);
 
     const productUpdate = async (id) => {
         const data = await fetchProduct(id);
@@ -26,137 +32,125 @@ const ProductsListPage = observer(() => {
             setProductUpdateVisible(true);
     }
 
-    const productRemove = async (id) => {
-        const data = await removeProduct(id);
-            product.setProducts(data.products);
-            product.setTotalCount(data.countPages);
+    const productRemove = async (prod) => {
+        setRemoveVisible(true);
+        remove.setRemoveObjeck(prod);
+        remove.setRemoveParameterName('product');
     }
 
-    const paginationClick = async (item) => {
-        if (general.typeSort !== '' || general.fieldName !== '') {
-            const data = await sortProducts(general.fieldName, general.typeSort, item);
+    const paginationClick = async () => {
+        if (sort.typeSort !== '' || sort.fieldName !=='') {
+            const data = await sortProducts(sort.fieldName, sort.typeSort, page.currentPage);
                 product.setProducts(data.products);
-                setPage(item);
+        } else if (search.searchBy !== '' || search.selectedSearchParameter !== '') {
+            const data = await fetchSearchProductAdmin(search.selectedSearchParameter, page.currentPage, search.searchBy);
+                product.setProducts(data.products);
         } else {
-            const data = await fetchProducts(item);
+            const data = await fetchProducts(page.currentPage);
                 product.setProducts(data.products);
-                setPage(item);
         }
     };
 
-
-    if (product.countPages > 1) {
-        for (let index = 0; index < product.countPages; index++) {
-            pages.push(index + 1);
-        }
-    }
-
     const sortClick = () => {
-        general.setFieldNames(FIELD_NAMES_PRODUCTS);
+        sort.setFieldNames(FIELD_NAMES_PRODUCTS);
             setSortVisible(true);
     }
 
     const clickAdmin = () => {
-        general.setFieldNames([]);
-        general.setFieldName('');
-        general.setTypeSort('');
+        sort.setFieldNames([]);
+        sort.setFieldName('');
+        sort.setTypeSort('');
         navigate(ADMIN_ROUTE);
     }
     
     return (
         <Row className='tableFonPage'>
-        <Col 
-            md={11}
-            className='containerTable'
-        >
-            <Row>
-                <Col md={9}>
-                    <SearchForm 
-                        key='id'
-                        parameter='productAdmin'
-                    />
-                </Col>
-                <Col md={3}>
-                    <Button 
-                        className='buttonSortTable'
-                        variant='outline-primary'
-                        onClick={sortClick}
-                    >
-                        Sort
-                    </Button>
-                </Col>
-            </Row>
-            <Table
-                className='tableTable'
-                size='sm'
+            <Col 
+                md={11}
+                className='containerTable'
             >
-                <thead>
-                    <tr key="id">
-                        <th scope="col">Id</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Category</th>
-                        <th scope="col">Brand</th>
-                        <th scope="col">Type</th>
-                        <th scope="col">Short Description</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Available</th>
-                        <th scope="col">Count View</th>
-                        <th scope="col">Buttons</th>
-                    </tr>
-                </thead>
-                <tbody>
-                     {product.products.map((prod) => (
-                        <tr key = {prod.id}>
-                            <th scope="col">{prod.id}</th>
-                            <th scope="col">{prod.name}</th>
-                            <th scope="col">{prod.categoryName}</th>
-                            <th scope="col">{prod.brandName}</th>
-                            <th scope="col">{prod.typeName}</th>
-                            <th scope="col">{prod.shortDescription}</th>
-                            <th scope="col">{prod.price}</th>
-                            <th scope="col">{prod.available}</th>
-                            <th scope="col">{prod.countView}</th>
-                            <td className='buttonsTable'>
-                                <Button
-                                    className='buttonTable'
-                                    variant='outline-primary'
-                                    onClick={() => productUpdate(prod.id)}
-                                >
-                                    Update
-                                </Button>
-                                /
-                                <Button
-                                    className='buttonTable'
-                                    variant='outline-danger'
-                                    onClick={() => productRemove(prod.id)}
-                                >
-                                    Remove
-                                </Button>
-                            </td>
-                        </tr>
-                     ))}
-                </tbody>
-            </Table>
-            <Row>
-                <Pagination
-                    className='pagination'
-                    size="sm"
-                >
-                    {pages.map((item) => (
-                        <Pagination.Item
-                            key={item}
-                            active={item === page}
-                            onClick={() => paginationClick(item)}
+                <Row>
+                    <div 
+                        className='error-message'
+                    >
+                        {error.messageError}
+                    </div>
+                    <Col md={9}>
+                        <SearchFormProductAndUserList 
+                            key='id'
+                            parameter='productAdmin'
+                        />
+                    </Col>
+                    <Col md={3}>
+                        <Button 
+                            className='buttonSortTable'
+                            variant='outline-primary'
+                            onClick={sortClick}
                         >
-                            {item}
-                        </Pagination.Item>
-                    ))}
-                </Pagination>
+                            Sort
+                        </Button>
+                    </Col>
+                </Row>
+                <Table
+                    className='tableTable'
+                    size='sm'
+                >
+                    <thead>
+                        <tr key="id">
+                            <th scope="col">Id</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Brand</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">Short Description</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Available</th>
+                            <th scope="col">Count View</th>
+                            <th scope="col">Buttons</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {product.products?.map((prod) => (
+                            <tr key = {prod.id}>
+                                <th scope="col">{prod.id}</th>
+                                <th scope="col">{prod.name}</th>
+                                <th scope="col">{prod.categoryName}</th>
+                                <th scope="col">{prod.brandName}</th>
+                                <th scope="col">{prod.typeName}</th>
+                                <th scope="col">{prod.shortDescription}</th>
+                                <th scope="col">{prod.price}</th>
+                                <th scope="col">{prod.available}</th>
+                                <th scope="col">{prod.countView}</th>
+                                <td className='buttonsTable'>
+                                    <Button
+                                        className='buttonTable'
+                                        variant='outline-primary'
+                                        onClick={() => productUpdate(prod.id)}
+                                    >
+                                        Update
+                                    </Button>
+                                    /
+                                    <Button
+                                        className='buttonTable'
+                                        variant='outline-danger'
+                                        onClick={() => productRemove(prod)}
+                                    >
+                                        Remove
+                                    </Button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </Table>
+                <Row onClick={paginationClick}>
+                    <PageBar/>
+                </Row>
                 <Nav.Link onClick={clickAdmin}>Admin panel</Nav.Link>
-            </Row>
-            <UpdateProduct show={productUpdateVisible} onHide={() => setProductUpdateVisible(false)}/>
-            <SortForm show={sortVisible} onHide={() => setSortVisible(false)} parameter='product'/>
-        </Col>
+                
+                <UpdateProduct show={productUpdateVisible} onHide={() => setProductUpdateVisible(false)}/>
+                <SortForm show={sortVisible} onHide={() => setSortVisible(false)} parameter='product'/>
+                <ConfirmRemoval show={removeVisible} onHide={() => setRemoveVisible(false)}/>
+            </Col>
         </Row>
     );
 });

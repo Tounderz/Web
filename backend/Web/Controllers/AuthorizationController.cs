@@ -90,14 +90,14 @@ namespace Web.Controllers
             var token = _jwtService.Verify(jwtToken[7..]);
             if (token != null && !token.Header.Alg.Equals(SecurityAlgorithms.HmacSha256))
             {
-                return BadRequest();
+                return Unauthorized();
             }
 
             var user = _auth.GetByUserFromToken(token);
             var refreshTokenModel = _jwtService.GetRefreshToken(user.Id);
             if (refreshTokenModel == null)
             {
-                return BadRequest();
+                return Unauthorized();
             }
 
             var accessToken = _jwtService.GenerateJwt(user);

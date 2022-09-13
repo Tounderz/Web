@@ -7,13 +7,14 @@ import { fetchInfoProduct } from '../http/infoProductApi';
 import '../css/ProductItem.css'
 
 const ProductItem = ({prod}) => {
-    const{product} = useContext(Context)
+    const {product} = useContext(Context);
+    const {brand} = useContext(Context);
     const navigate = useNavigate()
 
     const getProduct = async () => {
         product.setSelectedProduct(prod);
         const data = await fetchInfoProduct(product.selectedProduct.id);
-        product.setInfoProduct(data.infoProducts)
+            product.setInfoProduct(data.infoProducts)
         navigate(PRODUCT_ROUTE)
     }
 
@@ -39,7 +40,8 @@ const ProductItem = ({prod}) => {
                 />
                 <div>
                     <div>
-                        Brand: {product.brands.filter(brand => {return brand.id === prod.brandId}).map(brand => brand.name)}
+                        Brand: {brand.brands.filter(brandItem => {
+                            return brandItem.id === prod.brandId}).map(brandItem => brandItem.name)}
                     </div>
                     <div>
                         Model: {prod.name}

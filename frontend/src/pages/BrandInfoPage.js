@@ -4,31 +4,34 @@ import { useNavigate } from 'react-router';
 import { fetchProductsBrand } from '../http/brandApi';
 import { fetchCategoriesByBrand } from '../http/categoryApi';
 import { Context } from '../index';
-import { BRAND_ROUTE, LOCALHOST, NO_IMAGE, PAGE_FIRST } from '../utils/const';
+import { BRAND_ROUTE, LOCALHOST, NO_IMAGE } from '../utils/const';
 import '../css/InfoPage.css'
 
 const BrandInfoPage = () => {
-    const {product} = useContext(Context)
-    const {user} = useContext(Context)
-    const navigate = useNavigate()
+    const {product} = useContext(Context);
+    const {brand} = useContext(Context);
+    const {category} = useContext(Context);
+    const {page} = useContext(Context);
+    const {user} = useContext(Context);
+    const navigate = useNavigate();
 
     const click = async () => {
-        const dataProducts = await fetchProductsBrand(product.selectedBrand.id, user.user.role, PAGE_FIRST);
+        const dataProducts = await fetchProductsBrand(brand.selectedBrand.id, user.user.role, page.currentPage);
             product.setProducts(dataProducts.products);
-            product.setSelectedCategory(dataProducts.categoriesId);
-            product.setCountPages(dataProducts.countPages);
+            category.setSelectedCategory(dataProducts.categoriesId);
+            page.setCountPages(dataProducts.countPages);
 
-        const dataCategories = await fetchCategoriesByBrand(product.selectedCategory)
-            product.setCategoriesByBrand(dataCategories.categoriesByBrand)
+        const dataCategories = await fetchCategoriesByBrand(category.selectedCategory)
+            category.setCategoriesByBrand(dataCategories.categoriesByBrand)
 
         navigate(BRAND_ROUTE)
     }
 
     let img;
-    if (product.selectedBrand.img === null) {
+    if (brand.selectedBrand.img === null) {
         img = (NO_IMAGE)
     } else {
-        img = (LOCALHOST + product.selectedBrand.img)
+        img = (LOCALHOST + brand.selectedBrand.img)
     }
 
     return (
@@ -40,10 +43,10 @@ const BrandInfoPage = () => {
                 <h3 
                     className='textInfo'
                 >
-                    {product.selectedBrand.name}
+                    {brand.selectedBrand.name}
                 </h3>
                 <Image
-                    key={product.selectedBrand.id}
+                    key={brand.selectedBrand.id}
                     src={img}
                     className='imgInfoPage'
                 />
@@ -57,13 +60,13 @@ const BrandInfoPage = () => {
                 >
                     Info
                 </h3>
-                {product.selectedBrand.info}
+                {brand.selectedBrand.info}
             </Col>
             <Nav.Link 
                 className='navLinkInfo'
                 onClick={click}
             >
-                Back to {product.selectedBrand.name}
+                Back to {brand.selectedBrand.name}
             </Nav.Link>
         </Row>
     );

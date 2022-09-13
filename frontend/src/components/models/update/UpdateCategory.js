@@ -4,9 +4,11 @@ import { Form, Modal, Button } from 'react-bootstrap';
 import { formDataCategory, updateCategory } from '../../../http/categoryApi';
 import { useInput } from '../../../http/validateApi';
 import { Context } from '../../../index';
+import '../../../css/update/UpdateCategory.css'
 
 const UpdateCategory = ({show, onHide}) => {
-    const {product} = useContext(Context)
+    const {category} = useContext(Context);
+    const {brand} = useContext(Context);
     const categoryId = useInput(0, {isNumberId: {name: 'Category'}});
     const name = useInput('', {minLength: {value: 3, name: 'Name'}});
     const shortDescription = useInput('', {minLength: {value: 8, name: 'Short Description'}});
@@ -26,8 +28,8 @@ const UpdateCategory = ({show, onHide}) => {
                 brandsId.onSelect([]);
                 img.saveImg(null);
                 onHide();
-        } catch (error) {
-            setMessageError(error.response.data.message)
+        } catch (e) {
+            setMessageError(e.message)
         }
         
     }
@@ -39,23 +41,30 @@ const UpdateCategory = ({show, onHide}) => {
             centered
         >
             <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
+                <Modal.Title 
+                    id='contained-modal-title-vcenter'
+                >
                     Update a Category
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <div style={{color: 'red'}}>{messageError}</div>
-                {(categoryId.isDirty && categoryId.isNumberError) && <div className='mt-3' style={{color: 'red'}}>{categoryId.messageError}</div>}
+                <div className='error-message'>
+                    {messageError}
+                </div>
+                {(categoryId.isDirty && categoryId.isNumberError) && 
+                    <div className='error-message'>
+                        {categoryId.messageError}
+                    </div>}
                 <Form.Select 
-                    id='selectCategory' 
-                    className='mt-3'
+                    id='selectCategory'
+                    className='form-update-category'
                     onChange={e => categoryId.onChange(e)}
                     onBlur={e => categoryId.onBlur(e)}
                 >
                     <option value={0}>
                         Select a category
                     </option>
-                    {product.categories.map(category => (
+                    {category.categories.map(category => (
                         <option
                             key={category.id}
                             value={category.id}
@@ -65,48 +74,69 @@ const UpdateCategory = ({show, onHide}) => {
                     ))}
                 </Form.Select>
                 <Form>
-                    {(name.isDirty && name.minLengthError) && <div className='mt-3' style={{color: 'red'}}>{name.messageError}</div>}
+                    {(name.isDirty && name.minLengthError) && 
+                        <div className='error-message'>
+                            {name.messageError}
+                        </div>}
                     <Form.Control
-                        className='mt-3'
+                        className='form-update-category'
                         value={name.value}
                         onChange={e => name.onChange(e)}
                         onBlur={e => name.onBlur(e)}
-                        placeholder={`Update 'Name': ${product.categories.filter(item => {return item.id === Number(categoryId.value)}).map(item => item.name)}`}
+                        placeholder={`Update 'Name': ${category.categories.filter(item => {
+                            return item.id === Number(categoryId.value)}).map(item => item.name)}`
+                        }
                     />
 
-                    {(shortDescription.isDirty && shortDescription.minLengthError) && <div className='mt-3' style={{color: 'red'}}>{shortDescription.messageError}</div>}
+                    {(shortDescription.isDirty && shortDescription.minLengthError) && 
+                        <div className='error-message'>
+                            {shortDescription.messageError}
+                        </div>}
                     <Form.Control
-                        className='mt-3'
+                        className='form-update-category'
                         value={shortDescription.value}
                         onChange={e => shortDescription.onChange(e)}
                         onBlur={e => shortDescription.onBlur(e)}
-                        placeholder={`Update 'Short description': ${product.categories.filter(item => {return item.id === Number(categoryId.value)}).map(item => item.shortDescription)}`}
+                        placeholder={`Update 'Short description': ${category.categories.filter(item => {
+                            return item.id === Number(categoryId.value)}).map(item => item.shortDescription)}`
+                        }
                     />
 
-                    {(info.isDirty && info.minLengthError) && <div className='mt-3' style={{color: 'red'}}>{info.messageError}</div>}
+                    {(info.isDirty && info.minLengthError) && 
+                        <div className='error-message'>
+                            {info.messageError}
+                        </div>}
                     <Form.Control
-                        className='mt-3'
+                        className='form-update-category'
                         value={info.value}
                         onChange={e => info.onChange(e)}
                         onBlur={e => info.onBlur(e)}
-                        placeholder={`Update 'Info': ${product.categories.filter(item => {return item.id === Number(categoryId.value)}).map(item => item.info)}`}
+                        placeholder={`Update 'Info': ${category.categories.filter(item => {
+                            return item.id === Number(categoryId.value)}).map(item => item.info)}`
+                        }
                     />
 
-                    {(img.isDirty && img.imgError) && <div className='mt-3' style={{color: 'red'}}>{img.messageError}</div>}
+                    {(img.isDirty && img.imgError) && 
+                        <div className='error-message'>
+                            {img.messageError}
+                        </div>}
                     <Form.Control
-                        className='mt-3'
+                        className='form-update-category'
                         type='file'
                         onChange={e => img.saveImg(e)}
                         onBlur={e => img.onBlur(e)}
                     />
                 </Form>
-                <label className='mt-3'>Brands:</label>
-                {(brandsId.isDirty && brandsId.multiSelectError) && <div className='mt-3' style={{color: 'red'}}>{brandsId.messageError}</div>}
+                {(brandsId.isDirty && brandsId.multiSelectError) && 
+                    <div className='error-message'>
+                        {brandsId.messageError}
+                    </div>}
                 <Multiselect 
-                    className=' mt-1'
+                    className='form-update-category'
+                    placeholder='Brands: '
                     displayValue='name'
                     value='id'
-                    options={product.brands}
+                    options={brand.brands}
                     onSelect={e => brandsId.onSelect(e)}
                     onRemove={e => brandsId.onRemove(e)}
                     onBlur={e => brandsId.onBlur(e)}
@@ -116,16 +146,15 @@ const UpdateCategory = ({show, onHide}) => {
             </Modal.Body>
             <Modal.Footer>
                 <Button
+                    className='button-update-category'
                     variant='outline-primary'
-                    style={{
-                        cursor: 'pointer',
-                        borderRadius: '5px',
-                        margin: '2px'
-                    }}
                     disabled={
                         !categoryId.inputValid  || (
-                            !name.inputValid && !shortDescription.inputValid && 
-                            !info.inputValid && !brandsId.inputValid && !img.inputValid
+                            !name.inputValid && 
+                            !shortDescription.inputValid && 
+                            !info.inputValid && 
+                            !brandsId.inputValid && 
+                            !img.inputValid
                         )
                     }
                     onClick={click}
@@ -133,12 +162,8 @@ const UpdateCategory = ({show, onHide}) => {
                     Update
                 </Button>
                 <Button 
+                    className='button-update-category'
                     variant='outline-danger'
-                    style={{
-                        cursor: 'pointer',
-                        borderRadius: '5px',
-                        margin: '2px'
-                    }}
                     onClick={onHide}
                 >
                     Close

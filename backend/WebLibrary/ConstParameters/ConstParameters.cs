@@ -17,9 +17,12 @@ namespace WebLibrary.ConstParameters
 
         public const int START_PAGE = 1;
 
-        public const int LIMIT_PRODUCT_ONE_PAGE = 12;
-        public const int LIMIN_USER_ONE_PAGE = 10;
-        public const int LIMIN_ORDERS_ONE_PAGE = 10;
+        /*public const int LIMIT_PRODUCT_ONE_PAGE = 12;*/
+        /*public const int LIMIN_USER_ONE_PAGE = 10;*/
+        /*public const int LIMIN_ORDERS_ONE_PAGE = 10;*/
+        public const int LIMIT_PRODUCT_ONE_PAGE = 1;
+        public const int LIMIN_USER_ONE_PAGE = 1;
+        public const int LIMIN_ORDERS_ONE_PAGE = 1;
         
         public const string FORMAT_DATE_TIME_ORDER = "R";
 

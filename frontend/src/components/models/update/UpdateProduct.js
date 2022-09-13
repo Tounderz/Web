@@ -4,9 +4,13 @@ import {  formDataProduct, updateProduct } from '../../../http/productApi';
 import { Context } from '../../../index';
 import { useInput } from '../../../http/validateApi';
 import { TRUE_AND_FALSE } from '../../../utils/const';
+import '../../../css/update/UpdateProduct.css'
 
 const UpdateProduct = ({show, onHide}) => {
-    const {product} = useContext(Context)
+    const {product} = useContext(Context);
+    const {category} = useContext(Context);
+    const {brand} = useContext(Context);
+    const {type} = useContext(Context);
     const name = useInput('', {minLength: {value: 3, name: 'Name'}});
     const categoryId = useInput(0, {isNumberId: {name: 'Category'}})
     const brandId = useInput(0, {isNumberId: {name: 'Brand'}})
@@ -38,8 +42,8 @@ const UpdateProduct = ({show, onHide}) => {
                 available.onChange(0);
                 img.saveImg(null);
                 onHide();
-        } catch (error) {
-            setMessageError(error.response.data.message)
+        } catch (e) {
+            setMessageError(e.message)
         }
         
     }
@@ -52,88 +56,113 @@ const UpdateProduct = ({show, onHide}) => {
         centered
     >
         <Modal.Header closeButton>
-            <Modal.Title id="contained-modal-title-vcenter">
+            <Modal.Title 
+                id='contained-modal-title-vcenter'
+            >
                 {'Update a Product: ' + product.selectedProduct.name}
             </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-            <div style={{color: 'red'}}>{messageError}</div>
+            <div className='error-message'>{messageError}</div>
             <Form>
-                {(categoryId.isDirty && categoryId.isNumberError) && <div className='mt-3' style={{color: 'red'}}>{categoryId.messageError}</div>}
+                {(categoryId.isDirty && categoryId.isNumberError) && 
+                    <div className='error-message'>
+                        {categoryId.messageError}
+                    </div>}
                 <Form.Select
-                    className='mt-2 mb-2' 
+                    className='form-update-product' 
                     onChange={e => categoryId.onChange(e)}
                     onBlur={e => categoryId.onBlur(e)}
                 >
                     <option value=''>
-                        {'Assigned category: ' + product.categories.filter(category => { return category.id === product.selectedProduct.categoryId}).map(category => category.name)}
+                        {'Assigned category: ' + category.categories.filter(categoryItem => {
+                            return categoryItem.id === product.selectedProduct.categoryId}).map(categoryItem => categoryItem.name)}
                     </option>
-                        {product.categories.map(category => (
+                        {category.categories.map(categoryItem => (
                             <option
-                                key={category.id}
-                                value={category.id}
+                                key={categoryItem.id}
+                                value={categoryItem.id}
                             >
-                                {category.name}
+                                {categoryItem.name}
                             </option>
                         ))}
                 </Form.Select>
 
-                {(typeId.isDirty && typeId.isNumberError) && <div className='mt-3' style={{color: 'red'}}>{typeId.messageError}</div>}
+                {(typeId.isDirty && typeId.isNumberError) && 
+                    <div className='error-message'>
+                        {typeId.messageError}
+                    </div>}
                 <Form.Select
-                    className='mt-2 mb-2' 
+                    className='form-update-product' 
                     onChange={e => typeId.onChange(e)}
                     onBlur={e => typeId.onBlur(e)}
                 >
                     <option value=''>
-                        {'Assigned type: ' + product.types.filter(type => { return type.id === product.selectedProduct.typeId}).map(type => type.name)}
+                        {'Assigned type: ' + type.types.filter(typeImet => { 
+                            return typeImet.id === product.selectedProduct.typeId}).map(typeImet => typeImet.name)}
                     </option>
-                        {product.types.map(type => (
+                        {type.types.map(typeImet => (
                             <option
-                                key={type.id}
-                                value={type.id}
+                                key={typeImet.id}
+                                value={typeImet.id}
                             >
-                                {type.name}
+                                {typeImet.name}
                             </option>
                         ))}
                 </Form.Select>
-                {(brandId.isDirty && brandId.isNumberError) && <div className='mt-3' style={{color: 'red'}}>{brandId.messageError}</div>}
+
+                {(brandId.isDirty && brandId.isNumberError) && 
+                    <div className='error-message'>
+                        {brandId.messageError}
+                    </div>}
                 <Form.Select
-                    className='mt-2 mb-2' 
+                    className='form-update-product' 
                     onChange={e => brandId.onChange(e)}
                     onBlur={e => brandId.onBlur(e)}
                 >
                     <option value=''>
-                        {'Assigned brand: ' + product.brands.filter(brand => { return brand.id === product.selectedProduct.brandId}).map(brand => brand.name)}
+                        {'Assigned brand: ' + brand.brands.filter(brandItem => { 
+                            return brandItem.id === product.selectedProduct.brandId}).map(brandItem => brandItem.name)}
                     </option>
-                        {product.brands.map(brand => (
+                        {brand.brands.map(brandItem => (
                             <option
-                                key={brand.id}
-                                value={brand.id}
+                                key={brandItem.id}
+                                value={brandItem.id}
                             >
-                                {brand.name}
+                                {brandItem.name}
                             </option>
                         ))}
                 </Form.Select> 
-                {(name.isDirty && name.minLengthError) && <div className='mt-3' style={{color: 'red'}}>{name.messageError}</div>}
+                
+                {(name.isDirty && name.minLengthError) && 
+                    <div className='error-message'>
+                        {name.messageError}
+                    </div>}
                 <Form.Control
+                    className='form-update-product' 
                     value={name.value}
                     onChange={e => name.onChange(e)}
                     onBlur={e => name.onBlur(e)}
-                    className='mt-3'
                     placeholder={`Update Name: '${product.selectedProduct.name}'`}
                 />
-                {(shortDescription.isDirty && shortDescription.minLengthError) && <div className='mt-3' style={{color: 'red'}}>{shortDescription.messageError}</div>}
+                {(shortDescription.isDirty && shortDescription.minLengthError) && 
+                    <div className='error-message'>
+                        {shortDescription.messageError}
+                    </div>}
                 <Form.Control
+                    className='form-update-product' 
                     value={shortDescription.value}
                     onChange={e => shortDescription.onChange(e)}
                     onBlur={e => shortDescription.onBlur(e)}
-                    className='mt-3'
                     placeholder={`Update Short Description: '${product.selectedProduct.shortDescription}'`}
                 />
                
-                {(isFavourite.isDirty && isFavourite.isNumberError) && <div className='mt-3' style={{color: 'red'}}>{isFavourite.messageError}</div>}
+                {(isFavourite.isDirty && isFavourite.isNumberError) && 
+                    <div className='error-message'>
+                        {isFavourite.messageError}
+                    </div>}
                 <Form.Select 
-                    className='mt-3'
+                    className='form-update-product' 
                     onChange={e =>isFavourite.onChange(e)}
                     onBlur={e => isFavourite.onBlur(e)}
                 >
@@ -152,9 +181,13 @@ const UpdateProduct = ({show, onHide}) => {
                         </option>
                     ))}
                 </Form.Select>
-                {(available.isDirty && available.isNumberError) && <div className='mt-3' style={{color: 'red'}}>{available.messageError}</div>}
+
+                {(available.isDirty && available.isNumberError) && 
+                    <div className='error-message'>
+                        {available.messageError}
+                    </div>}
                 <Form.Select 
-                    className='mt-3'
+                    className='form-update-product' 
                     onChange={e =>available.onChange(e)}
                     onBlur={e => available.onBlur(e)}
                 >
@@ -173,18 +206,24 @@ const UpdateProduct = ({show, onHide}) => {
                         </option>
                     ))}
                 </Form.Select>
-                {(price.isDirty && price.priceError) && <div className='mt-3' style={{color: 'red'}}>{price.messageError}</div>}
+                {(price.isDirty && price.priceError) && 
+                    <div className='error-message'>
+                        {price.messageError}
+                    </div>}
                 <Form.Control
+                    className='form-update-product' 
                     value={price.value}
                     onChange={e => price.onChange(e)}
                     onBlur={e => price.onBlur(e)}
-                    className='mt-3'
                     placeholder='Enter the cost of the product'
                     type='number'
                 />
-                {(img.isDirty && img.imgError) && <div className='mt-3' style={{color: 'red'}}>{img.messageError}</div>}
+                {(img.isDirty && img.imgError) && 
+                    <div className='error-message'>
+                        {img.messageError}
+                    </div>}
                 <Form.Control
-                    className='mt-3'
+                    className='form-update-product' 
                     type='file'
                     onChange={e => img.saveImg(e)}
                     onBlur={e => img.onBlur(e)}
@@ -193,28 +232,26 @@ const UpdateProduct = ({show, onHide}) => {
         </Modal.Body>
         <Modal.Footer>
             <Button
+                className='button-update-product'
                 variant='outline-primary'
-                style={{
-                    cursor: 'pointer',
-                    borderRadius: '5px',
-                    margin: '2px'
-                }}
                 disabled={
-                    !name.inputValid && !categoryId.inputValid && !typeId.inputValid && 
-                    !brandId.inputValid && !price.inputValid && !isFavourite.inputValid && 
-                    !available.inputValid && !shortDescription.inputValid && !img.inputValid
+                    !name.inputValid && 
+                    !categoryId.inputValid && 
+                    !typeId.inputValid && 
+                    !brandId.inputValid && 
+                    !price.inputValid && 
+                    !isFavourite.inputValid && 
+                    !available.inputValid && 
+                    !shortDescription.inputValid && 
+                    !img.inputValid
                 }
                 onClick={update}
             >
                 Update
             </Button>
             <Button 
+                className='button-update-product'
                 variant='outline-danger'
-                style={{
-                    cursor: 'pointer',
-                    borderRadius: '5px',
-                    margin: '2px'
-                }}
                 onClick={onHide}
             >
                 Close

@@ -5,23 +5,30 @@ import { createBrand, formDataBrand } from '../../../http/brandApi';
 import Multiselect from 'multiselect-react-dropdown';
 import { useInput } from '../../../http/validateApi';
 import { ZERO } from '../../../utils/const';
+import '../../../css/create/CreateBrand.css'
+import { useState } from 'react';
 
 const CreateBrand = ({show, onHide}) => {
-    const {product} = useContext(Context)
+    const {category} = useContext(Context);
     const name = useInput('', {minLength: {value: 3, name: 'Name'}});
     const categoriesId = useInput([], {multiselect: {name: 'Categories'}});
     const info = useInput('', {minLength: {value: 8, name: "Info"}});
     const img = useInput(null, {isImg: { name: 'Img' }} );
+    const [messageError, setMessageError] = useState('');
 
     const click = async () => {
-        const formData = formDataBrand(ZERO, name.value, info.value, categoriesId.value, img.value);
-        await createBrand(formData).then(data => {
-            name.onChange('');
-            categoriesId.onChange([]);
-            info.onSelect('');
-            img.saveImg(null);
-            onHide();
-        })
+        try {
+            const formData = formDataBrand(ZERO, name.value, info.value, categoriesId.value, img.value);
+            await createBrand(formData);
+                name.onChange('');
+                categoriesId.onChange([]);
+                info.onSelect('');
+                img.saveImg(null);
+                onHide();
+        } catch (e) {
+            setMessageError(e.message);
+        }
+        
     }
 
     return (
@@ -31,44 +38,61 @@ const CreateBrand = ({show, onHide}) => {
             centered
         >
             <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
+                <Modal.Title 
+                    id='contained-modal-title-vcenter'
+                >
                     New Brand
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
+                <div className='error-message'>
+                    {messageError}
+                </div>
                 <Form>
-                    {(name.isDirty && name.minLengthError) && <div className='mt-3' style={{color: 'red'}}>{name.messageError}</div>}
+                    {(name.isDirty && name.minLengthError) && 
+                        <div className='error-message'>
+                            {name.messageError}
+                        </div>}
                     <Form.Control
-                        className='mt-3'
+                        className='form-control-create-brand'
                         value={name.value}
                         onChange={e => name.onChange(e)}
                         onBlur={e => name.onBlur(e)}
                         placeholder={'Enter the brand name'}
                     />
 
-                    {(info.isDirty && info.minLengthError) && <div className='mt-3' style={{color: 'red'}}>{info.messageError}</div>}
+                    {(info.isDirty && info.minLengthError) && 
+                        <div className='error-message'>
+                            {info.messageError}
+                        </div>}
                     <Form.Control
-                        className='mt-3'
+                        className='form-control-create-brand'
                         value={info.value}
                         onChange={e => info.onChange(e)}
                         onBlur={e => info.onBlur(e)}
                         placeholder={'Info'}
                     />
 
-                    {(img.isDirty && img.imgError) && <div className='mt-3' style={{color: 'red'}}>{img.messageError}</div>}
+                    {(img.isDirty && img.imgError) && 
+                        <div className='error-message'>
+                            {img.messageError}
+                        </div>}
                     <Form.Control
-                        className='mt-3'
+                        className='form-control-create-brand'
                         type='file'
                         onChange={e => img.saveImg(e)}
                         onBlur={e => img.onBlur(e)}
                     />
-                {(categoriesId.isDirty && categoriesId.multiSelectError) && <div className='mt-3' style={{color: 'red'}}>{categoriesId.messageError}</div>}
-                <label className='mt-3'>Categories:</label>
+                {(categoriesId.isDirty && categoriesId.multiSelectError) && 
+                    <div className='error-message'>
+                        {categoriesId.messageError}
+                    </div>}
                 <Multiselect 
-                    className=' mt-1'
+                    className='form-control-create-brand'
                     displayValue='name'
+                    placeholder='Categories:'
                     value='id'
-                    options={product.categories}
+                    options={category.categories}
                     onSelect={e => categoriesId.onSelect(e)}
                     onRemove={e => categoriesId.onRemove(e)}
                     onBlur={e => categoriesId.onBlur(e)}
@@ -78,24 +102,16 @@ const CreateBrand = ({show, onHide}) => {
             </Modal.Body>
             <Modal.Footer>
                 <Button
+                    className='button-create-brand'
                     variant='outline-primary'
-                    style={{
-                        cursor: 'pointer',
-                        borderRadius: '5px',
-                        margin: '2px'
-                    }}
                     disabled={!name.inputValid || !categoriesId.inputValid}
                     onClick={click}
                 >
                     Create
                 </Button>
                 <Button 
+                    className='button-create-brand'
                     variant='outline-danger'
-                    style={{
-                        cursor: 'pointer',
-                        borderRadius: '5px',
-                        margin: '2px'
-                    }}
                     onClick={onHide}
                 >
                     Close

@@ -18,13 +18,15 @@ import { fetchBaskets } from "../http/basketApi";
 import '../css/PersonalAccountPage.css'
 
 const PersonalAccountPage = observer(() => {
-    const {user} = useContext(Context)
-    const {product} = useContext(Context)
-    const {error} = useContext(Context)
-    const navigate = useNavigate()
+    const {user} = useContext(Context);
+    const {order} = useContext(Context);
+    const {error} = useContext(Context);
+    const {cart} = useContext(Context);
+    const {page} = useContext(Context);
+    const navigate = useNavigate();
     const [userUpdateVisible, setUserUpdateVisible] = useState(false);
-    const [updatePasswordVisible, setUpdatePasswordVisible] = useState(false)
-    const [updatePhotoVisible, setUpdatePhotoVisible] = useState(false)
+    const [updatePasswordVisible, setUpdatePasswordVisible] = useState(false);
+    const [updatePhotoVisible, setUpdatePhotoVisible] = useState(false);
     
     const logOut = async () => {
         const data = await logout();
@@ -47,24 +49,27 @@ const PersonalAccountPage = observer(() => {
 
     const basket = async () => {
         const data = await fetchBaskets(user.user.login, PAGE_FIRST);
-            product.setBaskets(data.baskets);
-            product.setTotalAmount(data.sum);
-            product.setCountPages(data.countPages);
+            cart.setBaskets(data.baskets);
+            cart.setTotalAmount(data.sum);
+            page.setCurrentPage(PAGE_FIRST);
+            page.setCountPages(data.countPages);
             navigate(BASKET_ROUTE);
     }
 
     const purchaseHistory = async () => {
         try {
             const data = await ordersList(user.user.login, PAGE_FIRST);
-                product.setOrdersList(data.orders);
-                product.setTotalAmount(data.totalAmount);
-                product.setCountPages(data.countPages);
+                order.setOrdersList(data.orders);
+                order.setTotalAmount(data.totalAmount);
+                page.setCurrentPage(PAGE_FIRST);
+                page.setCountPages(data.countPages);
                 navigate(PURCHASES_STORY_ROUTE);
         } catch (e) {
             error.setMessageError(e.message);
-                product.setOrdersList([]);
-                product.setTotalAmount(0);
-                product.setCountPages([]);
+                order.setOrdersList([]);
+                order.setTotalAmount(0);
+                page.setCurrentPage(PAGE_FIRST);
+                page.setCountPages(0);
                 navigate(PURCHASES_STORY_ROUTE);
         }
 

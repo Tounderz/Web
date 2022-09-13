@@ -4,12 +4,12 @@ import { Context } from '../index';
 import '../css/Completed.css'
 
 const Completed = () => {
-    const {product} = useContext(Context)
+    const {order} = useContext(Context);
 
     return (
         <Row className='completedfonPage'>
             <Container className='containerCompleted'>
-                <h1>{product.selectedOrderId ? 'Order № ' + product.selectedOrderId : 'You are not logged in'}</h1>
+                <h1>{order.selectedOrderId ? 'Order № ' + order.selectedOrderId : 'You are not logged in'}</h1>
             </Container>
         </Row>
     );

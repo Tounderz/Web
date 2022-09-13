@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite';
-import React, { useContext, useState } from 'react';
-import { Button, Card, Col, ListGroup, Pagination, Row } from 'react-bootstrap';
+import React, { useContext } from 'react';
+import { Button, Card, Col, ListGroup, Row } from 'react-bootstrap';
 import { Context } from '../index';
 import ProductItem from '../components/ProductItem';
 import TypeItem from '../components/TypeItem';
@@ -12,51 +12,52 @@ import { fetchTypesByBrand } from '../http/typeApi';
 import { useInput } from '../http/validateApi';
 import '../css/CategoryPage.css'
 import { SvgSelector } from '../components/Svg/SvgSelector';
+import PageBar from '../components/PageBar';
 
 const CategoryPage = observer(() => {
     const {product} = useContext(Context);
-    const {user} = useContext(Context)
-    const {error} = useContext(Context)
-    const navigate = useNavigate()
-    const pages = []
-    const [page, setPage] = useState(PAGE_FIRST)
-    const brandsId = useInput([])
+    const {category} = useContext(Context);
+    const {brand} = useContext(Context);
+    const {type} = useContext(Context);
+    const {user} = useContext(Context);
+    const {error} = useContext(Context);
+    const {page} = useContext(Context);
+    const navigate = useNavigate();
+    const brandsId = useInput([]);
 
-    const paginationClick = async (item) => {
-        const data = await fetchProductsCategory(product.selectedCategory.id, user.user.role, item);
+    // setTimeout(function(){
+    //     document.body.classList.add('categoryFonPage_visable');
+    // }, 200);
+
+    const paginationClick = async () => {
+        const data = await fetchProductsCategory(category.selectedCategory.id, user.user.role, page.currentPage);
             product.setProducts(data.products);
-            product.setCategoriesByBrand(data.categoriesByBrand);
-            product.setCountPages(data.countPages);
-        setPage(item);
+            category.setCategoriesByBrand(data.categoriesByBrand);
+            page.setCountPages(data.countPages);
     }
 
     const viewBrand = async () => {
         try {
-            product.setBrandsByCategory(brandsId.value)
-            product.setBrandsByType(brandsId.value)
-            const dataProducts = await fetchProductsCategoryByBrand(product.selectedCategory.id, brandsId.value, PAGE_FIRST);
+            brand.setBrandsByCategory(brandsId.value)
+            brand.setBrandsByType(brandsId.value)
+            const dataProducts = await fetchProductsCategoryByBrand(category.selectedCategory.id, brandsId.value, PAGE_FIRST);
                 product.setProducts(dataProducts.products);
-                product.setCountPages(dataProducts.countPages);
-                product.setSelectedType(dataProducts.typesId);
+                page.setCountPages(dataProducts.countPages);
+                page.setCurrentPage(PAGE_FIRST);
+                type.setSelectedType(dataProducts.typesId);
 
-            const dataTypes = await fetchTypesByBrand(product.selectedType);
-                product.setTypes(dataTypes.typesByBrand)
+            const dataTypes = await fetchTypesByBrand(type.selectedType);
+                type.setTypes(dataTypes.typesByBrand)
 
             navigate(BRANDS_BY_CATEGORY_ROUTE)
         } catch (e) {
-            error.setMessageError(e.response.data.message);
+            error.setMessageError(e.message);
             navigate(ERROR_ROUTE)
         }
     }
 
     const infoCategory = () => {
         navigate(CATEGORY_INFO_ROUTE)
-    }
-
-    if (product.countPages > 1) {
-        for (let index = 0; index < product.countPages; index++) {
-            pages.push(index + 1);
-        }
     }
 
     return (
@@ -73,7 +74,7 @@ const CategoryPage = observer(() => {
                         placeholder='Brands:'
                         displayValue='name'
                         value='id'
-                        options={product.brandsByCategory}
+                        options={brand.brandsByCategory}
                         onSelect={e => brandsId.onSelect(e)}
                         onRemove={e => brandsId.onRemove(e)}
                         onBlur={e => brandsId.onBlur(e)}
@@ -104,8 +105,8 @@ const CategoryPage = observer(() => {
                         >
                             Types:
                         </ListGroup.Item >
-                        {product.types.map(type => 
-                            <TypeItem key={type.id} type={type} brandsId={brandsId.value}/>
+                        {type.types.map(typeItem => 
+                            <TypeItem key={typeItem.id} typeItem={typeItem} brandsId={brandsId.value}/>
                         )}
                     </ListGroup >
                 </Row>
@@ -120,31 +121,15 @@ const CategoryPage = observer(() => {
             <Col md={2}>
                 <Button
                     className='buttonInfoCategory'
-                    // variant='outline-info'
                     variant='link'
                     onClick={infoCategory}
                 >
-                    {/* Info */}
-                    {/* Info Category: {product.selectedCategory.name} */}
                     <SvgSelector id='info'/>
                 </Button>
             </Col>
-            <Row>
-                <Pagination 
-                    className='pagination'
-                    size='sm'
-                >
-                    {pages.map(item =>
-                        <Pagination.Item
-                            key={item}
-                            active={item === page}
-                            onClick={() => paginationClick(item)}
-                        >
-                            {item}
-                        </Pagination.Item>
-                    )}
-                </Pagination>
-            </Row>  
+            <Row onClick={() => paginationClick()}>
+                <PageBar/>
+            </Row>
         </Row>
     );
 });

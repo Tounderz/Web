@@ -1,0 +1,9 @@
+.form-control-create-brand {
+    margin-top: 2%;
+}
+
+.button-create-brand {
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 2px;
+}

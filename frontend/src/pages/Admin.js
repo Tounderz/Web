@@ -11,24 +11,42 @@ import { fetchProducts } from '../http/productApi';
 import '../css/AdminPage.css'
 
 const Admin = () => {
-    const {user} = useContext(Context)
-    const {product} = useContext(Context)
-    const [create, setCreate] = useState(false)
-    const [update, setUpdate] = useState(false)
-    const [remove, setRemove] = useState(false)
-    const navigate = useNavigate()
+    const {user} = useContext(Context);
+    const {product} = useContext(Context);
+    const {page} = useContext(Context);
+    const {error} = useContext(Context);
+    const {search} = useContext(Context);
+    const {sort} = useContext(Context);
+    const [create, setCreate] = useState(false);
+    const [update, setUpdate] = useState(false);
+    const [remove, setRemove] = useState(false);
+    const navigate = useNavigate();
 
     const userList = async () => {
         const data = await fetchUsers(PAGE_FIRST);
             user.setUsersList(data.usersList);
-            user.setCountPages(data.countPages);
+            page.setCurrentPage(PAGE_FIRST);
+            page.setCountPages(data.countPages);
+            search.setSearchBy('');
+            search.setSelectedSearchParameter('');
+            sort.setFieldNames([]);
+            sort.setFieldName('');
+            sort.setTypeSort('');
+            error.setMessageError('');
             navigate(USERLIST_ROUTE)
     }
 
     const productList = async () => {
         const data = await fetchProducts(PAGE_FIRST);
             product.setProducts(data.products);
-            product.setCountPages(data.countPages);
+            page.setCurrentPage(PAGE_FIRST);
+            page.setCountPages(data.countPages);
+            search.setSearchBy('');
+            search.setSelectedSearchParameter('');
+            sort.setFieldNames([]);
+            sort.setFieldName('');
+            sort.setTypeSort('');
+            error.setMessageError('');
             navigate(PRODUCTS_LIST_ROUTE)
     }
 

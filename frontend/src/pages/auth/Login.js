@@ -9,13 +9,11 @@ import { useInput } from "../../http/validateApi";
 import '../../css/Auth.css'
 
 const Login = () => {
-    const {user} = useContext(Context)
-    const [message, setMessage] = useState('')
+    const {user} = useContext(Context);
+    const [message, setMessage] = useState('');
     const login = useInput('', {minLength: {value: 3, name: 'login'}});
     const password = useInput('', {minLength: {value: 4, name: 'password'}});
     const navigate = useNavigate();
-
-    
 
     const click = async () => {
         try {
@@ -28,8 +26,8 @@ const Login = () => {
                 login.onChange('');
                 password.onChange('');
             navigate(PERSONAL_ACCOUNT_ROUTE);
-        } catch (error) {
-            setMessage(error.response.data.message);
+        } catch (e) {
+            setMessage(e.message);
         }
     }
 
@@ -42,7 +40,6 @@ const Login = () => {
                     <h1 style={{ textName: 'italic' }}>Please Sign In</h1>
                     <div className='errorAuth'>{message}</div>
                     {(login.isDirty && login.minLengthError) && <div className='errorAuth'>{login.messageError}</div>}
-                    
                     <Form.Control
                         className='formControlAuth'
                         placeholder='Login'

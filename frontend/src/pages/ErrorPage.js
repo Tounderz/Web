@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite';
 import '../css/ErrorPage.css'
 
 const ErrorPage = observer(() => {
-    const {error} = useContext(Context)
+    const {error} = useContext(Context);
 
     return (
         <div className='errorFonPage'>

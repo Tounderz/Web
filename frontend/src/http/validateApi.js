@@ -70,7 +70,7 @@ const useValidation = (value, validations) => {
                 case 'isPhone':
                     const rePhone = /^(\s*)?(\+)?([- _():=+]?\d[- _():=+]?){10,14}(\s*)?$/;
                     rePhone.test(value) ? setPhoneError(false) : setPhoneError(true);
-                    setMessageError(`The 'phone' field can't to empty or Incorrect phone number.`);
+                    setMessageError(`The 'Phone' field can't to empty or Incorrect phone number.`);
                     break;
                 case 'isPasswordSecurity':
                     const rePasswordSecurity = /^(?=.*[A-Z].*[A-Z])(?=.*[!@#$&*])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8,}$/;

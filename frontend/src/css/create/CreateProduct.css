@@ -1,0 +1,9 @@
+.form-control-create-product {
+    margin-top: 2%;
+}
+
+.button-create-product {
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 2px;
+}

@@ -3,12 +3,13 @@ import { Form, Modal, Button } from 'react-bootstrap';
 import { Context } from '../../../index';
 import { useInput } from '../../../http/validateApi';
 import { updatePassword } from '../../../http/userApi';
+import '../../../css/update/UpdatePassword.css'
 
 const UpdatePassword = ({show, onHide}) => {
     const {user} = useContext(Context);
-    const oldPassword = useInput('', {minLength: {value: 6, name: 'password'}});
-    const newPassword = useInput('', {minLength: {value: 6, name: 'newPassword'}, isConfirmPassword: oldPassword.value});
-    const confirmPassword = useInput('', {minLength: {value: 6, name: 'confirmPassword'}, isConfirmPassword: newPassword.value});
+    const oldPassword = useInput('', {minLength: {value: 6, name: 'Password'}});
+    const newPassword = useInput('', {minLength: {value: 6, name: 'New Password'}, isConfirmPassword: {value: oldPassword.value}});
+    const confirmPassword = useInput('', {minLength: {value: 6, name: 'Confirm Password'}, isConfirmPassword: {value: newPassword.value}});
     const [messageError, setMessageError] = useState('');
 
     const update = async () => {
@@ -20,8 +21,8 @@ const UpdatePassword = ({show, onHide}) => {
                 confirmPassword.onChange('');
                 setMessageError('')
                 onHide();
-        } catch (error) {
-            setMessageError(error.response.data.message);
+        } catch (e) {
+            setMessageError(e.message);
         }
     }
 
@@ -33,16 +34,23 @@ const UpdatePassword = ({show, onHide}) => {
             centered
         >
             <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
+                <Modal.Title
+                    id='contained-modal-title-vcenter'
+                >
                     Update Password
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <div style={{color: 'red'}}>{messageError}</div>
+                <div className='error-message'>
+                    {messageError}
+                </div>
                 <Form>
-                    {(oldPassword.isDirty && oldPassword.minLengthError) && <div className='mt-3' style={{color: 'red'}}>{oldPassword.messageError}</div>}
-                    <Form.Label>Old password:</Form.Label>
+                    {(oldPassword.isDirty && oldPassword.minLengthError) && 
+                        <div className='error-message'>
+                            {oldPassword.messageError}
+                        </div>}
                     <Form.Control
+                        className='form-update-password'
                         type="password"
                         placeholder="Old password"
                         value={oldPassword.value}
@@ -50,10 +58,13 @@ const UpdatePassword = ({show, onHide}) => {
                         onBlur={e => oldPassword.onBlur(e)}
                     />
  
-                    {(newPassword.isDirty && newPassword.minLengthError) && <div className='mt-3' style={{color: 'red'}}>{newPassword.messageError}</div>}
-                    {(newPassword.isDirty && !newPassword.confirmPasswordError) && <div className='mt-3' style={{color: 'red'}}>{newPassword.messageError}</div>}
-                    <Form.Label className='mt-3'>New password:</Form.Label>
+                    {((newPassword.isDirty && newPassword.minLengthError) || 
+                        (newPassword.isDirty && newPassword.confirmPasswordError)) && 
+                        <div className='error-message'>
+                            {newPassword.messageError}
+                        </div>} 
                     <Form.Control
+                        className='form-update-password'
                         type="password"
                         placeholder="New password"
                         value={newPassword.value}
@@ -61,9 +72,13 @@ const UpdatePassword = ({show, onHide}) => {
                         onBlur={e => newPassword.onBlur(e)}
                     />
 
-                    {((confirmPassword.isDirty && confirmPassword.minLengthError) || (confirmPassword.isDirty && confirmPassword.confirmPasswordError)) && <div className='mt-3' style={{color: 'red'}}>{confirmPassword.messageError}</div>}
-                    <Form.Label className='mt-3'>Confirm Password:</Form.Label>
+                    {((confirmPassword.isDirty && confirmPassword.minLengthError) || 
+                        (confirmPassword.isDirty && confirmPassword.confirmPasswordError)) && 
+                        <div className='error-message'>
+                            {confirmPassword.messageError}
+                        </div>}
                     <Form.Control
+                        className='form-update-password'
                         type="password"
                         placeholder="Confirm Password"
                         value={confirmPassword.value}
@@ -74,24 +89,20 @@ const UpdatePassword = ({show, onHide}) => {
             </Modal.Body>
             <Modal.Footer>
                 <Button
+                    className='button-update-password'
                     variant='outline-primary'
-                    style={{
-                        cursor: 'pointer',
-                        borderRadius: '5px',
-                        margin: '2px'
-                    }}
-                    disabled={!oldPassword.inputValid || !newPassword.inputValid || !confirmPassword.inputValid}
+                    disabled={
+                        !oldPassword.inputValid || 
+                        !newPassword.inputValid || 
+                        !confirmPassword.inputValid
+                    }
                     onClick={() => update()}
                 >
                     Update
                 </Button>
                 <Button 
+                    className='button-update-password'
                     variant='outline-danger'
-                    style={{
-                        cursor: 'pointer',
-                        borderRadius: '5px',
-                        margin: '2px'
-                    }}
                     onClick={onHide}
                 >
                     Close

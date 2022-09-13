@@ -1,42 +1,43 @@
 import React, { useContext, useState } from "react";
-import { Button, Col, Nav, Pagination, Row, Table } from "react-bootstrap";
+import { Button, Col, Nav, Row, Table } from "react-bootstrap";
 import { useNavigate } from "react-router";
 import UpdateUser from "../components/models/update/UpdateUser";
-import SearchForm from "../components/SearchForm";
 import SortForm from "../components/SortForm";
 import { sortUsers } from "../http/sortApi";
-import { removeUser, fetchUsers } from "../http/userApi";
+import { fetchUsers } from "../http/userApi";
 import { Context } from "../index";
-import { ADMIN_ROUTE, FIELD_NAMES_USERS, PAGE_FIRST, ROLE_ARRAY } from "../utils/const";
+import { ADMIN_ROUTE, FIELD_NAMES_USERS, ROLE_ARRAY } from "../utils/const";
 import '../css/Table.css'
+import ConfirmRemoval from "../components/models/remove/ConfirmRemoval";
+import PageBar from "../components/PageBar";
+import { observer } from "mobx-react-lite";
+import SearchFormProductAndUserList from "../components/SearchFormProductAndUserList";
+import { fetchSearchUsers } from "../http/searchApi";
 
-const UsersListPage = () => {
+const UsersListPage = observer(() => {
     const { user } = useContext(Context);
-    const { general } = useContext(Context);
+    const { sort } = useContext(Context);
+    const { remove } = useContext(Context);
+    const { page } = useContext(Context);
+    const { search } = useContext(Context);
     const navigate = useNavigate();
     const [userUpdateVisible, setUserUpdateVisible] = useState(false);
     const [sortVisible, setSortVisible] = useState(false);
+    const [removeVisible, setRemoveVisible] = useState(false);
     const roleArray = [];
-    const pages = [];
-    const [page, setPage] = useState(PAGE_FIRST);
 
-    const paginationClick = async (item) => {
-        if (general.typeSort !== '' || general.fieldName !== '') {
-            const data = await sortUsers(general.fieldName, general.typeSort, item);
+    const paginationClick = async () => {
+        if (sort.typeSort !== '' || sort.fieldName !== '') {
+            const data = await sortUsers(sort.fieldName, sort.typeSort, page.currentPage);
                 user.setUsersList(data.usersList);
-                setPage(item);
-        } else {
-            const data = await fetchUsers(item);
+        } else if (search.searchBy !== '' || search.selectedSearchParameter !== '') {
+            const data = await fetchSearchUsers(search.selectedSearchParameter, page.currentPage, search.searchBy);
                 user.setUsersList(data.usersList);
-                setPage(item);
+            } else {
+            const data = await fetchUsers(page.currentPage);
+                user.setUsersList(data.usersList);
         }
     };
-
-    if (user.countPages > 1) {
-        for (let index = 0; index < user.countPages; index++) {
-            pages.push(index + 1);
-        }
-    }
 
     for (let index = 0; index < ROLE_ARRAY.length; index++) {
         if (user.user.role === "admin" && ROLE_ARRAY[index] !== "admin") {
@@ -50,10 +51,11 @@ const UsersListPage = () => {
         }
     }
 
-    const userRemove = async (id) => {
-        const data = await removeUser(id);
-            user.setUsersList(data.usersList);
-            user.setCountPages(data.countPages);
+    const userRemove = async (item) => {
+        setRemoveVisible(true);
+        remove.setRemoveObjeck(item);
+        remove.setRemoveParameterName('user');
+        
     };
 
     const userUpdate = async (item) => {
@@ -62,14 +64,14 @@ const UsersListPage = () => {
     };
 
     const sortClick = () => {
-        general.setFieldNames(FIELD_NAMES_USERS);
+        sort.setFieldNames(FIELD_NAMES_USERS);
             setSortVisible(true);
     }
 
     const clickAdmin = () => {
-        general.setFieldNames([]);
-        general.setFieldName('');
-        general.setTypeSort('');
+        sort.setFieldNames([]);
+        sort.setFieldName('');
+        sort.setTypeSort('');
         navigate(ADMIN_ROUTE);
     }
 
@@ -81,7 +83,7 @@ const UsersListPage = () => {
             >
                 <Row>
                     <Col md={9}>
-                        <SearchForm 
+                        <SearchFormProductAndUserList 
                             key='id'
                             parameter='user'
                         />
@@ -136,7 +138,7 @@ const UsersListPage = () => {
                                             className='buttonTable'
                                             variant='outline-danger'
                                             disabled={!roleArray.some((i) => i === item.role)}
-                                            onClick={() => userRemove(item.id)}
+                                            onClick={() => userRemove(item)}
                                         >
                                             Remove
                                         </Button>
@@ -145,23 +147,11 @@ const UsersListPage = () => {
                             ))}
                         </tbody>
                     </Table>
-                    <Row>
-                        <Pagination
-                            className='pagination'
-                            size="sm"
-                        >
-                            {pages.map((item) => (
-                                <Pagination.Item
-                                    key={item}
-                                    active={item === page}
-                                    onClick={() => paginationClick(item)}
-                                >
-                                    {item}
-                                </Pagination.Item>
-                            ))}
-                        </Pagination>
-                        <Nav.Link onClick={clickAdmin}>Admin panel</Nav.Link>
+                    <Row onClick={() => paginationClick()}>
+                        <PageBar/>
                     </Row>
+                    <Nav.Link onClick={clickAdmin}>Admin panel</Nav.Link>
+
                     <UpdateUser
                         show={userUpdateVisible}
                         onHide={() => setUserUpdateVisible(false)}
@@ -171,9 +161,10 @@ const UsersListPage = () => {
                         onHide={() => setSortVisible(false)}
                         parameter='user'
                     />
-            </Col>       
+            </Col>    
+            <ConfirmRemoval show={removeVisible} onHide={() => setRemoveVisible(false)}/>   
         </Row>
     );
-};
+});
 
 export default UsersListPage;

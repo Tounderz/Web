@@ -1,5 +1,4 @@
 import { CONFIG_MULTIPART, FORM_DATA_VIEW, FORM_DATA_IDS} from '../utils/const';
-import axiosApi from './axiosApi';
 import { createRequest } from './interceptor';
 
 export const formDataCategory = (categoryId, name, shortDescription, info, img, brandsId) => {
@@ -15,12 +14,12 @@ export const formDataCategory = (categoryId, name, shortDescription, info, img, 
 }
 
 export const fetchCategories = async () => {
-    const {data} = await axiosApi.get(`/categories/list`);
+    const {data} = await createRequest().get(`/categories/list`);
     return data;
 }
 
 export const fetchCategoriesByBrand = async (categoriesId) => {
-    const {data} = await axiosApi.post(`/categories/categoriesByBrand`, FORM_DATA_IDS(categoriesId), CONFIG_MULTIPART);
+    const {data} = await createRequest().post(`/categories/categoriesByBrand`, FORM_DATA_IDS(categoriesId), CONFIG_MULTIPART);
     return data;
 }
 
@@ -40,7 +39,7 @@ export const removeCategory = async (id) => {
 }
 
 export const fetchProductsCategory = async (categoryId, role, page) => {
-    const {data} = await axiosApi.post(`/categories/productsCategory`, FORM_DATA_VIEW(categoryId, role, page), CONFIG_MULTIPART);
+    const {data} = await createRequest().post(`/categories/productsCategory`, FORM_DATA_VIEW(categoryId, role, page), CONFIG_MULTIPART);
     return data;
 }
 
@@ -53,6 +52,6 @@ const formData = (categoryId, brandsId, page) => {
     return formData;
 }
 export const fetchProductsCategoryByBrand = async (categoryId, brandsId, page) => {
-    const {data} = await axiosApi.post(`/categories/categoryByBrand`, formData(categoryId, brandsId, page), CONFIG_MULTIPART);
+    const {data} = await createRequest().post(`/categories/categoryByBrand`, formData(categoryId, brandsId, page), CONFIG_MULTIPART);
     return data;
 }

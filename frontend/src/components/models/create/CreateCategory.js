@@ -5,9 +5,10 @@ import { createCategory, formDataCategory } from '../../../http/categoryApi';
 import { Multiselect } from 'multiselect-react-dropdown';
 import { useInput } from '../../../http/validateApi';
 import { ZERO } from '../../../utils/const';
+import '../../../css/create/CreateCategory.css'
 
 const CreateCategory = ({show, onHide}) => {
-    const {product} = useContext(Context)
+    const {brand} = useContext(Context);
     const name = useInput('', {minLength: {value: 3, name: 'Name'}});
     const shortDescription = useInput('', {minLength: {value: 8, name: 'Short Description'}});
     const info = useInput('', {minLength: {value: 8, name: 'Info'}});
@@ -38,14 +39,21 @@ const CreateCategory = ({show, onHide}) => {
             centered
         >
             <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
+                <Modal.Title
+                    id='contained-modal-title-vcenter'
+                >
                     New Category
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <div style={{color: 'red'}}>{messageError}</div>
+                <div className='error-message'>
+                    {messageError}
+                </div>
                 <Form>
-                    {(name.isDirty && name.minLengthError) && <div className='mt-3' style={{color: 'red'}}>{name.messageError}</div>}
+                    {(name.isDirty && name.minLengthError) && 
+                        <div className='error-message'>
+                            {name.messageError}
+                        </div>}
                     <Form.Control
                         value={name.value}
                         onChange={e => name.onChange(e)}
@@ -53,38 +61,50 @@ const CreateCategory = ({show, onHide}) => {
                         placeholder={'Enter the category name'}
                     />
 
-                    {(shortDescription.isDirty && shortDescription.minLengthError) && <div className='mt-3' style={{color: 'red'}}>{shortDescription.messageError}</div>}
+                    {(shortDescription.isDirty && shortDescription.minLengthError) && 
+                        <div className='error-message'>
+                            {shortDescription.messageError}
+                        </div>}
                     <Form.Control
-                        className='mt-3'
+                        className='form-control-create-category'
                         value={shortDescription.value}
                         onChange={e => shortDescription.onChange(e)}
                         onBlur={e => shortDescription.onBlur(e)}
                         placeholder={'Short description'}
                     />
 
-                    {(info.isDirty && info.minLengthError) && <div className='mt-3' style={{color: 'red'}}>{info.messageError}</div>}
+                    {(info.isDirty && info.minLengthError) && 
+                        <div className='error-message'>
+                            {info.messageError}
+                        </div>}
                     <Form.Control
-                        className='mt-3'
+                        className='form-control-create-category'
                         value={info.value}
                         onChange={e => info.onChange(e)}
                         onBlur={e => info.onBlur(e)}
                         placeholder={'Info'}
                     />
-                    {(img.isDirty && img.imgError) && <div className='mt-3' style={{color: 'red'}}>{img.messageError}</div>}
+                    {(img.isDirty && img.imgError) && 
+                        <div className='error-message'>
+                            {img.messageError}
+                        </div>}
                     <Form.Control
-                        className='mt-3'
+                        className='form-control-create-category'
                         type='file'
                         onChange={e => img.saveImg(e)}
                         onBlur={e => img.onBlur(e)}
                     />
                 </Form>
-                <label className='mt-3'>Brands:</label>
-                {(brandsId.isDirty && brandsId.multiSelectError) && <div className='mt-3' style={{color: 'red'}}>{brandsId.messageError}</div>}
+                {(brandsId.isDirty && brandsId.multiSelectError) && 
+                    <div className='error-message'>
+                        {brandsId.messageError}
+                    </div>}
                 <Multiselect 
-                    className=' mt-1'
+                    className='form-control-create-category'
+                    placeholder='Brands:'
                     displayValue='name'
                     value='id'
-                    options={product.brands}
+                    options={brand.brands}
                     onSelect={e => brandsId.onSelect(e)}
                     onRemove={e => brandsId.onRemove(e)}
                     onBlur={e => brandsId.onBlur(e)}
@@ -94,24 +114,16 @@ const CreateCategory = ({show, onHide}) => {
             </Modal.Body>
             <Modal.Footer>
                 <Button 
+                    className='button-create-category'
                     variant='outline-primary'
-                    style={{
-                        cursor: 'pointer',
-                        borderRadius: '5px',
-                        margin: '2px'
-                    }}
                     disabled={!name.inputValid || !brandsId.inputValid}
                     onClick={click}
                 >
                     Create
                 </Button>
                 <Button 
+                    className='button-create-category'
                     variant='outline-danger'
-                    style={{
-                        cursor: 'pointer',
-                        borderRadius: '5px',
-                        margin: '2px'
-                    }}
                     onClick={onHide}
                 >
                     Close

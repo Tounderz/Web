@@ -25,8 +25,8 @@ const Register = observer(() => {
             const formData = formDataUser(ZERO, name.value, surname.value, email.value, phone.value, login.value, password.value, img.value);
             await register(formData);
             navigate(LOGIN_ROUTE);
-        } catch (error) {
-            setMessageError(error.response.data.message)
+        } catch (e) {
+            setMessageError(e.message)
         }
         finally{
             name.onChange('');

@@ -3,10 +3,11 @@ import { Modal, Form, Button } from 'react-bootstrap';
 import { removeCategory } from '../../../http/categoryApi';
 import { useInput } from '../../../http/validateApi';
 import { Context } from '../../../index';
+import '../../../css/remove/RemoveCategory.css'
 
 const RemoveCategory = ({show, onHide}) => {
-    const {product} = useContext(Context)
-    const categoryId = useInput(0, {isNumberId: {name: 'Category'}})
+    const {category} = useContext(Context);
+    const categoryId = useInput(0, {isNumberId: {name: 'Category'}});
 
     const click = async () =>  {
         await removeCategory(categoryId.value);
@@ -21,21 +22,26 @@ const RemoveCategory = ({show, onHide}) => {
             centered
         >
             <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
+                <Modal.Title 
+                    id='contained-modal-title-vcenter'
+                >
                     Remove a Category
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                {(categoryId.isDirty && categoryId.isNumberError) && <div className='mt-3' style={{color: 'red'}}>{categoryId.messageError}</div>}
+                {(categoryId.isDirty && categoryId.isNumberError) && 
+                    <div className='error-message'>
+                        {categoryId.messageError}
+                    </div>}
                 <Form.Select
-                    className='mt-3'
+                    className='form-category-remove'
                     onChange={e => categoryId.onChange(e)}
                     onBlur={e => categoryId.onBlur(e)}
                 >
                     <option value=''>
                         Select a category
                     </option>
-                    {product.categories.map(category => (
+                    {category.categories.map(category => (
                         <option
                             value={category.id}
                             key={category.id}
@@ -47,24 +53,16 @@ const RemoveCategory = ({show, onHide}) => {
             </Modal.Body>
             <Modal.Footer>
                 <Button
+                    className='button-category-remove'
                     variant='outline-primary'
-                    style={{
-                        cursor: 'pointer',
-                        borderRadius: '5px',
-                        margin: '2px'
-                    }}
                     disabled={!categoryId.inputValid}
                     onClick={() => click()}
                 >
                     Remove
                 </Button>
                 <Button 
+                    className='button-category-remove'
                     variant='outline-danger'
-                    style={{
-                        cursor: 'pointer',
-                        borderRadius: '5px',
-                        margin: '2px'
-                    }}
                     onClick={onHide}
                 >
                     Close

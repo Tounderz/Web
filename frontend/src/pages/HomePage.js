@@ -12,23 +12,25 @@ import '../css/HomePage.css'
 
 
 const HomePage = observer(() => {
-    const {product} = useContext(Context)
+    const {product} = useContext(Context);
+    const {category} = useContext(Context);
+    const {brand} = useContext(Context);
 
     useEffect(async () => {
         const dataPopularCategories = await fetchCategoriesPopular();
-            product.setPopularCategories(dataPopularCategories.popularCategories);
+            category.setPopularCategories(dataPopularCategories.popularCategories);
 
         const dataCategories = await fetchCategories();
-            product.setCategories(dataCategories.categories);
+            category.setCategories(dataCategories.categories);
 
         const dataPopularBrands = await fetchBrandsPopular();
-            product.setPopularBrands(dataPopularBrands.popularBrands);
+            brand.setPopularBrands(dataPopularBrands.popularBrands);
         const dataBrands = await fetchBrands();
-            product.setBrands(dataBrands.brands);
+            brand.setBrands(dataBrands.brands);
         
         const dataProducts = await fetchProductsPopular();
             product.setPopularProducts(dataProducts.popularProducts);
-    }, [])
+    }, [brand, category, product])
 
     return (
         <Row className='homeFonPage'>
@@ -39,8 +41,8 @@ const HomePage = observer(() => {
                 <ListGroup 
                     className='listBrandHome'
                 >
-                    {product.popularBrands.map((brand) => 
-                        <BrandBar key={brand.id} brand={brand}/>
+                    {brand.popularBrands.map(brandItem => 
+                        <BrandBar key={brandItem.id} brandItem={brandItem}/>
                     )}
                 </ListGroup>
             </Col>
@@ -52,12 +54,12 @@ const HomePage = observer(() => {
                     className='carouselHome'
                     variant='dark'
                 >
-                    {product.popularCategories.map(category => (
+                    {category.popularCategories.map(categoryItem => (
                         <Carousel.Item
 
-                            key={category.id}
+                            key={categoryItem.id}
                         >
-                            <CategoryItem key={category.id} category={category}/>
+                            <CategoryItem key={categoryItem.id} categoryItem={categoryItem}/>
                         </Carousel.Item>
                     ))}
                 </Carousel>

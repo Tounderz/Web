@@ -39,8 +39,8 @@ import ProductsListPage from './pages/ProductsListPage';
 import PersonalAccountPage from './pages/PersonalAccountPage';
 
 const App = observer(() => {
-  const {user} = useContext(Context)
-  const [loading, setLoading] = useState(true)
+  const {user} = useContext(Context);
+  const [loading, setLoading] = useState(true);
 
   // useEffect(() => { 
   //   setTimeout(async () => {

@@ -8,28 +8,37 @@ import { Context } from '../index';
 import { BRAND_ROUTE, ERROR_ROUTE, PAGE_FIRST, PICTURE } from '../utils/const';
 import '../css/HomePage.css'
 
-const BrandBar = observer(({brand}) => {
-    const {product} = useContext(Context)
-    const {user} = useContext(Context)
-    const {error} = useContext(Context)
-    const navigate = useNavigate()
+const BrandBar = observer(({brandItem}) => {
+    const {product} = useContext(Context);
+    const {category} = useContext(Context);
+    const {brand} = useContext(Context);
+    const {user} = useContext(Context);
+    const {error} = useContext(Context);
+    const {sort} = useContext(Context);
+    const {page} = useContext(Context);
+    const navigate = useNavigate();
 
     const getBrand = async () => {
         try {
-            product.setSelectedBrand(brand);
-            const dataProducts = await fetchProductsBrand(product.selectedBrand.id, user.user.role, PAGE_FIRST);
+            brand.setSelectedBrand(brandItem);
+            const dataProducts = await fetchProductsBrand(brand.selectedBrand.id, user.user.role, PAGE_FIRST);
                 product.setProducts(dataProducts.products);
-                product.setSelectedCategory(dataProducts.categoriesId);
-                product.setCountPages(dataProducts.countPages);
+                category.setSelectedCategory(dataProducts.categoriesId);
+                page.setCurrentPage(PAGE_FIRST);
+                page.setCountPages(dataProducts.countPages);
 
-            const dataCatgories = await fetchCategoriesByBrand(product.selectedCategory);
-                product.setCategoriesByBrand(dataCatgories.categoriesByBrand);
+            const dataCatgories = await fetchCategoriesByBrand(category.selectedCategory);
+                category.setCategoriesByBrand(dataCatgories.categoriesByBrand);
 
-            navigate(BRAND_ROUTE)
+                navigate(BRAND_ROUTE)
         } catch (e) {
-            error.setMessageError(e.response.data.message);
-            navigate(ERROR_ROUTE);
-        }  
+            error.setMessageError(e.message);
+                navigate(ERROR_ROUTE);
+        } finally {
+            sort.setFieldNames([]);
+            sort.setFieldName('');
+            sort.setTypeSort('');
+        }
     }
 
     return (
@@ -38,11 +47,11 @@ const BrandBar = observer(({brand}) => {
             onClick={() => getBrand()}
         >
                 <Image
-                    src={PICTURE(brand.img)}
+                    src={PICTURE(brandItem.img)}
                     className="listBarndImgHome"
                 />
                 <h4 className='listBrandNameHome'>
-                    {brand.name}
+                    {brandItem.name}
                 </h4>
         </ListGroup.Item>
     );

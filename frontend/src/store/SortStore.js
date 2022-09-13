@@ -1,6 +1,6 @@
 import { makeAutoObservable } from 'mobx'
 
-export default class GeneralStore {
+export default class SortStore {
     constructor() {
         this._fieldNames = []
         this._fieldName = ''
@@ -12,7 +12,6 @@ export default class GeneralStore {
     setFieldNames(fieldNames) {
         this._fieldNames = fieldNames
     }
-    
     get fieldNames() {
         return this._fieldNames
     }
@@ -20,7 +19,6 @@ export default class GeneralStore {
     setFieldName(fieldName) {
         this._fieldName = fieldName
     }
-
     get fieldName() {
         return this._fieldName
     }
@@ -28,7 +26,6 @@ export default class GeneralStore {
     setTypeSort(typeSort) {
         this._typeSort = typeSort
     }
-
     get typeSort() {
         return this._typeSort
     }

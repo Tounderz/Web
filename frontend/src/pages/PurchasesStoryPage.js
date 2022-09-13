@@ -1,33 +1,25 @@
 import { observer } from 'mobx-react-lite';
-import React, { useContext, useState } from 'react';
-import { Col, Image, Nav, Pagination, Row, Table } from 'react-bootstrap';
+import React, { useContext } from 'react';
+import { Col, Image, Nav, Row, Table } from 'react-bootstrap';
 import { useNavigate } from 'react-router';
 import { Context } from '..';
+import PageBar from '../components/PageBar';
 import { ordersList } from '../http/orderApi';
-import { LOCALHOST, NO_IMAGE, PAGE_FIRST, PERSONAL_ACCOUNT_ROUTE } from '../utils/const';
+import { LOCALHOST, NO_IMAGE, PERSONAL_ACCOUNT_ROUTE } from '../utils/const';
 
 const PurchasesStoryPage = observer(() => {
-    const {product} = useContext(Context)
-    const {user} = useContext(Context)
-    const {error} = useContext(Context)
-    const navigate = useNavigate()
-    const pages = []
-    const [page, setPage] = useState(PAGE_FIRST)
+    const {page} = useContext(Context);
+    const {order} = useContext(Context);
+    const {user} = useContext(Context);
+    const {error} = useContext(Context);
+    const navigate = useNavigate();
 
-    const paginationClick = async (item) => {
-        const data = await ordersList(user.user.login, item);
-            product.setOrdersList(data.orders);
-            product.setTotalAmount(data.totalAmount);
-            setPage(item)
+    const paginationClick = async () => {
+        const data = await ordersList(user.user.login, page.currentPage);
+            order.setOrdersList(data.orders);
+            order.setTotalAmount(data.totalAmount);
     }
 
-    if (product.countPages > 1) {
-        for (let index = 0; index < product.countPages; index++) {
-            pages.push(index + 1);
-        }
-    }
-
-    
     const imgProduct = (productImg) => {
         let img;
         if (productImg === null) {
@@ -42,7 +34,7 @@ const PurchasesStoryPage = observer(() => {
     return (
         <Row className='tableFonPage'>
             <Col className='containerTable'>
-                {product.ordersList.length > 0 ? 
+                {order.ordersList.length > 0 ? 
                     <Table className='tableTable'>
                         <thead>
                             <tr>
@@ -54,7 +46,7 @@ const PurchasesStoryPage = observer(() => {
                             </tr>
                         </thead>
                         <tbody>
-                            {product.ordersList.map(item => 
+                            {order.ordersList.map(item => 
                                 <tr key={item.orderId}>
                                     <th scope='row'>{item.orderId}</th>
                                     <td>{item.orderTime}</td>
@@ -70,35 +62,22 @@ const PurchasesStoryPage = observer(() => {
                             )}
                             <tr>
                                 <th colSpan={4}>Total amount:</th>
-                                <th>{product.totalAmount}$</th>
+                                <th>{order.totalAmount}$</th>
                             </tr>
                         </tbody>
                     </Table>
                     : 
                     <h1 className='errorTable'>{error.messageError}</h1>
                 }
-                <Row>
-                    <Pagination 
-                        className='pagination' 
-                        size='sm'
-                    >
-                        {pages.map(item =>
-                            <Pagination.Item
-                                key={item}
-                                active={item === page}
-                                onClick={() => paginationClick(item)}
-                            >
-                                {item}
-                            </Pagination.Item>
-                        )}
-                    </Pagination>
-                    <Nav.Link 
+                <Row onClick={() => paginationClick()}>
+                    <PageBar/>
+                </Row>
+                <Nav.Link 
                         className='navigateTable'
                         onClick={() => navigate(PERSONAL_ACCOUNT_ROUTE)}
                     >
                         Cabinet
                     </Nav.Link>
-                </Row>
             </Col>
         </Row>
     );

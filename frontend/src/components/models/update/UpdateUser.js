@@ -4,12 +4,13 @@ import { formDataUser, updateUserByAdmin, updateUserByUser } from '../../../http
 import { useInput } from '../../../http/validateApi';
 import { Context } from '../../../index';
 import { ROLE_ARRAY } from '../../../utils/const';
+import '../../../css/update/UpdateUser.css'
 
 const UpdateUser = ({show, onHide}) => {
     const {user} = useContext(Context);
     const name = useInput('', {minLength: {value: 3, name: 'Name'}});
     const surname = useInput('', {minLength: {value: 3, name: 'Surname'}});
-    const email = useInput('', {minLength: {value: 4, name: 'surname'}, isEmail: true});
+    const email = useInput('', {minLength: {value: 4, name: 'Email'}, isEmail: true});
     const phone = useInput('', {isPhone: true});
     const login = useInput('', {minLength: {value: 3, name: 'Login'}});
     const role = useInput('', {minLength: {value: 4, name: 'Role'}, isRole: user.role});
@@ -45,8 +46,8 @@ const UpdateUser = ({show, onHide}) => {
                 role.onChange('');
                 img.saveImg(null);                    
                 onHide();
-        } catch (error) {
-            setMessageError(error.response.data.message);
+        } catch (e) {
+            setMessageError(e.message);
         }
     }
 
@@ -54,8 +55,12 @@ const UpdateUser = ({show, onHide}) => {
     if (user.user.role === 'admin' || user.user.role === 'moderator') {
         updateRole = (
             <Form>
+                {(role.isDirty && role.minLengthError) && 
+                        <div className='error-message'>
+                            {role.messageError}
+                        </div>}
                  <Form.Select
-                    className='mt-2 mb-2' 
+                    className='form-update-user' 
                     onChange={e => role.onChange(e)}
                     onBlur={e => role.onBlur(e)}
                 >
@@ -84,57 +89,81 @@ const UpdateUser = ({show, onHide}) => {
         >
             <Modal.Header closeButton>
                 <Modal.Title
-                    id='contained-modal-title-center'
-                    style={{
-                        
-                    }}
+                    id='contained-modal-title-vcenter'
                 >
                     Update User : {user.selectedUser.login}
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <div style={{color: 'red'}}>{messageError}</div>
+                <div className='error-message'>{messageError}</div>
                 <Form>
-                    <Form.Label>Name:</Form.Label>
+                    {(name.isDirty && name.minLengthError) && 
+                        <div className='error-message'>
+                            {name.messageError}
+                        </div>}
                     <Form.Control
+                        className='form-update-user'
                         value={name.value}
                         onChange={e => name.onChange(e)}
                         onBlur={e => name.onBlur(e)}
-                        placeholder={user.selectedUser.name}
+                        placeholder={`Name: ${user.selectedUser.name}`}
                     />
-                    <Form.Label className='mt-3'>Surname:</Form.Label>
+
+                    {(surname.isDirty && surname.minLengthError) && 
+                        <div className='error-message'>
+                            {surname.messageError}
+                        </div>}
                     <Form.Control
+                        className='form-update-user'
                         value={surname.value}
                         onChange={e => surname.onChange(e)}
                         onBlur={e => surname.onBlur(e)}
-                        placeholder={user.selectedUser.surname}
+                        placeholder={`Surname: ${user.selectedUser.surname}`}
                     />
-                    <Form.Label className='mt-3'>Email:</Form.Label>
+
+                    {(email.isDirty && email.minLengthError) && 
+                        <div className='error-message'>
+                            {email.messageError}
+                        </div>}
                     <Form.Control
+                        className='form-update-user'
                         value={email.value}
                         onChange={e => email.onChange(e)}
                         onBlur={e => email.onBlur(e)}
-                        placeholder={user.selectedUser.email}
+                        placeholder={`Email: ${user.selectedUser.email}`}
                     />
-                    <Form.Label className='mt-3'>Phone:</Form.Label>
+
+                    {(phone.isDirty && phone.phoneError) && 
+                        <div className='error-message'>
+                            {phone.messageError}
+                        </div>}
                     <Form.Control
+                        className='form-update-user'
                         value={phone.value}
                         onChange={e => phone.onChange(e)}
                         onBlur={e => phone.onBlur(e)}
-                        placeholder={user.selectedUser.phone}
+                        placeholder={`Phone: ${user.selectedUser.phone}`}
                     />
-                    <Form.Label className='mt-3'>Login:</Form.Label>
+
+                    {(login.isDirty && login.minLengthError) && 
+                        <div className='error-message'>
+                            {login.messageError}
+                        </div>}
                     <Form.Control
+                        className='form-update-user'
                         value={login.value}
                         onChange={e => login.onChange(e)}
                         onBlur={e => login.onBlur(e)}
-                        placeholder={user.selectedUser.login}
+                        placeholder={`Login: ${user.selectedUser.login}`}
                     />
                     {updateRole}
 
-                    {(img.isDirty && img.imgError) && <div className='mt-3' style={{color: 'red'}}>{img.messageError}</div>}
+                    {(img.isDirty && img.imgError) && 
+                        <div className='error-message'>
+                            {img.messageError}
+                        </div>}
                     <Form.Control
-                        className='mt-3'
+                        className='form-update-user'
                         type='file'
                         onChange={e => img.saveImg(e)}
                         onBlur={e => img.onBlur(e)}
@@ -143,15 +172,15 @@ const UpdateUser = ({show, onHide}) => {
             </Modal.Body>
             <Modal.Footer>
                 <Button
+                    className='button-update-user'
                     variant='outline-primary'
-                    style={{
-                        cursor: 'pointer',
-                        borderRadius: '5px',
-                        margin: '2px'
-                    }}
                     disabled={
-                        !name.inputValid && !surname.inputValid && !email.inputValid && 
-                        !phone.inputValid && !login.inputValid && !role.inputValid && 
+                        !name.inputValid && 
+                        !surname.inputValid && 
+                        !email.inputValid && 
+                        !phone.inputValid && 
+                        !login.inputValid && 
+                        !role.inputValid && 
                         !img.inputValid
                     }
                     onClick={() => update()}
@@ -159,12 +188,8 @@ const UpdateUser = ({show, onHide}) => {
                     Update
                 </Button>
                 <Button
+                    className='button-update-user'
                     variant='outline-danger'
-                    style={{
-                        cursor: 'pointer',
-                        borderRadius: '5px',
-                        margin: '2px'
-                    }}
                     onClick={onHide}
                 >
                     Close

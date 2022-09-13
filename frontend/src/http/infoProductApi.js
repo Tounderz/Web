@@ -1,8 +1,7 @@
-import axiosApi from './axiosApi';
 import { createRequest } from './interceptor';
 
 export const fetchInfoProduct = async (productId) => {
-    const {data} = await axiosApi.get(`/products/info?productId=${productId}`);
+    const {data} = await createRequest().get(`/products/info?productId=${productId}`);
     return data;
 }
 

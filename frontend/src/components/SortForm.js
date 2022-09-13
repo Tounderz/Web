@@ -10,38 +10,43 @@ const SortForm = ({show, onHide, parameter}) => {
     const {product} = useContext(Context);
     const {error} = useContext(Context);
     const {user} = useContext(Context);
-    const {general} = useContext(Context);
+    const {sort} = useContext(Context);
+    const {page} = useContext(Context);
     const navigate = useNavigate();
     const fieldName = useInput('', {minLength: {value: 2, name: 'Field Name'}});
     const typeSort = useInput('', {minLength: {value: 2, name: 'Type Sort'}});
 
-    const sort = async () => {
+    const sortClick = async () => {
         try {
             let data;
             switch(parameter) {
                 case 'product':
                     data = await sortProducts(fieldName.value, typeSort.value, PAGE_FIRST);
                         product.setProducts(data.products);
-                        product.setCountPages(data.countPages);
-                        general.setFieldName(fieldName.value);
-                        general.setTypeSort(typeSort.value);
+                        page.setCurrentPage(PAGE_FIRST);
+                        page.setCountPages(data.countPages);
+                        sort.setFieldName(fieldName.value);
+                        sort.setTypeSort(typeSort.value);
                         onHide();
+                        
                         navigate(PRODUCTS_LIST_ROUTE);
                     break;
                 case 'user':
                     data = await sortUsers(fieldName.value, typeSort.value, PAGE_FIRST);
                         user.setUsersList(data.usersList);
-                        user.setCountPages(data.countPages);
-                        general.setFieldName(fieldName.value);
-                        general.setTypeSort(typeSort.value);
+                        page.setCurrentPage(PAGE_FIRST);
+                        page.setCountPages(data.countPages);
+                        sort.setFieldName(fieldName.value);
+                        sort.setTypeSort(typeSort.value);
                         onHide();
+
                         navigate(USERLIST_ROUTE);
                     break;
                 default:
                     break;
             }
         } catch (e) {
-            error.setMessageError(e.response.data.message);
+            error.setMessageError(e.message);
             navigate(ERROR_ROUTE)
         }
     }
@@ -69,7 +74,7 @@ const SortForm = ({show, onHide, parameter}) => {
                     >
                         Select a field name
                     </option>
-                    {general.fieldNames.map(item =>
+                    {sort.fieldNames.map(item =>
                         <option
                             key={item}
                             value={item}
@@ -108,7 +113,7 @@ const SortForm = ({show, onHide, parameter}) => {
                         borderRadius: '5px',
                     }}
                     disabled={!typeSort.inputValid || !fieldName.inputValid}
-                    onClick={sort}
+                    onClick={sortClick}
                 >
                     Sort
                 </Button>

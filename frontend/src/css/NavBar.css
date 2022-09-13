@@ -1,7 +1,24 @@
-.link {
+.navbar {
+    background: #222222;
+}
+
+.link-home {
     color: white;
     cursor: pointer;
-    margin-left: 10px;
+    margin-left: 30px;
+}
+
+.link-home:hover {
+    color: grey;
+}
+
+.navDropdown {
+    padding-left: 20px;
+}
+
+.scroll-nav{
+    overflow: auto;
+    max-height: 150px;
 }
 
 .svg :hover {
@@ -10,10 +27,44 @@
   }
 
 #collasible-nav-dropdown {
-    color: white !important;
+    color: white;
     cursor: pointer;
 }
   
 #collasible-nav-dropdown:hover {
-    color: grey !important;
+    color: grey;
+}
+
+.div-sign {
+    margin: 7px;
+}
+
+.sign {
+    color: white;
+    font-size: 1em;
+    margin-left: 5px;
+    position: relative;
+	cursor: pointer;
+	line-height: 1; /*задаём высоту строки*/
+	text-decoration: none; /*убираем подчёркивание*/
+}
+
+.sign:after {
+	display: block;
+	position: absolute;
+	left: 0; /*изменить на right:0;, чтобы изменить направление подчёркивания */
+	width: 0;/*задаём длинну линии до наведения курсора*/
+	height: 2px; /*задаём ширину линии*/
+	background-color: gray; /*задаём цвет линии*/
+	content: "";
+	transition: width 0.3s ease-out; /*задаём время анимации*/
+}
+
+.sign:hover:after,
+.sign:focus:after {
+	width: 100%; /*устанавливаем значение 100% чтобы ссылка подчёркивалась полностью*/
+}
+
+.sign:hover {
+    color: gray;
 }

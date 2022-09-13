@@ -32,7 +32,7 @@ export function createRequest() {
             console.log(error.response?.status);
             if (error.response?.status === 401) {
                 const { data } = await axiosApi.post('auth/refreshToken');
-                // localStorage.removeItem('accessToken')
+                localStorage.removeItem('accessToken')
                 localStorage.setItem('accessToken', data.accessToken);
 
         error.config.headers.accept = 'application/json';

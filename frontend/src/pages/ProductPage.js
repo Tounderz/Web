@@ -29,7 +29,7 @@ const ProductPage = observer(() => {
     if (user.user.role !== 'user' && user.user.isAuth) {
         admin =(
             <Button 
-                className='adminProduct'
+                className='button-create-info'
                 variant='outline-success'
                 onClick={() => {setCreateInfoProduct(true)}}
             >

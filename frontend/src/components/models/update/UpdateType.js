@@ -3,9 +3,11 @@ import { Form, Modal, Button } from 'react-bootstrap';
 import { updateType } from '../../../http/typeApi';
 import { useInput } from '../../../http/validateApi';
 import { Context } from '../../../index';
+import '../../../css/update/UpdateType.css'
 
 const UpdateType = ({show, onHide}) => {
-    const {product} = useContext(Context)
+    const {type} = useContext(Context);
+    const {category} = useContext(Context);
     const typeId = useInput(0, {isNumberId: {name: 'Type'}})
     const name = useInput('', {minLength: {value: 3, name: 'Name'}})
     const categoryId = useInput(0, {isNumberId: {name: 'Category'}});
@@ -31,76 +33,88 @@ const UpdateType = ({show, onHide}) => {
             centered
         >
             <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
+                <Modal.Title 
+                    id='contained-modal-title-vcenter'
+                >
                     Update a Type
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <div style={{color: 'red'}}>{messageError}</div>
-                {(typeId.isDirty && typeId.isNumberError) && <div className='mt-3' style={{color: 'red'}}>{typeId.messageError}</div>}
-                <Form.Select
-                    className='mt-3'
-                    onChange={e => typeId.onChange(e)}
-                    onBlur={e => typeId.onBlur(e)}
-                >
-                    <option value={0}>
-                        Select a type
-                    </option>
-                    {product.types.map(type => (
-                        <option
-                            value={type.id}
-                            key={type.id}
-                        >
-                            {type.name}
+                <Form>
+                    {(typeId.isDirty && typeId.isNumberError) && 
+                        <div className='error-message'>
+                            {typeId.messageError}
+                        </div>}
+                    <Form.Select
+                        className='form-update-type'
+                        onChange={e => typeId.onChange(e)}
+                        onBlur={e => typeId.onBlur(e)}
+                    >
+                        <option value={0}>
+                            Select a type
                         </option>
-                    ))}
-                </Form.Select>
-                <Form className='mt-3'>
+                        {type.types.map(typeItem => (
+                            <option
+                                value={typeItem.id}
+                                key={typeItem.id}
+                            >
+                                {typeItem.name}
+                            </option>
+                        ))}
+                    </Form.Select>
+
+                    {(name.isDirty && name.minLengthError) && 
+                        <div className='error-message'>
+                            {name.messageError}
+                        </div>}
                     <Form.Control
+                        className='form-update-type'
                         value={name.value}
                         onChange={e => name.onChange(e)}
                         onBlur={e => name.onBlur(e)}
-                        placeholder={`Update 'Name': ${product.types.filter(i => { return i.id === typeId}).map(i => i.name)}`}
+                        placeholder={`Update 'Name': ${type.types.filter(i => { return i.id === typeId}).map(i => i.name)}`}
                     />
-                </Form>
-                <Form.Select 
-                    className='mt-3'
-                    onChange={e => categoryId.onChange(e)}
-                    onBlur={e => categoryId.onBlur(e)}
-                >
-                    <option value=''>
-                        Update which category the type belongs to
-                    </option>
-                    {product.categories.map(catetegory => (
-                        <option
-                            value={catetegory.id}
-                            key={catetegory.id}
-                        >
-                            {catetegory.name}
+                
+                     {(categoryId.isDirty && categoryId.isNumberError) && 
+                        <div className='error-message'>
+                            {categoryId.messageError}
+                        </div>}
+                    <Form.Select 
+                        className='form-update-type'
+                        onChange={e => categoryId.onChange(e)}
+                        onBlur={e => categoryId.onBlur(e)}
+                    >
+                        <option value=''>
+                            Update which category the type belongs to
                         </option>
-                    ))}
-                </Form.Select>
+                        {category.categories.map(catetegoryItem => (
+                            <option
+                                value={catetegoryItem.id}
+                                key={catetegoryItem.id}
+                            >
+                                {catetegoryItem.name}
+                            </option>
+                        ))}
+                    </Form.Select>
+                </Form>
             </Modal.Body>
             <Modal.Footer>
                 <Button
+                    className='button-update-type'
                     variant='outline-primary'
-                    style={{
-                        cursor: 'pointer',
-                        borderRadius: '5px',
-                        margin: '2px'
-                    }}
-                    disabled={!typeId.inputValid || (!name.inputValid && !categoryId.inputValid)}
+                    disabled={
+                        !typeId.inputValid || 
+                        (!name.inputValid && 
+                        !categoryId.inputValid)
+                    }
                     onClick={click}
                 >
                     Update
                 </Button>
                 <Button
+                    className='button-update-type'
                     variant='outline-danger'
-                    style={{
-                        cursor: 'pointer',
-                        borderRadius: '5px',
-                        margin: '2px'
-                    }}
                     onClick={onHide}
                 >
                     Close

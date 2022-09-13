@@ -1,7 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import React, { useContext } from 'react';
-import { Button, NavDropdown } from 'react-bootstrap'
-import { Link } from 'react-router-dom';
+import { NavDropdown } from 'react-bootstrap'
 import { useNavigate } from 'react-router';
 import { fetchBaskets } from '../http/basketApi';
 import { fetchBrands } from '../http/brandApi';
@@ -15,61 +14,59 @@ import { ADMIN_ROUTE, BASKET_ROUTE, LOGIN_ROUTE,
          PERSONAL_ACCOUNT_ROUTE 
         } from '../utils/const';
 import { SvgSelector } from './Svg/SvgSelector';
+import '../css/NavBar.css'
+import { Link } from 'react-router-dom';
 
 const UserBar = observer(() => {
     const {user} = useContext(Context);
     const {product} = useContext(Context);
-    const {general} = useContext(Context);
+    const {paymentMethod} = useContext(Context);
+    const {cart} = useContext(Context);
+    const {page} = useContext(Context);
+    const {brand} = useContext(Context);
+    const {category} = useContext(Context);
+    const {type} = useContext(Context);
+    const {sort} = useContext(Context);
     const navigate = useNavigate();
 
-    const generalClear = () => {
-        general.setFieldNames([]);
-        general.setFieldName('');
-        general.setTypeSort('');
-    }
-
-    const signUp = () => {
-        generalClear();
-        navigate(REGISTER_ROUTE);
-    }
-
-    const logIn = () => {
-        generalClear();
-        navigate(LOGIN_ROUTE);
+    const sortClear = () => {
+        sort.setFieldNames([]);
+        sort.setFieldName('');
+        sort.setTypeSort('');
     }
 
     const logOut = async () => {
         const data = await logout();
             user.setUser(data.user);
             localStorage.removeItem('accessToken');
-            generalClear();
+            sortClear();
 
             navigate(SHOP_ROUTE);
     }
 
     const basket = async () => {
         const data = await fetchBaskets(user.user.login, PAGE_FIRST);
-            product.setBaskets(data.baskets);
-            product.setTotalAmount(data.sum);
-            product.setCountPages(data.countPages);
-            generalClear();
+            cart.setBaskets(data.baskets);
+            cart.setTotalAmount(data.sum);
+            page.setCountPages(data.countPages);
+            sortClear();
             navigate(BASKET_ROUTE);
     }
 
     const admin = async () => {
         const dataType = await fetchTypes();
-            product.setTypes(dataType.types);
+            type.setTypes(dataType.types);
         const dataCategory = await fetchCategories();
-            product.setCategories(dataCategory.categories);
+            category.setCategories(dataCategory.categories);
         const dataBrand = await fetchBrands();
-            product.setBrands(dataBrand.brands);
+            brand.setBrands(dataBrand.brands);
         const dataPM = await fetchPaymentMethods();
-            product.setPaymentMethods(dataPM.paymentMethods);
-            product.setSelectedBrand({})
-            product.setSelectedCategory({})
-            product.setSelectedType({})
+            paymentMethod.setPaymentMethods(dataPM.paymentMethods);
+            brand.setSelectedBrand({})
+            category.setSelectedCategory({})
+            type.setSelectedType({})
             product.setSelectedProduct({})
-            generalClear();
+            sortClear();
 
             navigate(ADMIN_ROUTE);
     }
@@ -77,7 +74,7 @@ const UserBar = observer(() => {
     const cabinet = async () => {
         const data = await fetchUser(user.user.login);
             user.setSelectedUser(data.user);
-            generalClear();
+            sortClear();
 
         navigate(PERSONAL_ACCOUNT_ROUTE);
     }
@@ -85,22 +82,21 @@ const UserBar = observer(() => {
     let menu;
     if (!user.user.isAuth) {
         menu = (
-            <div>
-                <Button
-                    variant='link'
-                    style={{
-                        color: 'white'
-                    }}
-                    onClick={logIn}
+            <div className='div-sign'>
+                <Link
+                    className='sign navbar-brand'
+                    to={LOGIN_ROUTE}
+                    onClick={sortClear}
                 >
                     Sign In
-                </Button>
-                <Button
-                    variant='outline-secondary'
-                    onClick={signUp}
+                </Link>
+                <Link
+                    className='sign navbar-brand'
+                    to={REGISTER_ROUTE}
+                    onClick={sortClear}
                 >
                     Sign Up
-                </Button>
+                </Link>
             </div>
         )
     } else {  
@@ -132,29 +128,6 @@ const UserBar = observer(() => {
                         Logout
                     </NavDropdown.Item>
                 </NavDropdown>
-                // <ul className='navbar-nav me-auto mb-2 mb-md-0'>
-                //         <Link 
-                //             className='nav-link'
-                //             to={BASKET_ROUTE}
-                //             onClick={basket}
-                //         >
-                //             Basket
-                //         </Link>
-                //         <Link
-                //             className='nav-link'
-                //             to={PERSONAL_ACCOUNT_ROUTE}
-                //             onClick={cabinet}
-                //         >
-                //             Cabinet
-                //         </Link>
-                //         <Link
-                //             className='nav-link'
-                //             to={SHOP_ROUTE}
-                //             onClick={logOut}
-                //         >
-                //             Logout
-                //         </Link>
-                // </ul>
             )
         } else {
             menu = (
@@ -184,29 +157,6 @@ const UserBar = observer(() => {
                         Logout
                     </NavDropdown.Item>
                 </NavDropdown>
-                // <ul className='navbar-nav me-auto mb-2 mb-md-0'>
-                //         <Link
-                //             className='nav-link'
-                //             to={ADMIN_ROUTE}
-                //             onClick={admin}
-                //         >
-                //             <SvgSelector id='admin'/>                            
-                //         </Link>
-                //         <Link
-                //             className='nav-link'
-                //             to={PERSONAL_ACCOUNT_ROUTE}
-                //             onClick={cabinet}
-                //         >
-                //             <SvgSelector id='account'/>  
-                //         </Link>
-                //         <Link
-                //             className='nav-link'
-                //             to={SHOP_ROUTE}
-                //             onClick={logOut}
-                //         >
-                //             Logout
-                //         </Link>
-                // </ul>
             )
         }
     }
