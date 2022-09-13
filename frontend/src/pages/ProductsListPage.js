@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Button, Col, Nav, Row, Table } from "react-bootstrap";
 import { Context } from '../index';
 import { fetchProduct, fetchProducts } from '../http/productApi';
-import { ADMIN_ROUTE, FIELD_NAMES_PRODUCTS } from "../utils/const";
+import { ADMIN_ROUTE, FIELD_NAMES_PRODUCTS, PAGE_FIRST } from "../utils/const";
 import UpdateProduct from '../components/models/update/UpdateProduct';
 import { observer } from 'mobx-react-lite';
 import { useNavigate } from 'react-router';
@@ -57,10 +57,24 @@ const ProductsListPage = observer(() => {
     }
 
     const clickAdmin = () => {
+        cleanSearchAndSort();
+        navigate(ADMIN_ROUTE);
+    }
+
+    const allProducts = async () => {
+        cleanSearchAndSort();
+        page.setCurrentPage(PAGE_FIRST);
+        const data = await fetchProducts(page.currentPage);
+            product.setProducts(data.products);
+            page.setCountPages(data.countPages);
+    }
+
+    const cleanSearchAndSort = () => {
         sort.setFieldNames([]);
         sort.setFieldName('');
         sort.setTypeSort('');
-        navigate(ADMIN_ROUTE);
+        search.setSearchBy('');
+        search.setSelectedSearchParameter('');
     }
     
     return (
@@ -75,19 +89,28 @@ const ProductsListPage = observer(() => {
                     >
                         {error.messageError}
                     </div>
-                    <Col md={9}>
+                    <Col md={8}>
                         <SearchFormProductAndUserList 
                             key='id'
                             parameter='productAdmin'
                         />
                     </Col>
-                    <Col md={3}>
+                    <Col md={2}>
                         <Button 
                             className='buttonSortTable'
                             variant='outline-primary'
                             onClick={sortClick}
                         >
                             Sort
+                        </Button>
+                    </Col>
+                    <Col md={2}>
+                        <Button 
+                            className='buttonSortTable'
+                            variant='outline-success'
+                            onClick={allProducts}
+                        >
+                            All Products
                         </Button>
                     </Col>
                 </Row>

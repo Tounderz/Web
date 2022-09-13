@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { Context } from '../index';
 import { useInput } from '../http/validateApi';
-import { FIELD_NAMES_PRODUCTS, FIELD_NAMES_USERS, PAGE_FIRST, PRODUCTS_LIST_ROUTE, USERLIST_ROUTE } from '../utils/const';
+import { ERROR_MESSAGE_SEARCH, FIELD_NAMES_PRODUCTS, FIELD_NAMES_USERS, PAGE_FIRST, PRODUCTS_LIST_ROUTE, USERLIST_ROUTE } from '../utils/const';
 import { useNavigate } from 'react-router';
 import { observer } from 'mobx-react-lite';
 import { SearchTableProduct } from '../functions/SearchTableProduct';
@@ -61,13 +61,11 @@ const SearchFormProductAndUserList = observer(({parameter}) => {
         switch(parameter) {
             case 'user':
                 try {
-                    console.log(searchBy.value, searchParameter.value);
                     const data = await SearchTableUser(searchBy.value, searchParameter.value);
-                    console.log('Op');
                     if (data === null) {
                         clean();
                         cleaningUpDueToAnErrorUser();
-                        error.setMessageError('According to the search criteria, nothing was found.');
+                        error.setMessageError(ERROR_MESSAGE_SEARCH);
                     } else {
                         user.setUsersList(data.usersList);
                         page.setCurrentPage(PAGE_FIRST);
@@ -89,7 +87,7 @@ const SearchFormProductAndUserList = observer(({parameter}) => {
                     if (data === null) {
                         clean();
                         cleaningUpDueToAnErrorProduct();
-                        error.setMessageError('According to the search criteria, nothing was found.');
+                        error.setMessageError(ERROR_MESSAGE_SEARCH);
                     } else {
                         product.setProducts(data.products);
                         page.setCurrentPage(PAGE_FIRST);

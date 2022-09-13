@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { IS_EMAIL, IS_PHONE } from "../utils/const";
 
 export const useInput = (intialValue, validations) => {
     const [value, setValue] = useState(intialValue);
@@ -63,13 +64,11 @@ const useValidation = (value, validations) => {
                     setMessageError(`The '${validations[validation].name}' field can't to empty and less than ${validations[validation].value} characters.`);
                     break;
                 case 'isEmail':
-                    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-                    re.test(String(value).toLowerCase()) ? setEmailError(false) : setEmailError(true);
+                    IS_EMAIL.test(String(value).toLowerCase()) ? setEmailError(false) : setEmailError(true);
                     setMessageError(`The 'email' field can't to empty or Incorrect email.`);
                     break;
                 case 'isPhone':
-                    const rePhone = /^(\s*)?(\+)?([- _():=+]?\d[- _():=+]?){10,14}(\s*)?$/;
-                    rePhone.test(value) ? setPhoneError(false) : setPhoneError(true);
+                    IS_PHONE.test(value) ? setPhoneError(false) : setPhoneError(true);
                     setMessageError(`The 'Phone' field can't to empty or Incorrect phone number.`);
                     break;
                 case 'isPasswordSecurity':

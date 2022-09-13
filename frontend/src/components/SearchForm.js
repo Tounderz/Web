@@ -3,14 +3,14 @@ import { Button, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router';
 import { Context } from '../index';
 import { useInput } from '../http/validateApi';
-import { ERROR_ROUTE, IS_NUMBER, PAGE_FIRST, SEARCH_ROUTE, USERLIST_ROUTE } from '../utils/const';
-import { fetchSearch, fetchSearchUsers } from '../http/searchApi';
+import { ERROR_ROUTE, PAGE_FIRST, SEARCH_ROUTE } from '../utils/const';
+import { fetchSearch } from '../http/searchApi';
+import { observer } from 'mobx-react-lite';
 
-const SearchForm = ({parameter, searchBy}) => {
+const SearchForm = observer(() => {
     const {product} = useContext(Context);
     const {search} = useContext(Context);
     const {error} = useContext(Context);
-    const {user} = useContext(Context);
     const {sort} = useContext(Context);
     const {page} = useContext(Context);
     const navigate = useNavigate();
@@ -18,40 +18,16 @@ const SearchForm = ({parameter, searchBy}) => {
 
     const searchClick = async () => {
         try {
-            let data;
-            switch(parameter)
-            {
-                case 'product':
-                    data = await fetchSearch(searchParameter.value, PAGE_FIRST);
-                        product.setProducts(data.products);
-                        page.setCurrentPage(PAGE_FIRST);
-                        page.setCountPages(data.countPages);
-                        search.setSelectedSearchParameter(searchParameter.value);
-                        navigate(SEARCH_ROUTE);
-                    break;
-                case 'user':
-                    if (IS_NUMBER.test(searchParameter.value)) {
-                        data = await fetchSearchUsers(searchParameter.value, PAGE_FIRST, 'Id');
-                            user.setUsersList(data.usersList);
-                            page.setCurrentPage(PAGE_FIRST);
-                            page.setCountPages(data.countPages);
-                    } else {
-                        data = await fetchSearchUsers(searchParameter.value, PAGE_FIRST);
-                            user.setUsersList(data.usersList);
-                            page.setCurrentPage(PAGE_FIRST);
-                            page.setCountPages(data.countPages);
-                    }
-                    navigate(USERLIST_ROUTE);
-                    
-                    break;
-                default:
-                    break;
-            }
+            const data = await fetchSearch(searchParameter.value, PAGE_FIRST);
+                product.setProducts(data.products);
+                page.setCurrentPage(PAGE_FIRST);
+                page.setCountPages(data.countPages);
+                search.setSelectedSearchParameter(searchParameter.value);
+                navigate(SEARCH_ROUTE);
         } catch (e) {
             error.setMessageError(e.message);
                 navigate(ERROR_ROUTE);
-        }
-        finally{
+        } finally {
             searchParameter.onChange('');
             sort.setFieldNames([]);
             sort.setFieldName('');
@@ -89,6 +65,6 @@ const SearchForm = ({parameter, searchBy}) => {
             </Button>
         </div>
     );
-};
+});
 
 export default SearchForm;

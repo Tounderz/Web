@@ -62,7 +62,7 @@ const NavBar = observer(() => {
                 <nav 
                     className='d-inline-flex mt-2 mt-md-0 ms-md-auto'
                 >
-                    <SearchForm key='id' parameter='product'/>
+                    <SearchForm key='id'/>
                     <UserBar/>
                 </nav> 
             </div> 

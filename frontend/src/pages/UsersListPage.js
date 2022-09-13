@@ -6,7 +6,7 @@ import SortForm from "../components/SortForm";
 import { sortUsers } from "../http/sortApi";
 import { fetchUsers } from "../http/userApi";
 import { Context } from "../index";
-import { ADMIN_ROUTE, FIELD_NAMES_USERS, ROLE_ARRAY } from "../utils/const";
+import { ADMIN_ROUTE, FIELD_NAMES_USERS, PAGE_FIRST, ROLE_ARRAY } from "../utils/const";
 import '../css/Table.css'
 import ConfirmRemoval from "../components/models/remove/ConfirmRemoval";
 import PageBar from "../components/PageBar";
@@ -20,6 +20,7 @@ const UsersListPage = observer(() => {
     const { remove } = useContext(Context);
     const { page } = useContext(Context);
     const { search } = useContext(Context);
+    const { error } = useContext(Context);
     const navigate = useNavigate();
     const [userUpdateVisible, setUserUpdateVisible] = useState(false);
     const [sortVisible, setSortVisible] = useState(false);
@@ -68,10 +69,24 @@ const UsersListPage = observer(() => {
             setSortVisible(true);
     }
 
-    const clickAdmin = () => {
+    const allUsers = async () => {
+        page.setCurrentPage(PAGE_FIRST);
+        cleanSearchAndSort();
+        const data = await fetchUsers(page.currentPage);
+            user.setUsersList(data.usersList);
+            page.setCountPages(data.countPages);
+    }
+
+    const cleanSearchAndSort = () => {
         sort.setFieldNames([]);
         sort.setFieldName('');
         sort.setTypeSort('');
+        search.setSearchBy('');
+        search.setSelectedSearchParameter('');
+    }
+
+    const clickAdmin = () => {
+        cleanSearchAndSort();
         navigate(ADMIN_ROUTE);
     }
 
@@ -82,19 +97,33 @@ const UsersListPage = observer(() => {
                 className='containerTable'
             >
                 <Row>
-                    <Col md={9}>
+                    <div 
+                        className='error-message'
+                    >
+                        {error.messageError}
+                    </div>
+                    <Col md={8}>
                         <SearchFormProductAndUserList 
                             key='id'
                             parameter='user'
                         />
                     </Col>
-                    <Col md={3}>
+                    <Col md={2}>
                         <Button 
                             className='buttonSortTable'
                             variant='outline-primary'
                             onClick={sortClick}
                         >
                             Sort
+                        </Button>
+                    </Col>
+                    <Col md={2}>
+                        <Button
+                            variant='outline-success'
+                            className=''
+                            onClick={allUsers}
+                        >
+                            All Users
                         </Button>
                     </Col>
                 </Row>
@@ -150,7 +179,7 @@ const UsersListPage = observer(() => {
                     <Row onClick={() => paginationClick()}>
                         <PageBar/>
                     </Row>
-                    <Nav.Link onClick={clickAdmin}>Admin panel</Nav.Link>
+                    <Nav.Link onClick={clickAdmin} >Admin panel</Nav.Link>
 
                     <UpdateUser
                         show={userUpdateVisible}
