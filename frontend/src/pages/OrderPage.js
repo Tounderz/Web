@@ -13,12 +13,12 @@ const OrderPage = observer(() => {
     const {product} = useContext(Context);
     const {order} = useContext(Context);
     const {user} = useContext(Context);
-    const {error} = useContext(Context);
+    const {messages} = useContext(Context);
     const {paymentMethod} = useContext(Context);
     const city = useInput('', {minLength: {value: 3, name: 'City'}});
     const street = useInput('', {minLength: {value: 3, name: 'Street'}});
-    const house = useInput(0, {isNumberId: {name: 'House'}});
-    const flat = useInput(0, {isNumberId: {name: 'Flat'}});
+    const house = useInput('', {isNumberId: {name: 'House'}});
+    const flat = useInput('', {isNumberId: {name: 'Flat'}});
     const commentsOrder = useInput('', {minLength: {value: 3, name: 'Comments Order'}});
     const method = useInput(0, {isNumberId: {name: 'Payment Method'}});
     const navigate = useNavigate()
@@ -46,7 +46,7 @@ const OrderPage = observer(() => {
     
             navigate(COMPLETED_ROUTE)
         } catch (e) {
-            error.setMessageError(e.message);
+            messages.setMessageError(e.message);
         }
         
     }
@@ -56,8 +56,8 @@ const OrderPage = observer(() => {
             <Container className='containerOrder'>
                 <Card className='cardOrder'>
                     <h1>Completed orders</h1>
-                    <div className='error'>{error.messageError}</div>
-                    {(city.isDirty && city.minLengthError) && <div className='error'>{city.messageError}</div>}
+                    <div className='error-message'>{messages.messageError}</div>
+                    {(city.isDirty && city.minLengthError) && <div className='error-message'>{city.messageError}</div>}
                     <FormControl
                         className='formControlOrder'
                         placeholder='City'
@@ -66,7 +66,7 @@ const OrderPage = observer(() => {
                         onBlur={e => city.onBlur(e)}
                     />
 
-                    {(street.isDirty && street.minLengthError) && <div className='error'>{street.messageError}</div>}
+                    {(street.isDirty && street.minLengthError) && <div className='error-message'>{street.messageError}</div>}
                     <FormControl
                         className='formControlOrder'
                         placeholder='Street'
@@ -75,7 +75,7 @@ const OrderPage = observer(() => {
                         onBlur={e => street.onBlur(e)}
                     />
 
-                    {(house.isDirty && house.isNumberError) && <div className='error'>{house.messageError}</div>}
+                    {(house.isDirty && house.isNumberError) && <div className='error-message'>{house.messageError}</div>}
                     <FormControl
                         className='formControlOrder'
                         placeholder='House'
@@ -84,7 +84,7 @@ const OrderPage = observer(() => {
                         onBlur={e => house.onBlur(e)}
                     />
 
-                    {(flat.isDirty && flat.isNumberError) && <div className='error'>{flat.messageError}</div>}
+                    {(flat.isDirty && flat.isNumberError) && <div className='error-message'>{flat.messageError}</div>}
                     <FormControl
                         className='formControlOrder'
                         placeholder='Flat'
@@ -93,7 +93,7 @@ const OrderPage = observer(() => {
                         onBlur={e => flat.onBlur(e)}
                     />
 
-                    {(commentsOrder.isDirty && commentsOrder.minLengthError) && <div className='error'>{commentsOrder.messageError}</div>}
+                    {(commentsOrder.isDirty && commentsOrder.minLengthError) && <div className='error-message'>{commentsOrder.messageError}</div>}
                     <FormControl
                         className='formControlOrder'
                         placeholder='CommentsOrder'
@@ -102,7 +102,7 @@ const OrderPage = observer(() => {
                         onBlur={e => commentsOrder.onBlur(e)}
                     />
 
-                    {(method.isDirty && method.isNumberError) && <div className='error'>{method.messageError}</div>}
+                    {(method.isDirty && method.isNumberError) && <div className='error-message'>{method.messageError}</div>}
                     <Form.Select 
                         className='formControlOrder'
                         onChange={e => method.onChange(e)}

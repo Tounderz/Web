@@ -19,9 +19,21 @@ namespace Web.Data.Repositories
 
         public IEnumerable<CategoriesBrandsModel> CategoriesBrands => _context.CategoriesBrands;
 
+        public List<CategoriesBrandsModel> GetBrandsByCategory(int categoryId)
+        {
+            var list = CategoriesBrands.Where(i => i.CategoryId == categoryId).ToList();
+            return list;
+        }
+
+        public List<CategoriesBrandsModel> GetCategoriesByBrand(int brandId)
+        {
+            var list = CategoriesBrands.Where(i => i.BrandId == brandId).ToList();
+            return list;
+        }
+
         public List<CategoriesBrandsModel> CreateCategoriesByBrand(BrandDtoModel model)
         {
-            List<CategoriesBrandsModel> categoriesBrands = new();
+            List<CategoriesBrandsModel> categoriesBrands = new ();
             foreach (var item in model.CategoriesId)
             {
                 categoriesBrands.Add(new CategoriesBrandsModel { CategoryId = item, BrandId = model.BrandId });
@@ -47,28 +59,76 @@ namespace Web.Data.Repositories
 
         public List<CategoriesBrandsModel> UpdateCategoriesByBrand(BrandDtoModel model)
         {
-            List<CategoriesBrandsModel> categoriesBrands = new();
-            foreach (var item in model.CategoriesId)
+            var categoriesIdFromBd = CategoriesBrands.Where(i => i.BrandId == model.BrandId).Select(i => i.CategoryId).ToList();
+            var removeList = new List<CategoriesBrandsModel>();
+            var addList = new List<CategoriesBrandsModel>();
+            foreach (var item in categoriesIdFromBd)
             {
-                categoriesBrands.Add(new CategoriesBrandsModel { CategoryId = item, BrandId = model.BrandId });
+                if (!model.CategoriesId.Contains(item))
+                {
+                    removeList.Add(_context.CategoriesBrands.FirstOrDefault(i => i.CategoryId == item && i.BrandId == model.BrandId));
+                }
             }
 
-            _context.CategoriesBrands.UpdateRange(categoriesBrands);
-            _context.SaveChanges();
-            return categoriesBrands;
+            foreach (var item in model.CategoriesId)
+            {
+                if (!categoriesIdFromBd.Contains(item))
+                {
+                    addList.Add(new CategoriesBrandsModel { CategoryId = item, BrandId = model.BrandId });
+                }
+            }
+
+            if (addList.Count > 0)
+            {
+                _context.CategoriesBrands.AddRange(addList);
+                _context.SaveChanges();
+            }
+
+            if (removeList.Count > 0)
+            {
+                _context.CategoriesBrands.RemoveRange(removeList);
+                _context.SaveChanges();
+            }
+
+            return addList;
         }
 
         public List<CategoriesBrandsModel> UpdateBrandsByCategory(CategoryDtoModel model)
         {
-            List<CategoriesBrandsModel> categoriesBrands = new();
+            var brandsIdFromBd = CategoriesBrands.Where(i => i.CategoryId == model.Id).Select(i => i.BrandId).ToList();
+            var removeList = new List<CategoriesBrandsModel>();
+            var addList = new List<CategoriesBrandsModel>();
+            foreach (var item in brandsIdFromBd)
+            {
+                if (!model.BrandsId.Contains(item))
+                {
+                    removeList.Add(_context.CategoriesBrands.FirstOrDefault(i => i.CategoryId == model.Id && i.BrandId == item));
+                }
+            }
+
             foreach (var item in model.BrandsId)
             {
-                categoriesBrands.Add(new CategoriesBrandsModel { CategoryId = model.Id, BrandId = item });
+                if (!brandsIdFromBd.Contains(item))
+                {
+                    addList.Add(new CategoriesBrandsModel { CategoryId = model.Id, BrandId = item });
+                }
             }
-            _context.CategoriesBrands.UpdateRange(categoriesBrands);
-            _context.SaveChanges();
-            return categoriesBrands;
+
+            if (removeList.Count > 0)
+            {
+                _context.CategoriesBrands.RemoveRange(removeList);
+                _context.SaveChanges();
+            }
+
+            if (addList.Count > 0)
+            {
+                _context.CategoriesBrands.AddRange(addList);
+                _context.SaveChanges();
+            }
+            
+            return addList;
         }
+
         public void RemoveCategoriesByBrand(int id)
         {
             var categoriesBrands = CategoriesBrands.Where(i => i.BrandId == id).ToList();
@@ -91,30 +151,6 @@ namespace Web.Data.Repositories
 
             _context.CategoriesBrands.RemoveRange(categoriesBrands);
             _context.SaveChanges();
-        }
-
-        private void RemoveCategoriesByBrand(int[] categoriesId, int brandId)
-        {
-            var listCategoriesIdFroBrand = CategoriesBrands.Where(i => i.BrandId == brandId).Select(i => i.CategoryId).ToList();
-            foreach (var item in listCategoriesIdFroBrand)
-            {
-                if (!categoriesId.Contains(item))
-                {
-                    _context.CategoriesBrands.Remove(new CategoriesBrandsModel { CategoryId = brandId, BrandId = item });
-                }
-            }
-        }
-
-        private void RemoveBrandsByCategory(int[] brandsId, int categoryId)
-        {
-            var listBrandsIdFromCategory = CategoriesBrands.Where(i => i.CategoryId == categoryId).Select(i => i.BrandId).ToList();
-            foreach (var item in listBrandsIdFromCategory)
-            {
-                if (!brandsId.Contains(item))
-                {
-                    _context.CategoriesBrands.Remove(new CategoriesBrandsModel { CategoryId = categoryId, BrandId = item });
-                }
-            }
         }
     }
 }

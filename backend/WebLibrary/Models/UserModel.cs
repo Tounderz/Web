@@ -22,6 +22,9 @@ namespace WebLibrary.Models
         public string Password { get; set; }
 
         public string Role { get; set; }
+
         public string Img { get; set; }
+
+        public bool ConfirmEmail { get; set; }
     }
 }

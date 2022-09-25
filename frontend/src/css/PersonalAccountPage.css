@@ -17,12 +17,13 @@
 }
 
 .cardPhotoAccount {
-    width: 10rem;
+    max-width: 30rem;
     background: none;
 }
 
 .imgAccount {
     align-items: center;
+    max-width: 30rem;
     border-radius: 5px;
 }
 
@@ -52,7 +53,7 @@
 }
 
 .modalFooterAccount {
-    margin-top: 25%;
+    margin-top: 20%;
 }
 
 .navLinkAccount {

@@ -4,15 +4,17 @@ import { removeType } from '../../../http/typeApi';
 import { useInput } from '../../../http/validateApi';
 import { Context } from '../../../index';
 import '../../../css/remove/RemoveType.css'
+import { observer } from 'mobx-react-lite';
 
-const RemoveType = ({show, onHide}) => {
+const RemoveType = observer(({show, onHide}) => {
     const {type} = useContext(Context);
     const typeId = useInput(0, {isNumberId: {name: 'Type'}});
 
     const click = async () => {
-        await removeType(typeId.value);
-            typeId.onChange(0);
-            onHide();
+        const data = await removeType(typeId.value);
+            type.setTypes(data.types);
+            document.getElementById('removeSelectType').value = '0';
+        onHide();
     }
 
     return (
@@ -34,11 +36,15 @@ const RemoveType = ({show, onHide}) => {
                         {typeId.messageError}
                     </div>}
                 <Form.Select
+                    id='removeSelectType'
                     className='form-type-remove'
                     onChange={e => typeId.onChange(e)}
                     onBlur={e => typeId.onBlur(e)}
                 >
-                    <option value=''>
+                    <option 
+                        key='0'
+                        value='0'
+                    >
                         Select a type
                     </option>
                     {type.types.map(type => (
@@ -70,6 +76,6 @@ const RemoveType = ({show, onHide}) => {
             </Modal.Footer>
         </Modal>
     );
-};
+});
 
 export default RemoveType;

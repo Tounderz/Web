@@ -18,7 +18,7 @@ const ProductsListPage = observer(() => {
     const {product} = useContext(Context);
     const {sort} = useContext(Context);
     const {remove} = useContext(Context);
-    const {error} = useContext(Context);
+    const {messages} = useContext(Context);
     const {page} = useContext(Context);
     const {search} = useContext(Context);
     const [productUpdateVisible, setProductUpdateVisible] = useState(false);
@@ -30,12 +30,13 @@ const ProductsListPage = observer(() => {
         const data = await fetchProduct(id);
             product.setSelectedProduct(data.product);
             setProductUpdateVisible(true);
+            cleanSearchAndSort();
     }
 
     const productRemove = async (prod) => {
         setRemoveVisible(true);
-        remove.setRemoveObjeck(prod);
-        remove.setRemoveParameterName('product');
+            remove.setRemoveObjeck(prod);
+            remove.setRemoveParameterName('product');
     }
 
     const paginationClick = async () => {
@@ -87,7 +88,7 @@ const ProductsListPage = observer(() => {
                     <div 
                         className='error-message'
                     >
-                        {error.messageError}
+                        {messages.messageError}
                     </div>
                     <Col md={8}>
                         <SearchFormProductAndUserList 

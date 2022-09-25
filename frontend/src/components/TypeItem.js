@@ -10,7 +10,7 @@ const TypeItem = observer(({typeItem, brandsId}) => {
     const {product} = useContext(Context);
     const {type} = useContext(Context);
     const {brand} = useContext(Context);
-    const {error} = useContext(Context);
+    const {messages} = useContext(Context);
     const {page} = useContext(Context);
     const navigate = useNavigate();
 
@@ -25,7 +25,7 @@ const TypeItem = observer(({typeItem, brandsId}) => {
         
             navigate(TYPE_ROUTE)
         } catch (e) {
-            error.setMessageError(e.message)
+            messages.setMessageError(e.message)
             navigate(ERROR_ROUTE)
         }
     }

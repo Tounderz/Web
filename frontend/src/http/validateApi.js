@@ -7,7 +7,7 @@ export const useInput = (intialValue, validations) => {
     const valid = useValidation(value, validations);
 
     const onChange = (e) => {
-        setValue(e.target?.value || '');
+        setValue(e?.target?.value || '');
     }
 
     const onSelect = (e) => {
@@ -19,11 +19,7 @@ export const useInput = (intialValue, validations) => {
     }
 
     const saveImg = (e) => {
-        if (!e.target.files.length) {
-            setValue(null);
-        } else {
-            setValue(e.target.files[0]);
-        }
+        setValue(e?.target?.files[0] || null);
     }
 
     const onBlur = (e) => {
@@ -76,7 +72,7 @@ const useValidation = (value, validations) => {
                     rePasswordSecurity.test(value) ? setPasswordSecurityError(false) : setPasswordSecurityError(true);
                     break;
                 case 'isConfirmPassword':
-                    value === validations[validation] ? setConfirmPasswordError(false) : setConfirmPasswordError(true);
+                    value === validations[validation].value ? setConfirmPasswordError(false) : setConfirmPasswordError(true);
                     setMessageError(`The password doesn't match.`);
                     break;
                 case 'multiSelect':

@@ -27,7 +27,7 @@ namespace WebLibrary.ConstParameters
         public const string ROLE = "Role";
         public const string INFO = "Info";
         public const string PAGE = "Page";
-        public const string IDS = "Ids";
+        public const string TYPES_ID = "TypesId";
         public const string OLD_PASSWORD = "OldPassword";
         public const string NEW_PASSWORD = "NewPassword";
         public const string ID_USER = "IdUser";

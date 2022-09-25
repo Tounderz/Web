@@ -102,7 +102,7 @@ namespace Web.Data.Repositories
                 return true;
             }
 
-            var category = Categories.Select(i => i.Name.Contains(name, StringComparison.InvariantCultureIgnoreCase));
+            var category = Categories.FirstOrDefault(i => i.Name.Contains(name, StringComparison.InvariantCultureIgnoreCase));
             if (category == null)
             {
                 return true;

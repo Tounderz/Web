@@ -15,7 +15,7 @@ const Register = observer(() => {
     const phone = useInput('', {isPhone: true});
     const login = useInput('', {minLength: {value: 3, name: 'Login'}});
     const password = useInput('', {minLength: {value: 6, name: 'Password'}});
-    const confirmPassword = useInput('', {minLength: {value: 6, name: 'Confirm Password'}, isConfirmPassword: password.value});
+    const confirmPassword = useInput('', {minLength: {value: 6, name: 'Confirm Password'}, isConfirmPassword: {value: password.value}});
     const img = useInput(null);
     const [messageError, setMessageError] = useState('')
     const navigate = useNavigate()
@@ -137,7 +137,14 @@ const Register = observer(() => {
                         <Button
                             className='buttonAuth'
                             variant='outline-primary'
-                            disabled={!name.inputValid || !surname.inputValid || !phone.inputValid || !email.inputValid || !login.inputValid || !password.inputValid}
+                            disabled={
+                                !name.inputValid || 
+                                !surname.inputValid || 
+                                !phone.inputValid || 
+                                !email.inputValid || 
+                                !login.inputValid || 
+                                !password.inputValid
+                            }
                             onClick={click}
                         >
                             Register

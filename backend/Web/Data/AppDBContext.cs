@@ -25,5 +25,7 @@ namespace Web.Data
         public DbSet<PaymentMethodModel> PaymentMethods { get; set; }
         public DbSet<CategoriesBrandsModel> CategoriesBrands { get; set; }
         public DbSet<RefreshTokenModel> RefreshTokens { get; set; }
+        public DbSet<ConfirmEmailModel> ConfirmEmails { get; set; }
+        public DbSet<RetrievePasswordModel> RetrievePasswords { get; set; }
     }
 }

@@ -37,7 +37,9 @@ namespace Web.Controllers
                 return BadRequest(new { message = ConstPaymentMethods.MESSAGE_ERROR });
             }
 
-            return Ok( new { paymentMethod = paymentMethod });
+            var paymentMethods = _method.PaymentMethods;
+
+            return Ok( new { paymentMethods = paymentMethods });
         }
 
         [HttpPost(ConstParameters.HTTP_POST_UPDATE)]
@@ -48,7 +50,10 @@ namespace Web.Controllers
             {
                 return BadRequest(new { message = ConstPaymentMethods.MESSAGE_ERROR });
             }
-            return Ok( new { paymentMethod = paymentMethod });
+
+            var paymentMethods = _method.PaymentMethods;
+
+            return Ok( new { paymentMethods = paymentMethods });
         }
 
         [HttpDelete(ConstParameters.HTTP_DELETE)]
@@ -60,7 +65,8 @@ namespace Web.Controllers
                 return BadRequest(new { message = ConstParameters.INVALID_CREDENTIALS_ERROR });
             }
 
-            var paymentMethods = _method.PaymentMethods.ToList();
+            var paymentMethods = _method.PaymentMethods;
+
             return Ok(new { paymentMethods = paymentMethods });
         }
     }

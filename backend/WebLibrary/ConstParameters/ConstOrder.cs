@@ -12,5 +12,6 @@ namespace WebLibrary.ConstParameters
         public const string HTTP_POST_CREATE_ORDER = "order";
         public const string HTTP_POST_CREATE_ALL_ITEMS_BASKET = "orderAllItemsBasket";
         public const string HTTP_POST_ORDERS_LIST = "ordersList";
+        public const string SUBJECK_ORDER = "Order";
     }
 }

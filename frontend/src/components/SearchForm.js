@@ -10,7 +10,7 @@ import { observer } from 'mobx-react-lite';
 const SearchForm = observer(() => {
     const {product} = useContext(Context);
     const {search} = useContext(Context);
-    const {error} = useContext(Context);
+    const {messages} = useContext(Context);
     const {page} = useContext(Context);
     const navigate = useNavigate();
     const searchParameter = useInput('', {minLength: {value: 1, name: 'Search'}});
@@ -24,7 +24,7 @@ const SearchForm = observer(() => {
                 search.setSelectedSearchParameter(searchParameter.value);
                 navigate(SEARCH_ROUTE);
         } catch (e) {
-            error.setMessageError(e.message);
+            messages.setMessageError(e.message);
                 navigate(ERROR_ROUTE);
         } finally {
             searchParameter.onChange('');

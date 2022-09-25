@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite';
 import Multiselect from 'multiselect-react-dropdown';
 import React, { useContext } from 'react';
-import { Button, Card, Col, Row } from 'react-bootstrap';
+import { Button, Card, Col, Row, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router';
 import ProductItem from '../components/ProductItem';
 import { fetchProductsBrand, fetchProductsBrandByCategory } from '../http/brandApi';
@@ -19,11 +19,16 @@ const BrandPage = observer(() => {
     const {category} = useContext(Context);
     const {type} = useContext(Context);
     const {user} = useContext(Context);
-    const {error} = useContext(Context);
+    const {messages} = useContext(Context);
+    const {loading} = useContext(Context);
     const {page} = useContext(Context);
     const navigate = useNavigate();
     const categoriesId = useInput([]);
 
+    if (loading.isLoading) {
+        return <Spinner animation={'grow'}/>
+    }
+    
     const paginationClick = async () => {
         const data = await fetchProductsBrand(brand.selectedBrand.id, user.user.role, page.currentPage);
             product.setProducts(data.products);
@@ -37,7 +42,6 @@ const BrandPage = observer(() => {
                 product.setProducts(dataProducts.products);
                 page.setCountPages(dataProducts.countPages);
                 page.setCurrentPage(PAGE_FIRST);
-                category.setCategoriesByBrand(dataProducts.categoriesByBrand);
                 type.setSelectedType(dataProducts.typesId);
 
             const dataTypes = await fetchTypesByBrand(type.selectedType)
@@ -45,7 +49,7 @@ const BrandPage = observer(() => {
         
             navigate(CATEGORIES_BY_BRAND_ROUTE)
         } catch (e) {
-            error.setMessageError(e.message);
+            messages.setMessageError(e.message);
             navigate(ERROR_ROUTE)
         }
     }

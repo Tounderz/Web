@@ -4,15 +4,17 @@ import { Context } from '../../../index';
 import { removePaymentMethods } from '../../../http/paymentMethodsApi';
 import { useInput } from '../../../http/validateApi';
 import '../../../css/remove/RemovePaymentMethod.css'
+import { observer } from 'mobx-react-lite';
 
-const RemovePaymentMethod = ({show, onHide}) => {
+const RemovePaymentMethod = observer(({show, onHide}) => {
     const {paymentMethod} = useContext(Context);
     const methodId = useInput(0, {isNumberId: {name: 'Payment Method'}});
 
     const click = async () => {
-        await removePaymentMethods(methodId.value);
-            methodId.onChange(0);
-            onHide();
+        const data = await removePaymentMethods(methodId.value);
+            paymentMethod.setPaymentMethods(data.paymentMethods);
+            document.getElementById('removeSelectMethod').value = '0';
+        onHide();
     }
 
     return (
@@ -34,11 +36,15 @@ const RemovePaymentMethod = ({show, onHide}) => {
                         {methodId.messageError}
                     </div>}
                 <Form.Select 
+                    id='removeSelectMethod'
                     className='form-method-remove'
                     onChange={e => methodId.onChange(e)}
                     onBlur={e => methodId.onBlur(e)}
                 >
-                    <option value=''>
+                    <option 
+                        key='0'
+                        value='0'
+                    >
                         Select a Payment Method
                     </option>
                     {paymentMethod.paymentMethods.map(item => (
@@ -70,6 +76,6 @@ const RemovePaymentMethod = ({show, onHide}) => {
             </Modal.Footer>
         </Modal>
     );
-};
+});
 
 export default RemovePaymentMethod;

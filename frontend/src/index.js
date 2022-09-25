@@ -4,7 +4,7 @@ import './index.css';
 import App from './App';
 import ProductStore from './store/ProductStore';
 import UserStore from './store/UserStore';
-import ErrorStore from './store/ErrorStore';
+import MessageStore from './store/MessageStore';
 import AuthStore from './store/AuthStore';
 import RemoveStore from './store/RemoveStore';
 import CategoryStore from './store/CategoryStore';
@@ -16,6 +16,8 @@ import CartStore from './store/CartStore';
 import SearchStore from './store/SearchStore';
 import PageStore from './store/PageStore';
 import SortStore from './store/SortStore';
+import LoadingStore from './store/LoadingStore';
+import UpdateStore from './store/UpdateStore';
 
 export const Context = createContext(null)
 
@@ -26,7 +28,7 @@ ReactDOM.render(
     brand: new BrandStore(),
     type: new TypeStore(),
     user: new UserStore(),
-    error: new ErrorStore(),
+    messages: new MessageStore(),
     auth: new AuthStore(),
     sort: new SortStore(),
     paymentMethod: new PaymentMethodsStore(),
@@ -34,7 +36,9 @@ ReactDOM.render(
     order: new OrderStore(),
     remove: new RemoveStore(),
     search: new SearchStore(),
-    page: new PageStore()
+    page: new PageStore(),
+    loading: new LoadingStore(),
+    updates: new UpdateStore()
   }}>
   <App />
   </Context.Provider>,

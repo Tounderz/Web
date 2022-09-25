@@ -12,6 +12,7 @@ using Web.Data.ConstMethods;
 using Web.Data.Repositories;
 using Web.HelpersJwt;
 using WebLibrary.Abstract;
+using WebLibrary.Models;
 
 namespace Web
 {
@@ -29,6 +30,7 @@ namespace Web
             services.AddCors();
             services.AddDbContext<AppDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
             services.AddAuthorization();
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -45,7 +47,12 @@ namespace Web
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
                     };
                 });
-            
+
+            var emailConfig = Configuration
+                .GetSection("EmailConfiguration")
+                .Get<EmailConfiguration>();
+            services.AddSingleton(emailConfig);
+
             services.AddControllers();
 
             services.AddScoped<IAuthorization, AuthorizationRepository>();
@@ -61,7 +68,9 @@ namespace Web
             services.AddScoped<ISort, SortRepository>();
             services.AddScoped<IJwt, JwtService>();
             services.AddScoped<IGeneralMethods, GeneralMethods>();
-
+            services.AddScoped<ISendEmail, SendEmailService>();
+            services.AddScoped<IRetrievePassword, RetrievePasswordRepository>();
+            services.AddScoped<IConfirmEmail, ConfirmEmailRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -85,12 +94,6 @@ namespace Web
                .AllowAnyHeader()
                .AllowAnyMethod()
             );
-
-            using (var scope = app.ApplicationServices.CreateScope())
-            {
-                AppDBContext context = scope.ServiceProvider.GetRequiredService<AppDBContext>();
-                DBObjects.Initial(context);
-            }
 
             app.UseEndpoints(endpoints =>
             {

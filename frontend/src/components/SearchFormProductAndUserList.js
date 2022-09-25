@@ -7,13 +7,14 @@ import { useNavigate } from 'react-router';
 import { observer } from 'mobx-react-lite';
 import { SearchTableProduct } from '../functions/SearchTableProduct';
 import { SearchTableUser } from '../functions/SearchTableUser';
+import '../css/SearchFormProductAndUserList.css'
 
 const SearchFormProductAndUserList = observer(({parameter}) => {
     const {page} = useContext(Context);
     const {product} = useContext(Context);
     const {user} = useContext(Context);
     const {sort} = useContext(Context);
-    const {error} = useContext(Context);
+    const {messages} = useContext(Context);
     const {search} = useContext(Context);
     const navigate = useNavigate();
     const searchParameter = useInput('', {minLength: {value: 1, name: 'Search'}});
@@ -54,7 +55,7 @@ const SearchFormProductAndUserList = observer(({parameter}) => {
     const saveSearchStote = () => {
         search.setSearchBy(searchBy.value);
         search.setSelectedSearchParameter(searchParameter.value);
-        error.setMessageError('');
+        messages.setMessageError('');
     }
 
     const searchClick = async () => {
@@ -65,7 +66,7 @@ const SearchFormProductAndUserList = observer(({parameter}) => {
                     if (data === null) {
                         clean();
                         cleaningUpDueToAnErrorUser();
-                        error.setMessageError(ERROR_MESSAGE_SEARCH);
+                        messages.setMessageError(ERROR_MESSAGE_SEARCH);
                     } else {
                         user.setUsersList(data.usersList);
                         page.setCurrentPage(PAGE_FIRST);
@@ -76,7 +77,7 @@ const SearchFormProductAndUserList = observer(({parameter}) => {
                 } catch (e) {
                     clean();
                     cleaningUpDueToAnErrorUser();
-                    error.setMessageError(e.message);
+                    messages.setMessageError(e.message);
                 }
 
                 navigate(USERLIST_ROUTE);
@@ -87,7 +88,7 @@ const SearchFormProductAndUserList = observer(({parameter}) => {
                     if (data === null) {
                         clean();
                         cleaningUpDueToAnErrorProduct();
-                        error.setMessageError(ERROR_MESSAGE_SEARCH);
+                        messages.setMessageError(ERROR_MESSAGE_SEARCH);
                     } else {
                         product.setProducts(data.products);
                         page.setCurrentPage(PAGE_FIRST);
@@ -98,7 +99,7 @@ const SearchFormProductAndUserList = observer(({parameter}) => {
                 } catch (e) {
                     clean();
                     cleaningUpDueToAnErrorProduct();
-                    error.setMessageError(e.message);
+                    messages.setMessageError(e.message);
                 }
                 
                 navigate(PRODUCTS_LIST_ROUTE);
@@ -115,12 +116,12 @@ const SearchFormProductAndUserList = observer(({parameter}) => {
     }
 
     return (
-        <div className="d-flex">
+        <div className='div-search'>
             <Form.Select
                 id = 'selectTag' 
+                className='form-select-search'
                 onChange={e => searchBy.onChange(e)}
                 onBlur={e => searchBy.onBlur(e)}
-                style={{width: '100px', marginRight: '5px'}}
             >
                 <option
                     value='0'
@@ -140,19 +141,16 @@ const SearchFormProductAndUserList = observer(({parameter}) => {
             <Form.Control
                 onKeyPress={onKeyPress}
                 type='search'
-                className='me-2'
+                className='form-control-search'
                 placeholder='Search'
                 value={searchParameter.value}
                 onChange={e => searchParameter.onChange(e)}
                 onBlur={e => searchParameter.onBlur(e)}
             />
             <Button
+                className='button-search-list'
                 variant='outline-success'
                 disabled={!searchParameter.inputValid || !searchBy.inputValid}
-                style={{
-                    cursor: 'pointer',
-                    borderRadius: '5px',
-                }}
                 onClick={searchClick}
             >
                 Search

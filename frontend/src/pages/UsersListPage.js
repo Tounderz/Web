@@ -6,7 +6,7 @@ import SortForm from "../components/SortForm";
 import { sortUsers } from "../http/sortApi";
 import { fetchUsers } from "../http/userApi";
 import { Context } from "../index";
-import { ADMIN_ROUTE, FIELD_NAMES_USERS, PAGE_FIRST, ROLE_ARRAY } from "../utils/const";
+import { ADMIN_NAME, ADMIN_ROUTE, FIELD_NAMES_USERS, PAGE_FIRST, ROLE_ARRAY } from "../utils/const";
 import '../css/Table.css'
 import ConfirmRemoval from "../components/models/remove/ConfirmRemoval";
 import PageBar from "../components/PageBar";
@@ -20,7 +20,8 @@ const UsersListPage = observer(() => {
     const { remove } = useContext(Context);
     const { page } = useContext(Context);
     const { search } = useContext(Context);
-    const { error } = useContext(Context);
+    const { messages } = useContext(Context);
+    const { updates } = useContext(Context);
     const navigate = useNavigate();
     const [userUpdateVisible, setUserUpdateVisible] = useState(false);
     const [sortVisible, setSortVisible] = useState(false);
@@ -34,7 +35,7 @@ const UsersListPage = observer(() => {
         } else if (search.searchBy !== '' || search.selectedSearchParameter !== '') {
             const data = await fetchSearchUsers(search.selectedSearchParameter, page.currentPage, search.searchBy);
                 user.setUsersList(data.usersList);
-            } else {
+        } else {
             const data = await fetchUsers(page.currentPage);
                 user.setUsersList(data.usersList);
         }
@@ -56,12 +57,13 @@ const UsersListPage = observer(() => {
         setRemoveVisible(true);
         remove.setRemoveObjeck(item);
         remove.setRemoveParameterName('user');
-        
     };
 
     const userUpdate = async (item) => {
+        updates.setUpdateParameter(ADMIN_NAME);
         user.setSelectedUser(item);
             setUserUpdateVisible(true);
+        allUsers();
     };
 
     const sortClick = () => {
@@ -100,7 +102,7 @@ const UsersListPage = observer(() => {
                     <div 
                         className='error-message'
                     >
-                        {error.messageError}
+                        {messages.messageError}
                     </div>
                     <Col md={8}>
                         <SearchFormProductAndUserList 

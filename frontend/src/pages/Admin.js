@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
 import { Context } from '../index';
 import { useNavigate } from "react-router";
@@ -15,12 +15,9 @@ const Admin = observer(() => {
     const {user} = useContext(Context);
     const {product} = useContext(Context);
     const {page} = useContext(Context);
-    const {error} = useContext(Context);
+    const {messages} = useContext(Context);
     const {search} = useContext(Context);
     const {sort} = useContext(Context);
-    const [create, setCreate] = useState(false);
-    const [update, setUpdate] = useState(false);
-    const [remove, setRemove] = useState(false);
     const navigate = useNavigate();
 
     const cleanSearchAndSort = () => {
@@ -29,7 +26,7 @@ const Admin = observer(() => {
         sort.setFieldNames([]);
         sort.setFieldName('');
         sort.setTypeSort('');
-        error.setMessageError('');
+        messages.setMessageError('');
     }
 
     const pageParameters = (countPages) => {
@@ -56,13 +53,13 @@ const Admin = observer(() => {
     return (
         <Row className='adminFonPage'>
             <Col md={2}>
-                <Create show={create} onHide={() => setCreate(false)}/>
+                <Create/>
             </Col>
             <Col md={2}>
-                <Update show={update} onHide={() => setUpdate(false)}/>
+                <Update/>
             </Col>
             <Col md={2}>
-                <Remove show={remove} onHide={() => setRemove(false)}/>
+                <Remove/>
             </Col>
             <Row className='rowAdminButtons'>
                 <Button 

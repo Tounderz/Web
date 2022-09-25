@@ -4,7 +4,9 @@ using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Linq;
 using WebLibrary.Abstract;
 using WebLibrary.ConstParameters;
 using WebLibrary.Models;
@@ -19,12 +21,21 @@ namespace Web.Controllers
         private readonly IAuthorization _auth;
         private readonly IJwt _jwtService;
         private readonly IGeneralMethods _generalMethods;
+        private readonly ISendEmail _sendEmail;
+        private readonly IRetrievePassword _retrievePassword;
+        private readonly IConfirmEmail _confirmEmail;
 
-        public AuthorizationController(IAuthorization auth, IJwt jwtService, IGeneralMethods generalMethods)
+        public AuthorizationController(IAuthorization auth, 
+            IJwt jwtService, IGeneralMethods generalMethods, 
+            ISendEmail sendEmail, IRetrievePassword retrievePassword,
+            IConfirmEmail confirmEmail)
         {
             _auth = auth;
             _jwtService = jwtService;
             _generalMethods = generalMethods;
+            _sendEmail = sendEmail;
+            _retrievePassword = retrievePassword;
+            _confirmEmail = confirmEmail;
         }
 
         [HttpGet(ConstAuth.HTTP_GET_GET_USER)]
@@ -40,12 +51,17 @@ namespace Web.Controllers
             var user = _auth.GetByUser(model.Login);
             if (user == null)
             {
-                return BadRequest(new { message = "Invalid Login." });
+                return BadRequest(new { message = ConstAuth.ERROR_MESSAGE_INVALID_LOGIN });
             }
 
             if (!BCrypt.Net.BCrypt.Verify(model.Password, user.Password))
             {
-                return BadRequest(new { message = "Invalid Password." });
+                return BadRequest(new { message = ConstAuth.ERROR_MESSAGE_INVALID_PASSWORD });
+            }
+
+            if (!user.ConfirmEmail)
+            {
+                return BadRequest(new { message = ConstAuth.ERROR_CONFIRM_EMAIL });
             }
 
             var accessToken = _jwtService.GenerateJwt(user);
@@ -63,13 +79,47 @@ namespace Web.Controllers
         public IActionResult Register()
         {
             var model = GetUserRegisterModel();
-            var user = model != null ? _auth.CreateUser(model) : null;
-            if (user == null)
+            var checkLoginAndEmail = model != null && _auth.CheckUser(model.Login, model.Email);
+            if (!checkLoginAndEmail)
             {
-                return BadRequest(new { message = "Such login or Email address already exists." });
+                return BadRequest(new { message = ConstAuth.ERROR_MESSAGE_LOGIN_OR_EMAIL });
             }
 
+            var messageBody = _sendEmail.MessageBodyConfirmEmail(model.Email);
+            var messageSendingCheck = messageBody != null && _sendEmail.SendEmail(model.Email, messageBody, ConstAuth.SUBJECK_CONFIRM_EMAIL);
+            if (!messageSendingCheck)
+            {
+                return BadRequest(new { message = ConstAuth.ERROR_MESSAGE_LOGIN_OR_EMAIL });
+            }
+
+            var user = _auth.CreateUser(model);
+
             return Ok(new { user = user });
+        }
+
+        [HttpGet(ConstAuth.HTTP_GET_CONFIRM_EMAIL)]
+        public IActionResult ConfirmEmail(string token)
+        {
+            var user = _confirmEmail.ConfirmEmailService(token);
+            if (user == null)
+            {
+                return BadRequest(new { message = ConstAuth.ERROR_INCORRECT_EMAIL_OUTDATED_LINK });
+            }
+
+            if (!user.ConfirmEmail)
+            {
+                var messageBody = _sendEmail.MessageBodyConfirmEmail(user.Email);
+                var messageSendingCheck = messageBody != null && _sendEmail.SendEmail(user.Email, messageBody, ConstAuth.SUBJECK_CONFIRM_EMAIL);
+                if (!messageSendingCheck)
+                {
+                    return BadRequest(new { message = ConstAuth.ERROR_CONFIRM_EMAIL });
+                }
+            }
+
+            var confirmEmail = user.ConfirmEmail.ToString().ToLower();
+            _confirmEmail.TokenRemotalFromBD(token);
+
+            return Ok( new { confirmEmail = confirmEmail, message = "Successful confirmation of email address." } );
         }
 
         [Authorize]
@@ -80,7 +130,7 @@ namespace Web.Controllers
 
             foreach (var header in Request.Headers)
             {
-                if (header.Key == "Authorization")
+                if (header.Key == ConstAuth.AUTHORIZATION)
                 {
                     jwtToken = header.Value;
                     break;
@@ -127,24 +177,45 @@ namespace Web.Controllers
         public IActionResult UpdateUserByAdmin()
         {
             var model = GetUserRegisterModel();
+            if (model.Email != string.Empty)
+            {
+                var messageBody = _sendEmail.MessageBodyConfirmEmail(model.Email);
+                var messageSendingCheck = messageBody != null && _sendEmail.SendEmail(model.Email, messageBody, ConstAuth.SUBJECK_CONFIRM_EMAIL);
+                if (!messageSendingCheck)
+                {
+                    return BadRequest(new { message = ConstAuth.ERROR_MESSAGE_LOGIN_OR_EMAIL });
+                }
+            }
+
             var user = model != null ? _auth.UpdateUser(model) : null;
             if (user == null)
             {
-                return BadRequest(new { message = "Such login or Email address already exists." });
+                return BadRequest(new { message = ConstAuth.ERROR_MESSAGE_LOGIN_OR_EMAIL });
             }
 
             var users = _auth.GetByUsersList();
-            return Ok(new { users });
+            var list = _generalMethods.GetUsersList(users, ConstParameters.START_PAGE);
+            return Ok(new { usersList = list.users, countPages = list.countPages });
         }
 
         [HttpPost(ConstAuth.HTTP_POST_UPDATE_USER_BY_USER)]
         public IActionResult UpdateUserByUser()
         {
             var model = GetUserRegisterModel();
+            if (!string.IsNullOrEmpty(model.Email))
+            {
+                var messageBody = _sendEmail.MessageBodyConfirmEmail(model.Email);
+                var messageSendingCheck = messageBody != null && _sendEmail.SendEmail(model.Email, messageBody, ConstAuth.SUBJECK_CONFIRM_EMAIL);
+                if (!messageSendingCheck)
+                {
+                    return BadRequest(new { message = ConstAuth.ERROR_MESSAGE_LOGIN_OR_EMAIL });
+                }
+            }
+
             var user = model != null ? _auth.UpdateUser(model) : null;
             if (user == null)
             {
-                return BadRequest(new { message = "Such login or Email address already exists." });
+                return BadRequest(new { message = ConstAuth.ERROR_MESSAGE_LOGIN_OR_EMAIL });
             }
 
             return Ok(new { user = user });
@@ -167,11 +238,50 @@ namespace Web.Controllers
 
             if (!BCrypt.Net.BCrypt.Verify(oldPassword, user.Password))
             {
-                return BadRequest(new { message = "Invalid Old Password." });
+                return BadRequest(new { message = ConstAuth.ERROR_MESSAGE_UPDATE_PASSWORD });
             }
 
             user = _auth.UpdatePassword(newPassword, user);
             return Ok(new { user = user });
+        }
+
+        [HttpGet(ConstAuth.HTTP_GET_RETRIEVE_PASSWORD)]
+        public IActionResult RetrievePassword(string email)
+        {
+            var user = _auth.GetUserByEmail(email);
+            if (user == null)
+            {
+                return BadRequest( new {message = ConstAuth.ERROR_INCORRECT_EMAIL });
+            }
+
+            var messageBody = _sendEmail.MessageBodyRetrievePassword(user.Email);
+            var messageSendingCheck = messageBody != null && _sendEmail.SendEmail(user.Email, messageBody, ConstAuth.SUBJECK_RETRIEVE_YOUR_PASSWORD);
+            if (!messageSendingCheck)
+            {
+                return BadRequest(new { message = ConstAuth.ERROR_MESSAGE_LOGIN_OR_EMAIL });
+            }
+
+            return Ok();
+        }
+
+        [HttpPost(ConstAuth.HTTP_POST_CREATE_NEW_PASSWORD)]
+        public IActionResult CreateNewPassword(RetrievePasswordDtoModel model)
+        {
+            var user = _retrievePassword.RetrievePasswordService(model.Token);
+            if (user == null)
+            {
+                return BadRequest( new {message = ConstAuth.ERROR_INCORRECT_EMAIL_OUTDATED_LINK } );
+            }
+
+            if (BCrypt.Net.BCrypt.Verify(model.NewPassword, user.Password))
+            {
+                return BadRequest(new { message = ConstAuth.ERROR_MESSAGE_UPDATE_PASSWORD });
+            }
+
+            _auth.UpdatePassword(model.NewPassword, user);
+            _retrievePassword.TokenRemotalFromBD(model.Token);
+
+            return Ok( new { message = ConstAuth.MESSAGE_PASSWORD_SUCCESSFULY });
         }
 
         [HttpDelete(ConstAuth.HTTP_DELETE_USER)]
@@ -179,7 +289,8 @@ namespace Web.Controllers
         {
             _auth.DeleteUser(id);
             var users = _auth.GetByUsersList();
-            return Ok(new { users });
+            var list = _generalMethods.GetUsersList(users, ConstParameters.START_PAGE);
+            return Ok(new { usersList = list.users, countPages = list.countPages });
         }
 
         [HttpPost(ConstAuth.HTTP_POST_LOGOUT)]
@@ -211,9 +322,9 @@ namespace Web.Controllers
                         Request.Form.FirstOrDefault(i => i.Key == FormFields.LOGIN).Value : string.Empty,
                 Password = !string.IsNullOrEmpty(Request.Form.FirstOrDefault(i => i.Key == FormFields.PASSWORD).Value) ?
                            Request.Form.FirstOrDefault(i => i.Key == FormFields.PASSWORD).Value : string.Empty,
-                Role = !string.IsNullOrEmpty(Request.Form.FirstOrDefault(i => i.Key == FormFields.ROLE).Value) ?
+                Role = !string.IsNullOrEmpty(Request.Form.FirstOrDefault(i => i.Key == FormFields.ROLE).Value)?
                            Request.Form.FirstOrDefault(i => i.Key == FormFields.ROLE).Value : string.Empty,
-                Img = Request.Form.Files.Count > 0 ? Request.Form.Files[0] : null
+                Img = Request.Form.Files.Count != 0 ? Request.Form.Files[0] : null
             };
 
             return model;

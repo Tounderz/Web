@@ -83,7 +83,8 @@ namespace Web.HelpersJwt
             var token = RefreshTokens.FirstOrDefault(i => i.UserId == userId);
             if (token != null)
             {
-                if (token.Expires == DateTime.Now)
+                var comparisonResult = DateTime.Compare(token.Expires, DateTime.Now);
+                if (comparisonResult < 1)
                 {
                     token.Token = refreshToken;
                     token.Created = DateTime.Now;

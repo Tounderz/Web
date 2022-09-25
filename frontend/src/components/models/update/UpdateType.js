@@ -4,8 +4,9 @@ import { updateType } from '../../../http/typeApi';
 import { useInput } from '../../../http/validateApi';
 import { Context } from '../../../index';
 import '../../../css/update/UpdateType.css'
+import { observer } from 'mobx-react-lite';
 
-const UpdateType = ({show, onHide}) => {
+const UpdateType = observer(({show, onHide}) => {
     const {type} = useContext(Context);
     const {category} = useContext(Context);
     const typeId = useInput(0, {isNumberId: {name: 'Type'}})
@@ -15,13 +16,14 @@ const UpdateType = ({show, onHide}) => {
 
     const click = async () => {
         try {
-            await updateType(typeId.value, name.value, categoryId.value);
-                typeId.onChange(0);
+            const data = await updateType(typeId.value, name.value, categoryId.value);
+                type.setTypes(data.types);
+                document.getElementById('updateSelectType').value = '0';
                 name.onChange('');
-                categoryId.onChange(0);
-                onHide();
+                document.getElementById('updateSelectCategoryByType').value = '0';
+            onHide();
         } catch (error) {
-            setMessageError(error.response.data.message)
+            setMessageError(error.message)
         }
         
     }
@@ -47,11 +49,15 @@ const UpdateType = ({show, onHide}) => {
                             {typeId.messageError}
                         </div>}
                     <Form.Select
+                        id='updateSelectType'
                         className='form-update-type'
                         onChange={e => typeId.onChange(e)}
                         onBlur={e => typeId.onBlur(e)}
                     >
-                        <option value={0}>
+                        <option 
+                            key='0'
+                            value='0'
+                        >
                             Select a type
                         </option>
                         {type.types.map(typeItem => (
@@ -80,12 +86,16 @@ const UpdateType = ({show, onHide}) => {
                         <div className='error-message'>
                             {categoryId.messageError}
                         </div>}
-                    <Form.Select 
+                    <Form.Select
+                        id='updateSelectCategoryByType'
                         className='form-update-type'
                         onChange={e => categoryId.onChange(e)}
                         onBlur={e => categoryId.onBlur(e)}
                     >
-                        <option value=''>
+                        <option 
+                            key='0'
+                            value='0'
+                        >
                             Update which category the type belongs to
                         </option>
                         {category.categories.map(catetegoryItem => (
@@ -122,6 +132,6 @@ const UpdateType = ({show, onHide}) => {
             </Modal.Footer>
         </Modal>
     );
-};
+});
 
 export default UpdateType;

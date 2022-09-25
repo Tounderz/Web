@@ -4,15 +4,17 @@ import { removeBrand } from '../../../http/brandApi';
 import { useInput } from '../../../http/validateApi';
 import { Context } from '../../../index';
 import '../../../css/remove/RemoveBrand.css'
+import { observer } from 'mobx-react-lite';
 
-const RemoveBrand = ({show, onHide}) => {
+const RemoveBrand = observer(({show, onHide}) => {
     const {brand} = useContext(Context);
     const brandId = useInput(0, {isNumberId: {name: 'Brand'}});
 
     const click = async () => {
-        await removeBrand(brandId.value);
-            brandId.onChange(0);
-            onHide();
+        const data = await removeBrand(brandId.value);
+            brand.setBrands(data.brands);
+            document.getElementById('removeSelectBrand').value = '0';
+        onHide();
     }
 
     return (
@@ -34,11 +36,15 @@ const RemoveBrand = ({show, onHide}) => {
                     {brandId.messageError}
                 </div>}
                     <Form.Select
+                        id='removeSelectBrand'
                         className='form-brand-remove'
                         onChange={e => brandId.onChange(e)}
                         onBlur={e => brandId.onBlur(e)}
                     >
-                        <option key={0} value=''>
+                        <option 
+                            key='0'
+                            value='0'
+                        >
                             Select a brand
                         </option>
                             {brand.brands.map(brand => (
@@ -70,6 +76,6 @@ const RemoveBrand = ({show, onHide}) => {
             </Modal.Footer>
         </Modal>
     );
-};
+});
 
 export default RemoveBrand;

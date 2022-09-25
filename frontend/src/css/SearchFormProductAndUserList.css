@@ -1,0 +1,17 @@
+.div-search {
+    display: flex;
+}
+
+.form-select-search {
+    width: 100px;
+    margin-right: 5px;
+}
+
+.form-control-search {
+    margin-right: 5px;
+}
+
+.button-search-list {
+    cursor: pointer;
+    border-radius: 5px;
+}

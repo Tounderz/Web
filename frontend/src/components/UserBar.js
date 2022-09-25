@@ -25,6 +25,7 @@ const UserBar = observer(() => {
     const {page} = useContext(Context);
     const {brand} = useContext(Context);
     const {category} = useContext(Context);
+    const {messages} = useContext(Context);
     const {type} = useContext(Context);
     const navigate = useNavigate();
 
@@ -69,6 +70,11 @@ const UserBar = observer(() => {
         navigate(PERSONAL_ACCOUNT_ROUTE);
     }
 
+    const cleanMessageStore = () => {
+        messages.setMessage('');
+        messages.setMessageError('');
+    }
+
     let menu;
     if (!user.user.isAuth) {
         menu = (
@@ -76,6 +82,7 @@ const UserBar = observer(() => {
                 <Link
                     className='sign navbar-brand'
                     to={LOGIN_ROUTE}
+                    onClick={cleanMessageStore}
                 >
                     Sign In
                 </Link>

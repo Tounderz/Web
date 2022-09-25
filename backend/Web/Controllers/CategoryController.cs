@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -37,20 +38,23 @@ namespace Web.Controllers
             return Ok(new { categories = categories });
         }
 
-        [HttpPost(CategoryConst.HTTP_POST_CATEGORIES_BY_BRAND)]
-        public IActionResult GetBrands()
+        [HttpGet(CategoryConst.HTTP_GET_CATEGORIES_BY_BRAND)]
+        public IActionResult GetCategories(int brandId)
         {
-            int[] categoriesId = Request.Form.FirstOrDefault(i => i.Key == FormFields.IDS).Value.Count > 0 ?
-                             Array.ConvertAll(Request.Form.FirstOrDefault(i => i.Key == FormFields.IDS).Value
-                             .ToString().Trim(' ').Split(','), int.Parse) : Array.Empty<int>();
-            if (categoriesId.Length == 0 && categoriesId == null)
+            if (brandId < 1)
+            {
+                return BadRequest(new { message = ConstParameters.INVALID_CREDENTIALS_ERROR });
+            }
+
+            var categoriesId = _categoriesBrands.CategoriesBrands.Where(i => i.BrandId == brandId).Select(i => i.CategoryId).ToList();
+            if (categoriesId.Count == 0 || categoriesId == null)
             {
                 return BadRequest(new { message = ConstParameters.INVALID_CREDENTIALS_ERROR });
             }
 
             var categoriesByBrand = _category.Categories.Where(i => categoriesId.Contains(i.Id)).ToList();
 
-            return Ok(new { categoriesByBrand });
+            return Ok(new { categoriesByBrand = categoriesByBrand });
         }
 
         [HttpPost(CategoryConst.HTTP_POST_PRODUCTS_CATEGORY)]
@@ -73,13 +77,11 @@ namespace Web.Controllers
                 return BadRequest(new { message = "There are no products according to the selected criteria!" });
             }
 
-            var brandsId = _categoriesBrands.CategoriesBrands.Where(i => i.CategoryId == model.ModelId).Select(i => i.BrandId).ToList();
             var (countPages, products) = _generalMethods.GetProducts(productList, model.Page);
 
             return Ok(new
             {
                 products = products,
-                brandsId = brandsId,
                 countPages = countPages
             });
         }
@@ -115,6 +117,11 @@ namespace Web.Controllers
         public IActionResult CreateCategory()
         {
             var categoryDto = FormCategoryDto();
+            if (categoryDto.BrandsId.Length < 1)
+            {
+                return BadRequest(new { message = "It is required to select the brand(s) for this category!" });
+            }
+
             var category = categoryDto != null ? _category.CreateCategory(categoryDto) : null;
             if (category == null)
             {
@@ -122,13 +129,10 @@ namespace Web.Controllers
             }
 
             categoryDto.Id = category.Id;
-            var categoriesBrands = categoryDto.BrandsId.Length > 0 ? _categoriesBrands.CreateBrandsByCategory(categoryDto) : null;
-            if (categoriesBrands == null)
-            {
-                return BadRequest(new { message = "It is required to select the brand(s) for this category!" });
-            }
+            var categoriesBrands = _categoriesBrands.CreateBrandsByCategory(categoryDto);
+            var categories = _category.Categories;
 
-            return Ok(new { category, categoriesBrands });
+            return Ok(new { categories = categories });
         }
 
         [HttpPost(ConstParameters.HTTP_POST_UPDATE)]
@@ -142,13 +146,10 @@ namespace Web.Controllers
             }
 
             categoryDto.Id = category.Id;
-            var categoriesBrands = categoryDto.BrandsId.Length > 0 ? _categoriesBrands.UpdateBrandsByCategory(categoryDto) : null;
-            if (categoriesBrands == null)
-            {
-                return BadRequest(new { message = "It is required to select the brand(s) for this category!" });
-            }
+            var categoriesBrands = _categoriesBrands.UpdateBrandsByCategory(categoryDto);
+            var categories = _category.Categories;
 
-            return Ok(new { category, categoriesBrands });
+            return Ok(new { categories = categories });
         }
 
         [HttpDelete(ConstParameters.HTTP_DELETE)]
@@ -157,7 +158,8 @@ namespace Web.Controllers
             _category.RemoveCategory(id);
             _categoriesBrands.RemoveBrandsByCategory(id);
 
-            return Ok("success");
+            var categories = _category.Categories;
+            return Ok( new { categories = categories });
         }
 
         private CategoryDtoModel FormCategoryDto()

@@ -15,7 +15,7 @@ const CategoryDropdown = observer(({categoryItem}) => {
     const {brand} = useContext(Context);
     const {type} = useContext(Context);
     const {user} = useContext(Context);
-    const {error} = useContext(Context);
+    const {messages} = useContext(Context);
     const {page} = useContext(Context);
     const navigate = useNavigate();
 
@@ -26,17 +26,16 @@ const CategoryDropdown = observer(({categoryItem}) => {
             
             const dataProducts = await fetchProductsCategory(categoryItem.id, user.user.role, PAGE_FIRST);
                 product.setProducts(dataProducts.products);
-                brand.setSelectedBrand(dataProducts.brandsId);
                 page.setCurrentPage(PAGE_FIRST);
                 page.setCountPages(dataProducts.countPages);
                 category.setSelectedCategory(categoryItem);
 
-            const dataBrands = await fetchBrandsByCategory(brand.selectedBrand);
+            const dataBrands = await fetchBrandsByCategory(categoryItem.id);
                 brand.setBrandsByCategory(dataBrands.brandsByCategory);
 
             navigate(CATEGORY_ROUTE)
         } catch (e) {
-            error.setMessageError(e.message)
+            messages.setMessageError(e.message)
             navigate(ERROR_ROUTE)
         }
     }

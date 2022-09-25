@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebLibrary.Abstract;
+using WebLibrary.ConstParameters;
 using WebLibrary.Models.Dtos;
 
 namespace Web.Controllers
 {
-    [Route("sort")]
+    [Route(ConstSort.SORT_ROUTE)]
     [ApiController]
     public class SortController : ControllerBase
     {
@@ -18,7 +19,7 @@ namespace Web.Controllers
             _generalMethods = generalMethods;
         }
 
-        [HttpPost("users")]
+        [HttpPost(ConstSort.HTTP_POST_SORT_USERS)]
         public IActionResult SortUsers(SortDtoModel model)
         {
             var sort = _sort.SortUser(model);
@@ -35,7 +36,7 @@ namespace Web.Controllers
             });
         }
 
-        [HttpPost("products")]
+        [HttpPost(ConstSort.HTTP_POST_SORT_PRODUCTS)]
         public IActionResult SortProducts(SortDtoModel model)
         {
             var (countPages, products) = _sort.SortProduct(model);

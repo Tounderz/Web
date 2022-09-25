@@ -65,14 +65,13 @@ const ProductPage = observer(() => {
                             className='cardProduct'
                         >
                             <h1 className='addToCartProduct'>Price: {product.selectedProduct.price} $</h1>
-                            <Button
+                            <Row 
                                 className='button-addToCartProduct'
-                                variant='link'
-                                disabled={!product.selectedProduct.available}
+                                disabled={!product.selectedProduct.available} 
                                 onClick={onClick}
                             >
                                 <SvgSelector id='addToCart'/>
-                            </Button>
+                            </Row>
                         </Card>
                     </Col>
                 </Row>
@@ -93,7 +92,7 @@ const ProductPage = observer(() => {
                         </thead>
                         <tbody>
                             {product.infoProduct.map((info, id) => (
-                                <ProductInfoItem info={info} id={id + 1}/>
+                                <ProductInfoItem key={id} info={info} id={id + 1}/>
                             ))}
                         </tbody>
                     </Table>

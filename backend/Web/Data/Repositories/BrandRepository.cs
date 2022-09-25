@@ -82,7 +82,12 @@ namespace Web.Data.Repositories
 
         private bool CheckBrandName(string name)
         {
-            var brand = Brands.FirstOrDefault(i => i.Name.ToLower() == name.ToLower());
+            if (name == string.Empty)
+            {
+                return true;
+            }
+
+            var brand = Brands.FirstOrDefault(i => i.Name.Contains(name, StringComparison.InvariantCultureIgnoreCase));
             if (brand == null)
             {
                 return true;

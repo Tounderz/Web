@@ -15,7 +15,7 @@ const CreateType = ({show, onHide}) => {
         try {
             createType(name.value, categoryId.value);
                 name.onChange('');
-                categoryId.onChange(0);
+                document.getElementById('createSelectTypeCategory').value = '0';
                 onHide();
         } catch (e) {
             setMessageError(e.message)
@@ -55,12 +55,16 @@ const CreateType = ({show, onHide}) => {
                     <div className='error-message'>
                         {categoryId.messageError}
                     </div>}
-                <Form.Select 
+                <Form.Select
+                    id='createSelectTypeCategory'
                     className='form-control-create-type' 
                     onChange={e => categoryId.onChange(e)}
                     onBlur={e => categoryId.onBlur(e)}
                 >
-                    <option value={0}>
+                    <option 
+                        key='0'
+                        value='0'
+                    >
                         Select a category
                     </option>
                     {category.categories.map(item => (

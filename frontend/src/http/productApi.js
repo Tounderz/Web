@@ -1,7 +1,7 @@
 import { CONFIG_MULTIPART } from '../utils/const';
 import { createRequest } from './interceptor';
 
-export const formDataProduct = (productId, name, categoryId, typeId, brandId, shortDescription, isFavourite, available, price, img) => {
+export const formDataProduct = ({productId, name, categoryId, typeId, brandId, shortDescription, isFavourite, available, price, img}) => {
     const formData = new FormData();
         formData.append('Id', productId);
         formData.append('Name', name);

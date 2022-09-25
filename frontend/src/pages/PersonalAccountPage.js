@@ -10,7 +10,8 @@ import {
          SHOP_ROUTE, BASKET_ROUTE, 
          PURCHASES_STORY_ROUTE, 
          PAGE_FIRST,
-         PICTURE
+         PICTURE,
+         CABINET_NAME
         } from "../utils/const";
 import UpdatePhoto from "../components/models/update/UpdatePhoto";
 import { ordersList } from "../http/orderApi";
@@ -20,9 +21,10 @@ import '../css/PersonalAccountPage.css'
 const PersonalAccountPage = observer(() => {
     const {user} = useContext(Context);
     const {order} = useContext(Context);
-    const {error} = useContext(Context);
+    const {messages} = useContext(Context);
     const {cart} = useContext(Context);
     const {page} = useContext(Context);
+    const {updates} = useContext(Context);
     const navigate = useNavigate();
     const [userUpdateVisible, setUserUpdateVisible] = useState(false);
     const [updatePasswordVisible, setUpdatePasswordVisible] = useState(false);
@@ -36,15 +38,16 @@ const PersonalAccountPage = observer(() => {
     }
 
     const userUpdate = async () => {
-        setUserUpdateVisible(true)
+        updates.setUpdateParameter(CABINET_NAME);
+        setUserUpdateVisible(true);
     }
 
     const updatePassword = () => {
-        setUpdatePasswordVisible(true)
+        setUpdatePasswordVisible(true);
     }
 
     const updatePhoto = async (e) => {
-        setUpdatePhotoVisible(true)
+        setUpdatePhotoVisible(true);
     }
 
     const basket = async () => {
@@ -65,7 +68,7 @@ const PersonalAccountPage = observer(() => {
                 page.setCountPages(data.countPages);
                 navigate(PURCHASES_STORY_ROUTE);
         } catch (e) {
-            error.setMessageError(e.message);
+            messages.setMessageError(e.message);
                 order.setOrdersList([]);
                 order.setTotalAmount(0);
                 page.setCurrentPage(PAGE_FIRST);

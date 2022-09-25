@@ -11,7 +11,7 @@ const PurchasesStoryPage = observer(() => {
     const {page} = useContext(Context);
     const {order} = useContext(Context);
     const {user} = useContext(Context);
-    const {error} = useContext(Context);
+    const {messages} = useContext(Context);
     const navigate = useNavigate();
 
     const paginationClick = async () => {
@@ -67,7 +67,7 @@ const PurchasesStoryPage = observer(() => {
                         </tbody>
                     </Table>
                     : 
-                    <h1 className='errorTable'>{error.messageError}</h1>
+                    <h1 className='errorTable'>{messages.messageError}</h1>
                 }
                 <Row onClick={() => paginationClick()}>
                     <PageBar/>

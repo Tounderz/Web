@@ -20,14 +20,10 @@ const CategoryPage = observer(() => {
     const {brand} = useContext(Context);
     const {type} = useContext(Context);
     const {user} = useContext(Context);
-    const {error} = useContext(Context);
+    const {messages} = useContext(Context);
     const {page} = useContext(Context);
     const navigate = useNavigate();
     const brandsId = useInput([]);
-
-    // setTimeout(function(){
-    //     document.body.classList.add('categoryFonPage_visable');
-    // }, 200);
 
     const paginationClick = async () => {
         const data = await fetchProductsCategory(category.selectedCategory.id, user.user.role, page.currentPage);
@@ -51,7 +47,7 @@ const CategoryPage = observer(() => {
 
             navigate(BRANDS_BY_CATEGORY_ROUTE)
         } catch (e) {
-            error.setMessageError(e.message);
+            messages.setMessageError(e.message);
             navigate(ERROR_ROUTE)
         }
     }

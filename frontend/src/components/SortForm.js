@@ -5,10 +5,11 @@ import { sortProducts, sortUsers } from '../http/sortApi';
 import { useInput } from '../http/validateApi';
 import { PAGE_FIRST, PRODUCTS_LIST_ROUTE, TYPES_SORT, USERLIST_ROUTE } from '../utils/const';
 import { useNavigate } from 'react-router';
+import { observer } from 'mobx-react-lite';
 
-const SortForm = ({show, onHide, parameter}) => {
+const SortForm = observer(({show, onHide, parameter}) => {
     const {product} = useContext(Context);
-    const {error} = useContext(Context);
+    const {messages} = useContext(Context);
     const {user} = useContext(Context);
     const {sort} = useContext(Context);
     const {page} = useContext(Context);
@@ -31,7 +32,7 @@ const SortForm = ({show, onHide, parameter}) => {
                             onHide();
                     } catch (e) {
                         cleaningUpDueToAnErrorProduct();
-                        error.setMessageError(e.message);
+                        messages.setMessageError(e.message);
                     }
                         navigate(PRODUCTS_LIST_ROUTE);
                     break;
@@ -46,7 +47,7 @@ const SortForm = ({show, onHide, parameter}) => {
                             onHide();
                     } catch (e) {
                         cleaningUpDueToAnErrorUser();
-                        error.setMessageError(e.message);
+                        messages.setMessageError(e.message);
                     }
                         navigate(USERLIST_ROUTE);
                     break;
@@ -154,6 +155,6 @@ const SortForm = ({show, onHide, parameter}) => {
             </Modal.Footer>
         </Modal>
     );
-};
+});
 
 export default SortForm;

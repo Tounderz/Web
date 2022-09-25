@@ -18,12 +18,14 @@ namespace Web.Controllers
         private readonly IOrder _order;
         private readonly IAuthorization _auth;
         private readonly IBasket _basket;
+        private readonly ISendEmail _sendEmail;
 
-        public OrderController(IOrder order, IAuthorization auth, IBasket basket)
+        public OrderController(IOrder order, IAuthorization auth, IBasket basket, ISendEmail sendEmail)
         {
             _order = order;
             _auth = auth;
             _basket = basket;
+            _sendEmail = sendEmail;
         }
 
         [HttpPost(ConstOrder.HTTP_POST_CREATE_ORDER)]
@@ -39,6 +41,13 @@ namespace Web.Controllers
             if (order == null)
             {
                 return BadRequest(new { message = ConstParameters.INVALID_CREDENTIALS_ERROR });
+            }
+
+            var messageBody = _sendEmail.MessageBodyOrder(order);
+            var messageSendingCheck = messageBody != null ? _sendEmail.SendEmail(user.Email, messageBody, ConstOrder.SUBJECK_ORDER) : false;
+            if (!messageSendingCheck)
+            {
+                return BadRequest(new { message = "This email address doesn`t exist" });
             }
                 
             return Ok(new { orderId = order.Id });

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "8Y4Tt7BzJXgFzlEQeprMrKke2HWD+jreNY2DIrVxX84=",
+  "Hash": "Gv72OUQlMrb6NdLhYzv8RgFv59pbALYNn/UXf1liNno=",
   "Source": "Web",
   "BasePath": "_content/Web",
   "Mode": "Default",
@@ -68,40 +68,6 @@
       "OriginalItemSpec": "wwwroot\\img\\02e2ac56-a8b4-4858-b6cf-41cf4d59b14anissanLogo.jpg"
     },
     {
-      "Identity": "C:\\Users\\basta\\source\\repos\\Web\\backend\\Web\\wwwroot\\img\\0f035c8d-9b83-4ad4-9326-eccfe1d432b5Без названия.jpg",
-      "SourceId": "Web",
-      "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\basta\\source\\repos\\Web\\backend\\Web\\wwwroot\\",
-      "BasePath": "_content/Web",
-      "RelativePath": "img/0f035c8d-9b83-4ad4-9326-eccfe1d432b5Без названия.jpg",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\img\\0f035c8d-9b83-4ad4-9326-eccfe1d432b5Без названия.jpg"
-    },
-    {
-      "Identity": "C:\\Users\\basta\\source\\repos\\Web\\backend\\Web\\wwwroot\\img\\1315d2e7-47cc-44f6-a5eb-bec99d3867074f0e9773-dee1-4189-af1d-8333181b57a1bob.jpg",
-      "SourceId": "Web",
-      "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\basta\\source\\repos\\Web\\backend\\Web\\wwwroot\\",
-      "BasePath": "_content/Web",
-      "RelativePath": "img/1315d2e7-47cc-44f6-a5eb-bec99d3867074f0e9773-dee1-4189-af1d-8333181b57a1bob.jpg",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\img\\1315d2e7-47cc-44f6-a5eb-bec99d3867074f0e9773-dee1-4189-af1d-8333181b57a1bob.jpg"
-    },
-    {
       "Identity": "C:\\Users\\basta\\source\\repos\\Web\\backend\\Web\\wwwroot\\img\\14e63c4f-6af8-4c56-98e4-f1ced6e6f0a5mercedes.jpg",
       "SourceId": "Web",
       "SourceType": "Discovered",
@@ -153,23 +119,6 @@
       "OriginalItemSpec": "wwwroot\\img\\4e1687d3-bc72-4782-bbee-c104e861fd7fteslaLogo.jpg"
     },
     {
-      "Identity": "C:\\Users\\basta\\source\\repos\\Web\\backend\\Web\\wwwroot\\img\\4f0e9773-dee1-4189-af1d-8333181b57a1bob.jpg",
-      "SourceId": "Web",
-      "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\basta\\source\\repos\\Web\\backend\\Web\\wwwroot\\",
-      "BasePath": "_content/Web",
-      "RelativePath": "img/4f0e9773-dee1-4189-af1d-8333181b57a1bob.jpg",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\img\\4f0e9773-dee1-4189-af1d-8333181b57a1bob.jpg"
-    },
-    {
       "Identity": "C:\\Users\\basta\\source\\repos\\Web\\backend\\Web\\wwwroot\\img\\785e4fa1-03f9-42ed-bf58-3a04d02548cbfordLogo.jpg",
       "SourceId": "Web",
       "SourceType": "Discovered",
@@ -185,23 +134,6 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\img\\785e4fa1-03f9-42ed-bf58-3a04d02548cbfordLogo.jpg"
-    },
-    {
-      "Identity": "C:\\Users\\basta\\source\\repos\\Web\\backend\\Web\\wwwroot\\img\\98e60177-0c35-4f00-8f16-a84082d3b94ehp-logo.jpg",
-      "SourceId": "Web",
-      "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\basta\\source\\repos\\Web\\backend\\Web\\wwwroot\\",
-      "BasePath": "_content/Web",
-      "RelativePath": "img/98e60177-0c35-4f00-8f16-a84082d3b94ehp-logo.jpg",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\img\\98e60177-0c35-4f00-8f16-a84082d3b94ehp-logo.jpg"
     },
     {
       "Identity": "C:\\Users\\basta\\source\\repos\\Web\\backend\\Web\\wwwroot\\img\\9acebdc6-126a-4e5b-857e-fcf777e50dd4apple-logo.jpg",
@@ -221,6 +153,23 @@
       "OriginalItemSpec": "wwwroot\\img\\9acebdc6-126a-4e5b-857e-fcf777e50dd4apple-logo.jpg"
     },
     {
+      "Identity": "C:\\Users\\basta\\source\\repos\\Web\\backend\\Web\\wwwroot\\img\\bc1be0cc-35c6-44c0-a46c-9e30a89273dffd892c00-d8e9-4b72-88e1-8173bf06395ftest.jpg",
+      "SourceId": "Web",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\basta\\source\\repos\\Web\\backend\\Web\\wwwroot\\",
+      "BasePath": "_content/Web",
+      "RelativePath": "img/bc1be0cc-35c6-44c0-a46c-9e30a89273dffd892c00-d8e9-4b72-88e1-8173bf06395ftest.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\bc1be0cc-35c6-44c0-a46c-9e30a89273dffd892c00-d8e9-4b72-88e1-8173bf06395ftest.jpg"
+    },
+    {
       "Identity": "C:\\Users\\basta\\source\\repos\\Web\\backend\\Web\\wwwroot\\img\\BMW.jpg",
       "SourceId": "Web",
       "SourceType": "Discovered",
@@ -236,6 +185,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\img\\BMW.jpg"
+    },
+    {
+      "Identity": "C:\\Users\\basta\\source\\repos\\Web\\backend\\Web\\wwwroot\\img\\c65536f1-d3f4-43ed-b98b-10234d40b1244f0e9773-dee1-4189-af1d-8333181b57a1bob.jpg",
+      "SourceId": "Web",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\basta\\source\\repos\\Web\\backend\\Web\\wwwroot\\",
+      "BasePath": "_content/Web",
+      "RelativePath": "img/c65536f1-d3f4-43ed-b98b-10234d40b1244f0e9773-dee1-4189-af1d-8333181b57a1bob.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\c65536f1-d3f4-43ed-b98b-10234d40b1244f0e9773-dee1-4189-af1d-8333181b57a1bob.jpg"
     },
     {
       "Identity": "C:\\Users\\basta\\source\\repos\\Web\\backend\\Web\\wwwroot\\img\\Cars.jpg",
@@ -272,23 +238,6 @@
       "OriginalItemSpec": "wwwroot\\img\\d5ef4ebe-999d-4d71-b7fe-467904259e6dhpLogo.jpg"
     },
     {
-      "Identity": "C:\\Users\\basta\\source\\repos\\Web\\backend\\Web\\wwwroot\\img\\de54fee6-779c-4a98-87cd-142adf44f63ahp-logo.jpg",
-      "SourceId": "Web",
-      "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\basta\\source\\repos\\Web\\backend\\Web\\wwwroot\\",
-      "BasePath": "_content/Web",
-      "RelativePath": "img/de54fee6-779c-4a98-87cd-142adf44f63ahp-logo.jpg",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\img\\de54fee6-779c-4a98-87cd-142adf44f63ahp-logo.jpg"
-    },
-    {
       "Identity": "C:\\Users\\basta\\source\\repos\\Web\\backend\\Web\\wwwroot\\img\\e8a03762-a7b8-4e59-9577-0b0f6787a3d9admin.jpg",
       "SourceId": "Web",
       "SourceType": "Discovered",
@@ -321,23 +270,6 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\img\\ee35d790-9629-47ec-baa6-677be25169bfbmwLogo.jpg"
-    },
-    {
-      "Identity": "C:\\Users\\basta\\source\\repos\\Web\\backend\\Web\\wwwroot\\img\\fd892c00-d8e9-4b72-88e1-8173bf06395ftest.jpg",
-      "SourceId": "Web",
-      "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\basta\\source\\repos\\Web\\backend\\Web\\wwwroot\\",
-      "BasePath": "_content/Web",
-      "RelativePath": "img/fd892c00-d8e9-4b72-88e1-8173bf06395ftest.jpg",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\img\\fd892c00-d8e9-4b72-88e1-8173bf06395ftest.jpg"
     },
     {
       "Identity": "C:\\Users\\basta\\source\\repos\\Web\\backend\\Web\\wwwroot\\img\\Ford.jpg",
@@ -440,40 +372,6 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\img\\Mercedes.jpg"
-    },
-    {
-      "Identity": "C:\\Users\\basta\\source\\repos\\Web\\backend\\Web\\wwwroot\\img\\mercedes.jpg71c8d03d-17ae-4ff0-8cd0-637e3deb07e8",
-      "SourceId": "Web",
-      "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\basta\\source\\repos\\Web\\backend\\Web\\wwwroot\\",
-      "BasePath": "_content/Web",
-      "RelativePath": "img/mercedes.jpg71c8d03d-17ae-4ff0-8cd0-637e3deb07e8",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\img\\mercedes.jpg71c8d03d-17ae-4ff0-8cd0-637e3deb07e8"
-    },
-    {
-      "Identity": "C:\\Users\\basta\\source\\repos\\Web\\backend\\Web\\wwwroot\\img\\mercedes.jpg9ed5ef34-90e4-4556-8b45-8966c5efb4b9",
-      "SourceId": "Web",
-      "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\basta\\source\\repos\\Web\\backend\\Web\\wwwroot\\",
-      "BasePath": "_content/Web",
-      "RelativePath": "img/mercedes.jpg9ed5ef34-90e4-4556-8b45-8966c5efb4b9",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\img\\mercedes.jpg9ed5ef34-90e4-4556-8b45-8966c5efb4b9"
     },
     {
       "Identity": "C:\\Users\\basta\\source\\repos\\Web\\backend\\Web\\wwwroot\\img\\Nissan.jpg",

@@ -1,4 +1,4 @@
-import { CONFIG_MULTIPART, FORM_DATA_IDS } from '../utils/const';
+import { CONFIG_MULTIPART } from '../utils/const';
 import { createRequest } from './interceptor';
 
 export const fetchTypes = async (categoryId) => {
@@ -12,7 +12,9 @@ export const fetchTypes = async (categoryId) => {
 }
 
 export const fetchTypesByBrand = async (typesId) => {
-    const {data} = await createRequest().post('/types/typesByBrand', FORM_DATA_IDS(typesId), CONFIG_MULTIPART );
+    const formData = new FormData();
+        formData.append('TypesId', typesId);
+    const {data} = await createRequest().post('/types/typesByBrand', formData, CONFIG_MULTIPART );
     return data;
 }
 

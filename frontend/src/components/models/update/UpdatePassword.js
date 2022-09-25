@@ -4,8 +4,9 @@ import { Context } from '../../../index';
 import { useInput } from '../../../http/validateApi';
 import { updatePassword } from '../../../http/userApi';
 import '../../../css/update/UpdatePassword.css'
+import { observer } from 'mobx-react-lite';
 
-const UpdatePassword = ({show, onHide}) => {
+const UpdatePassword = observer(({show, onHide}) => {
     const {user} = useContext(Context);
     const oldPassword = useInput('', {minLength: {value: 6, name: 'Password'}});
     const newPassword = useInput('', {minLength: {value: 6, name: 'New Password'}, isConfirmPassword: {value: oldPassword.value}});
@@ -110,6 +111,6 @@ const UpdatePassword = ({show, onHide}) => {
             </Modal.Footer>
         </Modal>
     );
-};
+});
 
 export default UpdatePassword;

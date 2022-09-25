@@ -18,7 +18,6 @@ const CategoriesByBrandPage = observer(() => {
         const data = await fetchProductsBrandByCategory(brand.selectedBrand.id, category.categoriesByBrand, page.currentPage);
             product.setProducts(data.products);
             page.setCountPages(data.countPages);
-            category.setCategoriesByBrand(data.categoriesByBrand);
     }
 
     return (

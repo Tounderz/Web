@@ -1,4 +1,4 @@
-import { CONFIG_MULTIPART, FORM_DATA_IDS, FORM_DATA_VIEW } from '../utils/const';
+import { CONFIG_MULTIPART, FORM_DATA_VIEW } from '../utils/const';
 import { createRequest } from './interceptor';
 
 export const formDataBrand = (brandId, name, info, categoriesId, img) => {
@@ -17,8 +17,8 @@ export const fetchBrands = async () => {
     return data;
 }
 
-export const fetchBrandsByCategory = async (brandsId) => {
-    const {data} = await createRequest().post(`/brands/brandsByCategory`, FORM_DATA_IDS(brandsId), CONFIG_MULTIPART);
+export const fetchBrandsByCategory = async (categoryId) => {
+    const {data} = await createRequest().get(`/brands/brandsByCategory?categoryId=${categoryId}`);
     return data;
 }
 

@@ -51,3 +51,20 @@
   padding-left: 3%;
   padding-right: 3%;
 }
+
+.nav-link-sign-up {
+  color: #FFF;
+}
+
+.nav-link-sign-up:hover {
+  color: grey;
+}
+
+.input-checkbox-auth {
+  margin-left: 5px;
+}
+
+.forgot-your-password-auth {
+  margin-left: 6em;
+  max-height: 35px
+}

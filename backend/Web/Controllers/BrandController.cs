@@ -31,24 +31,27 @@ namespace Web.Controllers
         [HttpGet(ConstParameters.HTTP_GET_LIST)]
         public IActionResult GetBrand()
         {
-            var brands = _brand.Brands.ToList();
+            var brands = _brand.Brands;
             return Ok(new { brands = brands });
         }
 
-        [HttpPost(ConstBrand.HTTP_POST_BRANDS_BY_CATEGORY)]
-        public IActionResult GetBrands()
+        [HttpGet(ConstBrand.HTTP_GET_BRANDS_BY_CATEGORY)]
+        public IActionResult GetBrands(int categoryId)
         {
-            int[] brandsId = Request.Form.FirstOrDefault(i => i.Key == FormFields.IDS).Value.Count > 0 ?
-                             Array.ConvertAll(Request.Form.FirstOrDefault(i => i.Key == FormFields.IDS).Value
-                             .ToString().Trim(' ').Split(','), int.Parse) : Array.Empty<int>();
-            if (brandsId.Length == 0 && brandsId == null)
+            if (categoryId < 1)
+            {
+                return BadRequest(new { message = ConstParameters.INVALID_CREDENTIALS_ERROR });
+            }
+
+            var brandsId = _categoriesBrands.CategoriesBrands.Where(i => i.CategoryId == categoryId).Select(i => i.BrandId).ToList();
+            if (brandsId.Count == 0 || brandsId == null)
             {
                 return BadRequest(new { message = ConstParameters.INVALID_CREDENTIALS_ERROR });
             }
 
             var brandsByCategory = _brand.Brands.Where(i => brandsId.Contains(i.Id)).ToList();
 
-            return Ok(new { brandsByCategory });
+            return Ok(new { brandsByCategory = brandsByCategory });
         }
 
         [HttpPost(ConstBrand.HTTP_POST_PRODUCTS_BRAND)]
@@ -71,14 +74,11 @@ namespace Web.Controllers
                 return BadRequest(new { message = "There are no products according to the selected criteria!" });
             }
 
-            var categoriesId = _categoriesBrands.CategoriesBrands.Where(i => i.BrandId == view.ModelId).Select(i => i.CategoryId).ToList();
-
             var (countPages, products) = _generalMethods.GetProducts(productList, view.Page);
 
             return Ok(new
             {
                 products = products,
-                categoriesId,
                 countPages = countPages
             });
         }
@@ -106,7 +106,6 @@ namespace Web.Controllers
             {
                 products = products,
                 typesId = typesId,
-                categoriesByBrand = categoriesBrandsDto.CategoriesId,
                 countPages = countPages
             });
         }
@@ -115,6 +114,11 @@ namespace Web.Controllers
         public IActionResult CreateBrand()
         {
             var brandDto = FormBrandDto();
+            if (brandDto.CategoriesId.Length < 1)
+            {
+                return BadRequest(new { message = "It is required to select the category(s) for this brand!" });
+            }
+
             var brand = brandDto != null ? _brand.CreateBrand(brandDto) : null;
             if (brand == null)
             {
@@ -122,19 +126,21 @@ namespace Web.Controllers
             }
 
             brandDto.BrandId = brand.Id;
-            var categoriesBrands = brandDto.CategoriesId.Length > 0 ? _categoriesBrands.CreateCategoriesByBrand(brandDto) : null;
-            if (categoriesBrands == null)
-            {
-                return BadRequest(new { message = "It is required to select the category(s) for this brand!" });
-            }
+            var categoriesBrands = _categoriesBrands.CreateCategoriesByBrand(brandDto);
 
-            return Ok(new { brand });
+            var brands = _brand.Brands;
+            return Ok(new { brands = brands });
         }
 
         [HttpPost(ConstParameters.HTTP_POST_UPDATE)]
         public IActionResult UpdateBrand()
         {
             var brandDto = FormBrandDto();
+            if (brandDto.CategoriesId == null)
+            {
+                return BadRequest(new { message = "It is required to select the category(s) for this brand!" });
+            }
+
             var brand = brandDto != null ? _brand.UpdateBrand(brandDto) : null;
             if (brand == null)
             {
@@ -142,14 +148,10 @@ namespace Web.Controllers
             }
 
             brandDto.BrandId = brand.Id;
-            var categoriesBrands = brandDto.CategoriesId.Length > 0 ? _categoriesBrands.UpdateCategoriesByBrand(brandDto) : _categoriesBrands.CategoriesBrands.Where(i => i.BrandId == brandDto.BrandId).ToList();
-            if (categoriesBrands == null)
-            {
-                return BadRequest(new { message = "It is required to select the category(s) for this brand!" });
-            }
+            var categoriesBrands = _categoriesBrands.UpdateCategoriesByBrand(brandDto);
 
-            var brands = _brand.Brands.ToList();
-            return Ok(new { brands });
+            var brands = _brand.Brands;
+            return Ok(new { brands = brands });
         }
 
         [HttpDelete(ConstParameters.HTTP_DELETE)]
@@ -157,7 +159,8 @@ namespace Web.Controllers
         {
             _brand.DeleteBrand(id);
             _categoriesBrands.RemoveCategoriesByBrand(id);
-            var brands = _brand.Brands.ToList();
+            var brands = _brand.Brands;
+
             return Ok(new { brands = brands });
         }
 
@@ -165,7 +168,7 @@ namespace Web.Controllers
         {
             var brandDto = new BrandDtoModel
             {
-                BrandId = int.Parse(Request.Form.FirstOrDefault(i => i.Key == FormFields.MODEL_ID).Value),
+                BrandId = int.Parse(Request.Form.FirstOrDefault(i => i.Key == FormFields.BRAND_ID).Value),
                 Name = !string.IsNullOrEmpty(Request.Form.FirstOrDefault(i => i.Key == FormFields.NAME).Value) ?
                        Request.Form.FirstOrDefault(i => i.Key == FormFields.NAME).Value : string.Empty,
                 Info = !string.IsNullOrEmpty(Request.Form.FirstOrDefault(i => i.Key == FormFields.INFO).Value) ?
@@ -183,7 +186,7 @@ namespace Web.Controllers
         {
             var view = new ViewDtoModel
             {
-                ModelId = int.Parse(Request.Form.FirstOrDefault(i => i.Key == "ModelId").Value),
+                ModelId = int.Parse(Request.Form.FirstOrDefault(i => i.Key == FormFields.MODEL_ID).Value),
                 Role = Request.Form.FirstOrDefault(i => i.Key == FormFields.ROLE).Value,
                 Page = int.Parse(Request.Form.FirstOrDefault(i => i.Key == FormFields.PAGE).Value) > 0 ?
                      int.Parse(Request.Form.FirstOrDefault(i => i.Key == FormFields.PAGE).Value) : ConstParameters.START_PAGE,

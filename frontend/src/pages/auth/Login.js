@@ -4,16 +4,20 @@ import { NavLink } from 'react-router-dom';
 import { Button, Container, Form, ModalFooter, Row } from "react-bootstrap";
 import { Context } from "../../index";
 import { useNavigate } from "react-router";
-import { fetchUser, signIn } from "../../http/userApi";
+import {  fetchUser, signIn } from "../../http/userApi";
 import { useInput } from "../../http/validateApi";
 import '../../css/Auth.css'
+import RetrieveYourPasswordModel from "../../components/models/RetrieveYourPasswordModel";
+import { observer } from "mobx-react-lite";
 
-const Login = () => {
+const Login = observer(() => {
     const {user} = useContext(Context);
-    const [message, setMessage] = useState('');
+    const {messages} = useContext(Context);
+    const [messageError, setMessageError] = useState('');
     const login = useInput('', {minLength: {value: 3, name: 'login'}});
     const password = useInput('', {minLength: {value: 4, name: 'password'}});
     const navigate = useNavigate();
+    const [retrievePasswordVisible, setRetrievePasswordVisible] = useState(false);
 
     const click = async () => {
         try {
@@ -27,7 +31,9 @@ const Login = () => {
                 password.onChange('');
             navigate(PERSONAL_ACCOUNT_ROUTE);
         } catch (e) {
-            setMessage(e.message);
+            setMessageError(e.message);
+        } finally {
+            messages.setMessage('');
         }
     }
 
@@ -38,7 +44,8 @@ const Login = () => {
                     className='formAuth'
                 >
                     <h1 style={{ textName: 'italic' }}>Please Sign In</h1>
-                    <div className='errorAuth'>{message}</div>
+                    <h5 style={{ textName: 'italic' }}>{messages.message}</h5>
+                    <div className='errorAuth'>{messageError}</div>
                     {(login.isDirty && login.minLengthError) && <div className='errorAuth'>{login.messageError}</div>}
                     <Form.Control
                         className='formControlAuth'
@@ -57,12 +64,35 @@ const Login = () => {
                         onChange={e => password.onChange(e)}
                         onBlur={e => password.onBlur(e)}
                     />
-
-                    <div className='checkboxLogin'>Remembre me <input type="checkbox" value="remember-me"/></div>
+                    
+                    <div 
+                        className='checkboxLogin'
+                    >
+                        Remembre me 
+                        <input 
+                            className='input-checkbox-auth'
+                            type='checkbox' 
+                            value='remember-me'
+                        />
+                        <Button
+                            variant='outline-primary'
+                            className='forgot-your-password-auth'
+                            onClick={() => setRetrievePasswordVisible(true)}
+                        >
+                            Forgot your password?
+                        </Button>
+                    </div>
+                    
                     <ModalFooter 
                         className='modalFooterAuth'
                     >
-                        Not an account? <NavLink to={REGISTER_ROUTE}>Sign Up</NavLink>
+                        Not an account? 
+                        <NavLink 
+                            className='nav-link-sign-up'
+                            to={REGISTER_ROUTE}
+                        >
+                            Sign Up
+                        </NavLink>
                         <Button 
                             className='buttonAuth'
                             variant='outline-primary'
@@ -74,8 +104,9 @@ const Login = () => {
                     </ModalFooter>
                 </Form>
             </Container>
+            <RetrieveYourPasswordModel  show={retrievePasswordVisible} onHide={() => setRetrievePasswordVisible(false)}/>
         </Row>
     );
-}
+});
 
 export default Login;

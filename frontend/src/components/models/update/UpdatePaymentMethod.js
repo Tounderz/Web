@@ -4,8 +4,9 @@ import { Context } from '../../../index';
 import { updatePaymentMethods } from '../../../http/paymentMethodsApi';
 import { useInput } from '../../../http/validateApi';
 import '../../../css/update/UpdatePaymentMethod.css'
+import { observer } from 'mobx-react-lite';
 
-const UpdatePaymentMethod = ({show, onHide}) => {
+const UpdatePaymentMethod = observer(({show, onHide}) => {
     const {paymentMethod} = useContext(Context);
     const methodId = useInput(0, {isNumberId: {name: 'Payment Method'}});
     const name = useInput('', {minLength: {value: 2, name: 'Payment Method'}});
@@ -13,8 +14,9 @@ const UpdatePaymentMethod = ({show, onHide}) => {
 
     const click = async () => {
         try {
-            await updatePaymentMethods(methodId.value, name.value);
-                methodId.onChange(0);
+            const data = await updatePaymentMethods(methodId.value, name.value);
+                paymentMethod.setPaymentMethods(data.paymentMethods);
+                document.getElementById('updateSelectMethod').value = '0';
                 name.onChange('');
                 onHide();
         } catch (e) {
@@ -32,7 +34,7 @@ const UpdatePaymentMethod = ({show, onHide}) => {
                 <Modal.Title 
                     id='contained-modal-title-vcenter'
                 >
-                    Update a brand
+                    Update a Payment Method
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -43,11 +45,15 @@ const UpdatePaymentMethod = ({show, onHide}) => {
                             {methodId.messageError}
                         </div>}
                     <Form.Select
+                        id='updateSelectMethod'
                         className='form-update-method'
                         onChange={e => methodId.onChange(e)}
                         onBlur={e => methodId.onBlur(e)}
                     >
-                        <option value={0}>
+                        <option
+                            key='0'
+                            value='0'
+                        >
                             Select a Payment Method
                         </option>
                         {paymentMethod.paymentMethods.map(item => (
@@ -91,6 +97,6 @@ const UpdatePaymentMethod = ({show, onHide}) => {
             </Modal.Footer>
         </Modal>
     );
-};
+});
 
 export default UpdatePaymentMethod;

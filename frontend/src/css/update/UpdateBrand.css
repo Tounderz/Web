@@ -2,6 +2,13 @@
     margin-top: 2%;
 }
 
+.form-update-brand-info {
+    margin-top: 2%;
+    max-height: 3rem;
+    row-gap: 10;
+    columns: 10;
+}
+
 .button-update-brand {
     cursor: pointer;
     border-radius: 5px;

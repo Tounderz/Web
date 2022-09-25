@@ -44,8 +44,8 @@ namespace Web.Controllers
         [HttpPost(ConstType.HTTP_POST_TYPES_BY_BRAND)]
         public IActionResult GetTypesByBrand()
         {
-            int[] typesId = Request.Form.FirstOrDefault(i => i.Key == FormFields.IDS).Value.Count > 0 ?
-                             Array.ConvertAll(Request.Form.FirstOrDefault(i => i.Key == FormFields.IDS).Value
+            int[] typesId = Request.Form.FirstOrDefault(i => i.Key == FormFields.TYPES_ID).Value.Count > 0 ?
+                             Array.ConvertAll(Request.Form.FirstOrDefault(i => i.Key == FormFields.TYPES_ID).Value
                              .ToString().Trim(' ').Split(','), int.Parse) : Array.Empty<int>();
             if (typesId.Length == 0 && typesId == null)
             {
@@ -106,7 +106,9 @@ namespace Web.Controllers
                 return BadRequest(new { message = "There is a type with this name!" });
             }
 
-            return Ok(new { type });
+            var types = _type.Types;
+
+            return Ok(new { types = types });
         }
 
         [HttpPost(ConstParameters.HTTP_POST_UPDATE)]
@@ -118,7 +120,9 @@ namespace Web.Controllers
                 return BadRequest(new { message = "There is a type with this name!" });
             }
 
-            return Ok(new { type });
+            var types = _type.Types;
+
+            return Ok(new { types = types });
         }
 
         [HttpDelete(ConstParameters.HTTP_DELETE)]
@@ -130,7 +134,8 @@ namespace Web.Controllers
                 return BadRequest(new { message = ConstParameters.INVALID_CREDENTIALS_ERROR });
             }
 
-            var types = _type.Types.ToList();
+            var types = _type.Types;
+
             return Ok(new { types });
         }
     }

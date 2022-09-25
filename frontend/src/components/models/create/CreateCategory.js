@@ -6,9 +6,11 @@ import { Multiselect } from 'multiselect-react-dropdown';
 import { useInput } from '../../../http/validateApi';
 import { ZERO } from '../../../utils/const';
 import '../../../css/create/CreateCategory.css'
+import { observer } from 'mobx-react-lite';
 
-const CreateCategory = ({show, onHide}) => {
+const CreateCategory = observer(({show, onHide}) => {
     const {brand} = useContext(Context);
+    const {category} = useContext(Context);
     const name = useInput('', {minLength: {value: 3, name: 'Name'}});
     const shortDescription = useInput('', {minLength: {value: 8, name: 'Short Description'}});
     const info = useInput('', {minLength: {value: 8, name: 'Info'}});
@@ -19,7 +21,8 @@ const CreateCategory = ({show, onHide}) => {
     const click = async () => {
         try {
             const formData = formDataCategory(ZERO, name.value, shortDescription.value, info.value, img.value, brandsId.value);
-            await createCategory(formData);
+            const data = await createCategory(formData);
+                category.setCategories(data.categories)
                 name.onChange('');
                 info.onChange('');
                 shortDescription.onChange('');
@@ -27,7 +30,7 @@ const CreateCategory = ({show, onHide}) => {
                 img.saveImg(null);
                 onHide();
         } catch (error) {
-            setMessageError(error.response.data.message);
+            setMessageError(error.message);
         }
         
     }
@@ -131,6 +134,6 @@ const CreateCategory = ({show, onHide}) => {
             </Modal.Footer>
         </Modal>
     );
-};
+});
 
 export default CreateCategory;

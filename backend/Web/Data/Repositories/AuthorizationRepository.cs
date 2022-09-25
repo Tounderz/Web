@@ -24,11 +24,6 @@ namespace Web.Data.Repositories
 
         public UserModel CreateUser(UserRegisterModel model)
         {
-            if (!CheckUser(model.Login, model.Email))
-            {
-                return null;
-            }
-
             var user = new UserModel
             {
                 Name = model.Name,
@@ -71,6 +66,12 @@ namespace Web.Data.Repositories
             return user;
         }
 
+        public UserModel GetUserByEmail(string email)
+        {
+            var user = _context.Users.FirstOrDefault(i => i.Email == email);
+            return user;
+        }
+
         public UserModel GetByUserFromToken(JwtSecurityToken token)
         {
             var user = new UserModel();
@@ -107,7 +108,8 @@ namespace Web.Data.Repositories
             user.Phone = model.Phone != string.Empty ? model.Phone : user.Phone;
             user.Login = model.Login != string.Empty ? model.Login : user.Login;
             user.Role = model.Role != string.Empty ? model.Role : user.Role;
-            user.Img = model.Img != null ? _generalMethods.SaveImg(model.Img) : string.Empty;
+            user.Img = model.Img != null ? _generalMethods.SaveImg(model.Img) : user.Img;
+            user.ConfirmEmail = model.Email != string.Empty ? false : user.ConfirmEmail;
 
             _context.Users.Update(user);
             _context.SaveChanges();
@@ -129,7 +131,7 @@ namespace Web.Data.Repositories
             _context.SaveChanges();
         }
 
-        private bool CheckUser(string login, string email)
+        public bool CheckUser(string login, string email)
         {
             var user = _context.Users.FirstOrDefault(i => i.Login.ToLower() == login.ToLower() || i.Email.ToLower() == email.ToLower());
             if (user == null)

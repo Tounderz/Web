@@ -13,7 +13,7 @@ using WebLibrary.Models.Dtos;
 namespace Web.Controllers
 {
     [ApiController]
-    [Route("baskets")]
+    [Route(ConstCart.BASKETS_ROUTE)]
     public class BasketController : ControllerBase
     {
         private readonly IBasket _basket;
@@ -29,7 +29,7 @@ namespace Web.Controllers
             _generalMethods = generalMethods;
         }
 
-        [HttpPost("cart")]
+        [HttpPost(ConstCart.HTTP_POST_CART)]
         public IActionResult Basket(BasketDtoModel model)
         {
             var user = _auth.GetByUser(model.UserLogin);
@@ -45,7 +45,7 @@ namespace Web.Controllers
             return Ok(new { baskets = products, sum = sum, countPages = countPages });
         }
 
-        [HttpPost("add")]
+        [HttpPost(ConstCart.HTTP_POST_ADD_TO_CART)]
         public IActionResult AddToCart(BasketDtoModel model)
         {
             var user = _auth.GetByUser(model.UserLogin);
@@ -59,7 +59,7 @@ namespace Web.Controllers
             return Ok(new { message = "success",  });
         }
 
-        [HttpPost("delete")]
+        [HttpPost(ConstCart.HTTP_POST_DELETE_ITEM_CART)]
         public IActionResult DeleteToCartItem(BasketDtoModel model) // удаление объекта из корзины
         {
             var user = _auth.GetByUser(model.UserLogin);
@@ -78,7 +78,7 @@ namespace Web.Controllers
             return Ok(new { baskets = products, sum = sum, countPages = countPages });
         }
 
-        [HttpPost("clean")]
+        [HttpPost(ConstCart.HTTP_POST_CLEAN_CART)]
         public IActionResult CleaningTheTrash(BasketDtoModel model)//очистка корзины
         {
             var user = _auth.GetByUser(model.UserLogin);

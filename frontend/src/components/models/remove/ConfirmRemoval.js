@@ -1,18 +1,21 @@
+import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useContext } from 'react';
 import { Button, Modal } from 'react-bootstrap';
+import { useNavigate } from 'react-router';
 import { cleanToCart, removeToCartItem } from '../../../http/basketApi';
 import { removeProduct } from '../../../http/productApi';
 import { removeUser } from '../../../http/userApi';
 import { Context } from '../../../index';
-import { PAGE_FIRST } from '../../../utils/const';
+import { PAGE_FIRST, USERLIST_ROUTE } from '../../../utils/const';
 
-const ConfirmRemoval = ({show, onHide}) => {
+const ConfirmRemoval = observer(({show, onHide}) => {
     const {product} = useContext(Context);
     const {user} = useContext(Context);
     const {remove} = useContext(Context);
     const {cart} = useContext(Context);
     const {page} = useContext(Context);
+    const navigate = useNavigate();
 
     const click = async () => {
         let data;
@@ -20,7 +23,7 @@ const ConfirmRemoval = ({show, onHide}) => {
             case 'product':
                 data = await removeProduct(remove.removeObjeck.id);
                     product.setProducts(data.products);
-                    cart.setTotalCount(data.countPages);
+                    page.setCountPages(data.countPages);
                     onHide();
                     break;
             case 'user':
@@ -28,6 +31,7 @@ const ConfirmRemoval = ({show, onHide}) => {
                     user.setUsersList(data.usersList);
                     page.setCountPages(data.countPages);
                     onHide();
+                    navigate(USERLIST_ROUTE);
                 break;
             case 'basketItem':
                 data = await removeToCartItem(remove.removeObjeck.id, user.user.login, PAGE_FIRST);
@@ -98,6 +102,6 @@ const ConfirmRemoval = ({show, onHide}) => {
             </Modal.Footer>
         </Modal>
     );
-};
+});
 
 export default ConfirmRemoval;

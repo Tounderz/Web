@@ -7,9 +7,11 @@ import { useInput } from '../../../http/validateApi';
 import { ZERO } from '../../../utils/const';
 import '../../../css/create/CreateBrand.css'
 import { useState } from 'react';
+import { observer } from 'mobx-react-lite';
 
-const CreateBrand = ({show, onHide}) => {
+const CreateBrand = observer(({show, onHide}) => {
     const {category} = useContext(Context);
+    const {brand} = useContext(Context);
     const name = useInput('', {minLength: {value: 3, name: 'Name'}});
     const categoriesId = useInput([], {multiselect: {name: 'Categories'}});
     const info = useInput('', {minLength: {value: 8, name: "Info"}});
@@ -19,7 +21,8 @@ const CreateBrand = ({show, onHide}) => {
     const click = async () => {
         try {
             const formData = formDataBrand(ZERO, name.value, info.value, categoriesId.value, img.value);
-            await createBrand(formData);
+            const data = await createBrand(formData);
+                brand.setBrands(data.brands);
                 name.onChange('');
                 categoriesId.onChange([]);
                 info.onSelect('');
@@ -119,6 +122,6 @@ const CreateBrand = ({show, onHide}) => {
             </Modal.Footer>
         </Modal>
     );
-};
+});
 
 export default CreateBrand;

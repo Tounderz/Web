@@ -10,7 +10,6 @@ import ProductItem from '../components/ProductItem';
 import BrandBar from '../components/BrandBar';
 import '../css/HomePage.css'
 
-
 const HomePage = observer(() => {
     const {product} = useContext(Context);
     const {category} = useContext(Context);

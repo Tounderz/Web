@@ -5,36 +5,66 @@ import { updateBrand, formDataBrand } from '../../../http/brandApi';
 import { useInput } from '../../../http/validateApi';
 import { Context } from '../../../index';
 import '../../../css/update/UpdateBrand.css'
+import { observer } from 'mobx-react-lite';
+import { fetchCategoriesByBrand } from '../../../http/categoryApi';
 
-const UpdateBrand = ({show, onHide}) => {
+const UpdateBrand = observer(({show, onHide}) => {
     const {brand} = useContext(Context);
     const {category} = useContext(Context);
     const brandId = useInput(0, {isNumberId: {name: 'Brand'}});
-    const name = useInput('', {minLength: {value: 3, name: 'Name'}});
+    const name = useInput('', {minLength: {value: 2, name: 'Name'}});
     const img = useInput(null, {isImg: { name: 'Img' }} );
-    const categoriesId = useInput([], {multiSelect: {name: 'Categories'}})
+    const categoriesId = useInput([], {multiSelect: {name: 'Categories'}});
     const info = useInput('', {minLength: {value: 3, name: 'Info'}});
     const [messageError, setMessageError] = useState('');
 
     const click = async () => {
         try {
-            const formData = formDataBrand(brandId.value, name.value, info.value, categoriesId.value, img.value);
-            await updateBrand(formData);
-                brandId.onChange(0);
-                name.onChange('');
-                info.onChange('');
-                categoriesId.onSelect([]);
-                img.saveImg(null);
-                onHide();
+            const difference = categoriesId.value
+                .filter(num => !category.categoriesByBrand.map(i => {return i.id}).includes(num))
+                .concat(category.categoriesByBrand.map(i => {return i.id}).filter(num => !categoriesId.value.includes(num)));
+                if (difference) {
+                    const formData = formDataBrand(
+                        brandId.value, name.value, 
+                        info.value, categoriesId.value, 
+                        img.value
+                    );
+                    const data = await updateBrand(formData);
+                        brand.setBrands(data.brands);
+                        close();
+                } else {
+                    setMessageError('Error')
+                }
         } catch (e) {
             setMessageError(e.message);
         }
     }
 
+    const onChangeBrandId = async (e) => {
+        category.setCategoriesByBrand([]);
+        categoriesId.onSelect([]);
+        if (/^-?\d+$/.test(e?.target?.value) && e?.target?.value > 0) {
+            const data = await fetchCategoriesByBrand(e?.target?.value);
+                category.setCategoriesByBrand(data.categoriesByBrand);
+        }
+
+        brandId.onChange(e)
+    }
+
+    const close = () => {
+        document.getElementById('updateSelectBrand').value = '0';
+        brandId.onChange(0);
+        name.onChange('');
+        info.onChange('');
+        categoriesId.onSelect([]);
+        img.saveImg(null);
+        onHide();
+    }
+
     return (
         <Modal
             show={show}
-            onHide={onHide}
+            onHide={close}
             centered
         >
             <Modal.Header closeButton>
@@ -53,12 +83,15 @@ const UpdateBrand = ({show, onHide}) => {
                         {brandId.messageError}
                     </div>}
                 <Form.Select
+                    id='updateSelectBrand'
                     className='form-update-brand'
-                    
-                    onChange={e => brandId.onChange(e)}
+                    onChange={e => onChangeBrandId(e)}
                     onBlur={e => brandId.onBlur(e)}
                 >
-                    <option value={0}>
+                    <option
+                        key='0'
+                        value='0'
+                    >
                         Select a Brand
                     </option>
                     {brand.brands.map(item => (
@@ -81,18 +114,22 @@ const UpdateBrand = ({show, onHide}) => {
                         value={name.value}
                         onChange={e => name.onChange(e)}
                         onBlur={e => name.onBlur(e)}
-                        placeholder={`Update 'Name': ${brand.brands.filter(item => {return item.id === Number(brandId.value)}).map(item => item.name)}`}
+                        placeholder={`Update 'Name': ${brand.brands.filter(item => {
+                            return item.id === Number(brandId.value)})
+                            .map(item => item.name)}`}
                     />
                     {(info.isDirty && info.minLengthError) && 
                         <div className='error-message'>
                             {info.messageError}
                         </div>}
                     <Form.Control
-                        className='form-update-brand'
+                        className='form-update-brand-info'
                         value={info.value}
                         onChange={e => info.onChange(e)}
                         onBlur={e => info.onBlur(e)}
-                        placeholder={`Update 'Info': ${brand.brands.filter(item => {return item.id === Number(brandId.value)}).map(item => item.info)}`}
+                        placeholder={`Update 'Info': ${brand.brands.filter(item => {
+                            return item.id === Number(brandId.value)})
+                            .map(item => item.info)}`}
                     />
                     {(img.isDirty && img.imgError) && 
                         <div className='error-message'>
@@ -113,6 +150,7 @@ const UpdateBrand = ({show, onHide}) => {
                         className='form-update-brand'
                         placeholder='Categories: '
                         displayValue='name'
+                        selectedValues={category.categoriesByBrand}
                         value='id'
                         options={category.categories}
                         onSelect={e => categoriesId.onSelect(e)}
@@ -140,13 +178,13 @@ const UpdateBrand = ({show, onHide}) => {
                 <Button
                     className='button-update-brand'
                     variant='outline-danger'
-                    onClick={onHide}
+                    onClick={close}
                 >
                     Close
                 </Button>
             </Modal.Footer>
         </Modal>
     );
-};
+});
 
 export default UpdateBrand;

@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite';
 import '../css/ErrorPage.css'
 
 const ErrorPage = observer(() => {
-    const {error} = useContext(Context);
+    const {messages} = useContext(Context);
 
     return (
         <div className='errorFonPage'>
@@ -13,7 +13,7 @@ const ErrorPage = observer(() => {
                     marginTop: '10%'
                 }}
             >
-                {error.messageError}
+                {messages.messageError}
             </h1>
         </div>
     );

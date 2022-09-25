@@ -5,8 +5,10 @@ import { formDataCategory, updateCategory } from '../../../http/categoryApi';
 import { useInput } from '../../../http/validateApi';
 import { Context } from '../../../index';
 import '../../../css/update/UpdateCategory.css'
+import { observer } from 'mobx-react-lite';
+import { fetchBrandsByCategory } from '../../../http/brandApi';
 
-const UpdateCategory = ({show, onHide}) => {
+const UpdateCategory = observer(({show, onHide}) => {
     const {category} = useContext(Context);
     const {brand} = useContext(Context);
     const categoryId = useInput(0, {isNumberId: {name: 'Category'}});
@@ -20,24 +22,40 @@ const UpdateCategory = ({show, onHide}) => {
     const click = async () => {
         try {
             const formData = formDataCategory(categoryId.value, name.value, shortDescription.value, info.value, img.value, brandsId.value);
-            await updateCategory(formData);
-                categoryId.onChange(0);
-                name.onChange('');
-                info.onChange('');
-                shortDescription.onChange('');
-                brandsId.onSelect([]);
-                img.saveImg(null);
-                onHide();
+            const data = await updateCategory(formData);
+                category.setCategories(data.categories);
+                close();
         } catch (e) {
             setMessageError(e.message)
         }
-        
+    }
+
+    const onChangeCategoryId = async (e) => {
+        brand.setBrandsByCategory([]);
+        brandsId.onSelect([]);
+        if (/^-?\d+$/.test(e?.target?.value) && e?.target?.value > 0) {
+            const data = await fetchBrandsByCategory(e?.target?.value);
+                brand.setBrandsByCategory(data.brandsByCategory);
+        }
+
+        categoryId.onChange(e)
+    }
+
+    const close = () => {
+        document.getElementById('updateSelectCategory').value = '0';
+        categoryId.onChange(0);
+        name.onChange('');
+        info.onChange('');
+        shortDescription.onChange('');
+        brandsId.onSelect([]);
+        img.saveImg(null);
+        onHide();
     }
 
     return (
         <Modal
             show={show}
-            onHide={onHide}
+            onHide={close}
             centered
         >
             <Modal.Header closeButton>
@@ -56,12 +74,15 @@ const UpdateCategory = ({show, onHide}) => {
                         {categoryId.messageError}
                     </div>}
                 <Form.Select 
-                    id='selectCategory'
+                    id='updateSelectCategory'
                     className='form-update-category'
-                    onChange={e => categoryId.onChange(e)}
+                    onChange={e => onChangeCategoryId(e)}
                     onBlur={e => categoryId.onBlur(e)}
                 >
-                    <option value={0}>
+                    <option 
+                        key='0'
+                        value='0'
+                    >
                         Select a category
                     </option>
                     {category.categories.map(category => (
@@ -135,6 +156,7 @@ const UpdateCategory = ({show, onHide}) => {
                     className='form-update-category'
                     placeholder='Brands: '
                     displayValue='name'
+                    selectedValues={brand.brandsByCategory}
                     value='id'
                     options={brand.brands}
                     onSelect={e => brandsId.onSelect(e)}
@@ -164,13 +186,13 @@ const UpdateCategory = ({show, onHide}) => {
                 <Button 
                     className='button-update-category'
                     variant='outline-danger'
-                    onClick={onHide}
+                    onClick={close}
                 >
                     Close
                 </Button>
             </Modal.Footer>
         </Modal>
     );
-};
+});
 
 export default UpdateCategory;

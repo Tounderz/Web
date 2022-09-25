@@ -4,8 +4,9 @@ import { Context } from '../../../index';
 import { useInput } from '../../../http/validateApi';
 import { updateUserByUser } from '../../../http/userApi';
 import '../../../css/update/UpdatePhoto.css'
+import { observer } from 'mobx-react-lite';
 
-const UpdatePhoto = ({show, onHide}) => {
+const UpdatePhoto = observer(({show, onHide}) => {
     const {user} = useContext(Context);
     const img = useInput(null, {isImg: { name: 'Img' }} );
     const [messageError, setMessageError] = useState('');
@@ -72,6 +73,6 @@ const UpdatePhoto = ({show, onHide}) => {
             </Modal.Footer>
         </Modal>
     );
-};
+});
 
 export default UpdatePhoto;

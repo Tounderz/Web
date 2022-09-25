@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -98,7 +99,9 @@ namespace Web.Controllers
                 return BadRequest(new { message = "There is a product with this name!" });
             }
 
-            return Ok(new { product = product });
+            var (countPages, products) = _product.GetProductsList(ConstParameters.START_PAGE);
+
+            return Ok(new { product = product, products = products, countPages = countPages });
         }
 
         [HttpPost(ConstProduct.HTTP_POST_UPDATE_INFO)]

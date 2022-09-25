@@ -4,15 +4,18 @@ import { removeCategory } from '../../../http/categoryApi';
 import { useInput } from '../../../http/validateApi';
 import { Context } from '../../../index';
 import '../../../css/remove/RemoveCategory.css'
+import { observer } from 'mobx-react-lite';
 
-const RemoveCategory = ({show, onHide}) => {
+const RemoveCategory = observer(({show, onHide}) => {
     const {category} = useContext(Context);
     const categoryId = useInput(0, {isNumberId: {name: 'Category'}});
 
     const click = async () =>  {
-        await removeCategory(categoryId.value);
-            categoryId.onChange(0);
-            onHide();
+        const data = await removeCategory(categoryId.value);
+            category.setCategories(data.categories);
+            document.getElementById('removeSelectCategory').value = '0';
+            
+        onHide();
     }
     
     return (
@@ -34,11 +37,15 @@ const RemoveCategory = ({show, onHide}) => {
                         {categoryId.messageError}
                     </div>}
                 <Form.Select
+                    id='removeSelectCategory'
                     className='form-category-remove'
                     onChange={e => categoryId.onChange(e)}
                     onBlur={e => categoryId.onBlur(e)}
                 >
-                    <option value=''>
+                    <option
+                        key='0'
+                        value='0'
+                    >
                         Select a category
                     </option>
                     {category.categories.map(category => (
@@ -70,6 +77,6 @@ const RemoveCategory = ({show, onHide}) => {
             </Modal.Footer>
         </Modal>
     );
-};
+});
 
 export default RemoveCategory;
