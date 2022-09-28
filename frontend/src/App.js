@@ -15,7 +15,7 @@ import { USERLIST_ROUTE, BASKET_ROUTE, CATEGORY_ROUTE,
          CATEGORIES_BY_BRAND_ROUTE, BRAND_INFO_ROUTE,
          CATEGORY_INFO_ROUTE, SEARCH_ROUTE,
          PURCHASES_STORY_ROUTE, ERROR_ROUTE,
-         PRODUCTS_LIST_ROUTE, VERIFY_EMAIL_ROUTE, RETRIEVE_PASSWORD_ROUTE
+         PRODUCTS_LIST_ROUTE, VERIFY_EMAIL_ROUTE, RETRIEVE_PASSWORD_ROUTE, RESTORE_ROUTE
         } from './utils/const';
 import CategoryPage from './pages/CategoryPage';
 import BrandPage from './pages/BrandPage';
@@ -38,6 +38,7 @@ import ProductsListPage from './pages/ProductsListPage';
 import PersonalAccountPage from './pages/PersonalAccountPage';
 import VerifyEmail from './pages/auth/VerifyEmail';
 import RetrieveYourPasswordPage from './pages/RetrieveYourPasswordPage';
+import RestoringAccount from './pages/auth/RestoringAccount';
 
 const App = observer(() => {
   const {user} = useContext(Context);
@@ -86,6 +87,7 @@ const App = observer(() => {
         <Route path={PURCHASES_STORY_ROUTE} element={<PurchasesStoryPage/>}/>
         <Route path={ERROR_ROUTE} element={<ErrorPage/>}/>
         <Route path={RETRIEVE_PASSWORD_ROUTE} element={<RetrieveYourPasswordPage/>}/>
+        <Route path={RESTORE_ROUTE} element={<RestoringAccount/>} />
       </Routes>
     </BrowserRouter>
   );

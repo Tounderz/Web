@@ -9,7 +9,9 @@ namespace WebLibrary.Abstract
 {
     public interface IRetrievePassword
     {
+        bool CreateToken(string email);
         UserModel RetrievePasswordService(string token);
+        bool UpdateToken(string token);
         void TokenRemotalFromBD(string token);
     }
 }

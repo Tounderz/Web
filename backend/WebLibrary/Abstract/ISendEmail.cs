@@ -10,8 +10,9 @@ namespace WebLibrary.Abstract
     public interface ISendEmail
     {
         bool SendEmail(string email, string messageBody, string subject);
-        string MessageBodyConfirmEmail(string email);
-        string MessageBodyRetrievePassword(string email);
+        string MessageBodyConfirmEmail(string token);
+        string MessageBodyRestoringAnAccount(string token);
+        string MessageBodyRetrievePassword(string token);
         string MessageBodyOrder(OrderModel model);
     }
 }

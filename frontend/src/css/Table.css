@@ -19,6 +19,12 @@
     border-radius: 5px;
   }
 
+  .rowSpecificationsProduct  {
+    display: flex;
+    flex: column;
+    margin: 3%;
+  }
+  
   .tableTable {
     border:#FFF;
     margin-top: 15px;

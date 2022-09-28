@@ -55,85 +55,22 @@ namespace Web.Data.Repositories
             }
         }
 
-        public string MessageBodyConfirmEmail(string email)
+        public string MessageBodyConfirmEmail(string token)
         {
-            string token = string.Empty;
-            var confirmEmail = _context.ConfirmEmails.FirstOrDefault(i => i.Email == email);
-            if (confirmEmail == null)
-            {
-                token = Guid.NewGuid().ToString();
-                confirmEmail = new ConfirmEmailModel()
-                {
-                    ConfirmEmailToken = token,
-                    Email = email,
-                    DateOfCreation = DateTime.Now,
-                    DateExpires = DateTime.Now.AddDays(7)
-                };
-
-                _context.ConfirmEmails.Add(confirmEmail);
-                _context.SaveChanges();
-            }
-            else
-            {
-                var comparisonResult = DateTime.Compare(confirmEmail.DateExpires, DateTime.Now);
-                if (comparisonResult < 1)
-                {
-                    token = Guid.NewGuid().ToString();
-                    confirmEmail.ConfirmEmailToken = token;
-                    confirmEmail.DateOfCreation = DateTime.Now;
-                    confirmEmail.DateExpires = DateTime.Now.AddDays(7);
-
-                    _context.ConfirmEmails.Update(confirmEmail);
-                    _context.SaveChanges();
-                }
-                else
-                {
-                    token = confirmEmail.ConfirmEmailToken;
-                }
-            }
-
             var link = $"http://localhost:3000/verifyEmail?token={token}";
             var messageBody = $"Confirm your account Please confirm your account by clicking <a href={link}>{link}</a>";
             return messageBody;
         }
 
-        public string MessageBodyRetrievePassword(string email)
+        public string MessageBodyRestoringAnAccount(string token)
         {
-            string token = string.Empty;
-            var retrievePassword = _context.RetrievePasswords.FirstOrDefault(i => i.Email == email);
-            if (retrievePassword == null)
-            {
-                token = Guid.NewGuid().ToString();
-                retrievePassword = new RetrievePasswordModel()
-                {
-                    RetrievePasswordToken = token,
-                    Email = email,
-                    DateOfCreation = DateTime.Now,
-                    DateExpires = DateTime.Now.AddDays(7)
-                };
+            var link = $"http://localhost:3000/restore?token={token}";
+            var messageBody = $"Confirm your account Please confirm your account by clicking <a href={link}>{link}</a>";
+            return messageBody;
+        }
 
-                _context.RetrievePasswords.Add(retrievePassword);
-                _context.SaveChanges();
-            }
-            else
-            {
-                var comparisonResult = DateTime.Compare(retrievePassword.DateExpires, DateTime.Now);
-                if (comparisonResult < 1)
-                {
-                    token = Guid.NewGuid().ToString();
-                    retrievePassword.RetrievePasswordToken = token;
-                    retrievePassword.DateOfCreation = DateTime.Now;
-                    retrievePassword.DateExpires = DateTime.Now.AddDays(7);
-
-                    _context.RetrievePasswords.Update(retrievePassword);
-                    _context.SaveChanges();
-                }
-                else
-                {
-                    token = retrievePassword.RetrievePasswordToken;
-                }
-            }
-
+        public string MessageBodyRetrievePassword(string token)
+        {
             var link = $"http://localhost:3000/retrievePassword?token={token}";
             var messageBody = $"To recover your password, follow this link: <a href={link}>{link}</a>";
             return messageBody;

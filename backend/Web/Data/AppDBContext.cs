@@ -27,5 +27,6 @@ namespace Web.Data
         public DbSet<RefreshTokenModel> RefreshTokens { get; set; }
         public DbSet<ConfirmEmailModel> ConfirmEmails { get; set; }
         public DbSet<RetrievePasswordModel> RetrievePasswords { get; set; }
+        public DbSet<DeletedAccountModel> DeletedAccounts { get; set; }
     }
 }

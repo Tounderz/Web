@@ -23,7 +23,12 @@
   width: auto;
 }
 
+.formControlAuth-select-option {
+  color: #000000;
+}
+
 .formControlAuth {
+  border-radius: 10px;
   text-align: center;
   width: 25rem;
   margin-top: 10px;
@@ -67,4 +72,8 @@
 .forgot-your-password-auth {
   margin-left: 6em;
   max-height: 35px
+}
+
+.button-restore-login {
+  margin-right: 2em;
 }

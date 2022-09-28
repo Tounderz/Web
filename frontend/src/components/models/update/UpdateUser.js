@@ -3,7 +3,7 @@ import { Form, Modal, Button } from 'react-bootstrap';
 import { formDataUser, updateUserByAdmin, updateUserByUser } from '../../../http/userApi';
 import { useInput } from '../../../http/validateApi';
 import { Context } from '../../../index';
-import { ADMIN_NAME, CABINET_NAME, ROLE_ARRAY } from '../../../utils/const';
+import { ADMIN_NAME, CABINET_NAME, GENDERS, ROLE_ARRAY } from '../../../utils/const';
 import '../../../css/update/UpdateUser.css'
 import { observer } from 'mobx-react-lite';
 
@@ -13,6 +13,8 @@ const UpdateUser = observer(({show, onHide}) => {
     const {updates} = useContext(Context);
     const name = useInput('', {minLength: {value: 3, name: 'Name'}});
     const surname = useInput('', {minLength: {value: 3, name: 'Surname'}});
+    const gender = useInput('', {isNumberId: {name: 'Gender'}});
+    const dateOfBirth = useInput('',{minLength: {value: 1, name: 'DateOfBirth'}, age: {name: 'DateOfBirth'}} );
     const email = useInput('', {minLength: {value: 4, name: 'Email'}, isEmail: true});
     const phone = useInput('', {isPhone: false});
     const login = useInput('', {minLength: {value: 3, name: 'Login'}});
@@ -34,42 +36,37 @@ const UpdateUser = observer(({show, onHide}) => {
             setMessageError('');
             let formData;
             if (user.user.role === 'admin' || user.user.role === 'moderator') {
-                formData = formDataUser({id: user.user.userId, name: name.value, 
-                    surname: surname.value, email: email.value, 
-                    phone: phone.value, login: login.value, password: '', img: 
-                    img.value, role: role.value
+                formData = formDataUser({
+                    id: user.selectedUser.id, name: name.value, 
+                    surname: surname.value, gender: gender.value, 
+                    dateOfBirth: dateOfBirth.value, email: email.value, 
+                    phone: phone.value, login: login.value, 
+                    password: '', img: img.value, role: role.value
                 });
             } else {
-                formData = formDataUser({id: user.user.userId, name: name.value, 
-                    surname: surname.value, email: email.value, 
-                    phone: phone.value, login: login.value, password: '', img: 
-                    img.value, role: ''
+                formData = formDataUser({
+                    id: user.user.userId, name: name.value, 
+                    surname: surname.value, gender: gender.value, 
+                    dateOfBirth: dateOfBirth.value, email: email.value, 
+                    phone: phone.value, login: login.value, 
+                    password: '', img: img.value, role: ''
                 });
             }
             
             if (updates.updateParameter === CABINET_NAME) {
                 const data = await updateUserByUser(formData);
                     user.setSelectedUser(data.user);
-                    onHide();
+                    close();
 
             } else if (updates.updateParameter === ADMIN_NAME) {
                 const data = await updateUserByAdmin(formData);
                     user.setUsersList(data.usersList);
                     page.setCountPages(data.countPages);
                     user.setSelectedUser({});
-                    onHide();
+                    close();
             }
         } catch (e) {
             setMessageError(e.message);
-        } finally {
-            name.onChange('');
-            surname.onChange('');
-            email.onChange('');
-            phone.onChange('');
-            login.onChange('');
-            document.getElementById('roleTag').value = '0';
-            role.onChange(0);
-            img.saveImg(null);
         }
     }
 
@@ -106,11 +103,25 @@ const UpdateUser = observer(({show, onHide}) => {
         )
     }
 
+    const close = () => {
+        name.onChange('');
+        surname.onChange('');
+        document.getElementById('genderUpdateSelect').value = '0';
+        gender.onChange('');
+        dateOfBirth.onChange('');
+        email.onChange('');
+        phone.onChange('');
+        login.onChange('');
+        document.getElementById('roleTag').value = '0';
+        role.onChange('');
+        img.saveImg(null);
+        onHide();
+    }
+
     return (
         <Modal
             show={show}
-            onHide={onHide}
-            size="lg"
+            onHide={close}
             centered
         >
             <Modal.Header closeButton>
@@ -146,6 +157,46 @@ const UpdateUser = observer(({show, onHide}) => {
                         onBlur={e => surname.onBlur(e)}
                         placeholder={`Surname: ${user.selectedUser.surname}`}
                     />
+
+                    {(gender.isDirty && gender.isNumberError) && 
+                        <div className='error-message'>
+                            {gender.messageError}
+                        </div>}
+                    <Form.Select 
+                        id='genderUpdateSelect'
+                        className='form-update-user-select'
+                        onChange={e => gender.onChange(e)}
+                        onBlur={e => gender.onBlur(e)}
+                    >
+                        <option 
+                            key='0'
+                            value='0'
+                        >
+                            Choose a gender
+                        </option>
+                        {GENDERS.map(item => (
+                            <option
+                                key={item}
+                                value={item}
+                            >
+                                {item}
+                            </option>
+                        ))}
+                    </Form.Select>
+
+                    {(dateOfBirth.isDirty && dateOfBirth.dateError) && 
+                        <div className='error-message'>
+                            {dateOfBirth.messageError}
+                        </div>}
+                    <Form.Control
+                        className='form-update-user'
+                        value={dateOfBirth.value}
+                        placeholder='Date Of Birth'
+                        type='date'
+                        onChange={e => dateOfBirth.onChange(e)}
+                        onBlur={e => dateOfBirth.onBlur(e)}
+                    />
+
 
                     {(email.isDirty && email.minLengthError) && 
                         <div className='error-message'>
@@ -203,6 +254,8 @@ const UpdateUser = observer(({show, onHide}) => {
                     disabled={
                         !name.inputValid && 
                         !surname.inputValid && 
+                        !gender.inputValid &&
+                        !dateOfBirth.inputValid &&
                         !email.inputValid && 
                         !phone.inputValid && 
                         !login.inputValid && 
@@ -216,7 +269,7 @@ const UpdateUser = observer(({show, onHide}) => {
                 <Button
                     className='button-update-user'
                     variant='outline-danger'
-                    onClick={onHide}
+                    onClick={close}
                 >
                     Close
                 </Button>

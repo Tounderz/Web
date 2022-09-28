@@ -71,6 +71,7 @@ namespace Web
             services.AddScoped<ISendEmail, SendEmailService>();
             services.AddScoped<IRetrievePassword, RetrievePasswordRepository>();
             services.AddScoped<IConfirmEmail, ConfirmEmailRepository>();
+            services.AddScoped<IRestoringAnAccount, RestoringAnAccountRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

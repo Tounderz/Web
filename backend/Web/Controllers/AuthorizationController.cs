@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Linq;
+using Web.Migrations;
 using WebLibrary.Abstract;
 using WebLibrary.ConstParameters;
 using WebLibrary.Models;
@@ -21,20 +22,15 @@ namespace Web.Controllers
         private readonly IAuthorization _auth;
         private readonly IJwt _jwtService;
         private readonly IGeneralMethods _generalMethods;
-        private readonly ISendEmail _sendEmail;
-        private readonly IRetrievePassword _retrievePassword;
         private readonly IConfirmEmail _confirmEmail;
 
-        public AuthorizationController(IAuthorization auth, 
-            IJwt jwtService, IGeneralMethods generalMethods, 
-            ISendEmail sendEmail, IRetrievePassword retrievePassword,
-            IConfirmEmail confirmEmail)
+        public AuthorizationController(
+            IAuthorization auth, IJwt jwtService,
+            IGeneralMethods generalMethods, IConfirmEmail confirmEmail)
         {
             _auth = auth;
             _jwtService = jwtService;
             _generalMethods = generalMethods;
-            _sendEmail = sendEmail;
-            _retrievePassword = retrievePassword;
             _confirmEmail = confirmEmail;
         }
 
@@ -61,7 +57,13 @@ namespace Web.Controllers
 
             if (!user.ConfirmEmail)
             {
-                return BadRequest(new { message = ConstAuth.ERROR_CONFIRM_EMAIL });
+                var confirmEmail = _confirmEmail.UpdatingToken(user.Email);
+                return BadRequest(new { message = ConfirmEmailConst.ERROR_CONFIRM_EMAIL });
+            }
+
+            if (user.IsDeleted)
+            {
+                return Ok( new {message = ConstAuth.ERROR_DELETED_ACCOUNT, isDeleted = user.IsDeleted });
             }
 
             var accessToken = _jwtService.GenerateJwt(user);
@@ -70,6 +72,7 @@ namespace Web.Controllers
 
             return Ok(new
             {
+                isDeleted = user.IsDeleted,
                 user = userDto,
                 accessToken = accessToken
             });
@@ -85,8 +88,7 @@ namespace Web.Controllers
                 return BadRequest(new { message = ConstAuth.ERROR_MESSAGE_LOGIN_OR_EMAIL });
             }
 
-            var messageBody = _sendEmail.MessageBodyConfirmEmail(model.Email);
-            var messageSendingCheck = messageBody != null && _sendEmail.SendEmail(model.Email, messageBody, ConstAuth.SUBJECK_CONFIRM_EMAIL);
+            var messageSendingCheck = _confirmEmail.CreateToken(model.Email);
             if (!messageSendingCheck)
             {
                 return BadRequest(new { message = ConstAuth.ERROR_MESSAGE_LOGIN_OR_EMAIL });
@@ -95,31 +97,6 @@ namespace Web.Controllers
             var user = _auth.CreateUser(model);
 
             return Ok(new { user = user });
-        }
-
-        [HttpGet(ConstAuth.HTTP_GET_CONFIRM_EMAIL)]
-        public IActionResult ConfirmEmail(string token)
-        {
-            var user = _confirmEmail.ConfirmEmailService(token);
-            if (user == null)
-            {
-                return BadRequest(new { message = ConstAuth.ERROR_INCORRECT_EMAIL_OUTDATED_LINK });
-            }
-
-            if (!user.ConfirmEmail)
-            {
-                var messageBody = _sendEmail.MessageBodyConfirmEmail(user.Email);
-                var messageSendingCheck = messageBody != null && _sendEmail.SendEmail(user.Email, messageBody, ConstAuth.SUBJECK_CONFIRM_EMAIL);
-                if (!messageSendingCheck)
-                {
-                    return BadRequest(new { message = ConstAuth.ERROR_CONFIRM_EMAIL });
-                }
-            }
-
-            var confirmEmail = user.ConfirmEmail.ToString().ToLower();
-            _confirmEmail.TokenRemotalFromBD(token);
-
-            return Ok( new { confirmEmail = confirmEmail, message = "Successful confirmation of email address." } );
         }
 
         [Authorize]
@@ -165,11 +142,11 @@ namespace Web.Controllers
         public IActionResult ListUsers(int page)
         {
             var users = _auth.GetByUsersList();
-            var list = _generalMethods.GetUsersList(users, page);
+            var (countPages, usersList) = _generalMethods.GetUsersList(users, page);
             return Ok(new
             {
-                usersList = list.users,
-                countPages = list.countPages
+                usersList = usersList,
+                countPages = countPages
             });
         }
 
@@ -179,8 +156,7 @@ namespace Web.Controllers
             var model = GetUserRegisterModel();
             if (model.Email != string.Empty)
             {
-                var messageBody = _sendEmail.MessageBodyConfirmEmail(model.Email);
-                var messageSendingCheck = messageBody != null && _sendEmail.SendEmail(model.Email, messageBody, ConstAuth.SUBJECK_CONFIRM_EMAIL);
+                var messageSendingCheck = _confirmEmail.CreateToken(model.Email);
                 if (!messageSendingCheck)
                 {
                     return BadRequest(new { message = ConstAuth.ERROR_MESSAGE_LOGIN_OR_EMAIL });
@@ -204,8 +180,7 @@ namespace Web.Controllers
             var model = GetUserRegisterModel();
             if (!string.IsNullOrEmpty(model.Email))
             {
-                var messageBody = _sendEmail.MessageBodyConfirmEmail(model.Email);
-                var messageSendingCheck = messageBody != null && _sendEmail.SendEmail(model.Email, messageBody, ConstAuth.SUBJECK_CONFIRM_EMAIL);
+                var messageSendingCheck = _confirmEmail.CreateToken(model.Email);
                 if (!messageSendingCheck)
                 {
                     return BadRequest(new { message = ConstAuth.ERROR_MESSAGE_LOGIN_OR_EMAIL });
@@ -245,52 +220,13 @@ namespace Web.Controllers
             return Ok(new { user = user });
         }
 
-        [HttpGet(ConstAuth.HTTP_GET_RETRIEVE_PASSWORD)]
-        public IActionResult RetrievePassword(string email)
-        {
-            var user = _auth.GetUserByEmail(email);
-            if (user == null)
-            {
-                return BadRequest( new {message = ConstAuth.ERROR_INCORRECT_EMAIL });
-            }
-
-            var messageBody = _sendEmail.MessageBodyRetrievePassword(user.Email);
-            var messageSendingCheck = messageBody != null && _sendEmail.SendEmail(user.Email, messageBody, ConstAuth.SUBJECK_RETRIEVE_YOUR_PASSWORD);
-            if (!messageSendingCheck)
-            {
-                return BadRequest(new { message = ConstAuth.ERROR_MESSAGE_LOGIN_OR_EMAIL });
-            }
-
-            return Ok();
-        }
-
-        [HttpPost(ConstAuth.HTTP_POST_CREATE_NEW_PASSWORD)]
-        public IActionResult CreateNewPassword(RetrievePasswordDtoModel model)
-        {
-            var user = _retrievePassword.RetrievePasswordService(model.Token);
-            if (user == null)
-            {
-                return BadRequest( new {message = ConstAuth.ERROR_INCORRECT_EMAIL_OUTDATED_LINK } );
-            }
-
-            if (BCrypt.Net.BCrypt.Verify(model.NewPassword, user.Password))
-            {
-                return BadRequest(new { message = ConstAuth.ERROR_MESSAGE_UPDATE_PASSWORD });
-            }
-
-            _auth.UpdatePassword(model.NewPassword, user);
-            _retrievePassword.TokenRemotalFromBD(model.Token);
-
-            return Ok( new { message = ConstAuth.MESSAGE_PASSWORD_SUCCESSFULY });
-        }
-
         [HttpDelete(ConstAuth.HTTP_DELETE_USER)]
         public IActionResult DeleteUser(int id)
         {
             _auth.DeleteUser(id);
             var users = _auth.GetByUsersList();
-            var list = _generalMethods.GetUsersList(users, ConstParameters.START_PAGE);
-            return Ok(new { usersList = list.users, countPages = list.countPages });
+            var (countPages, usersList) = _generalMethods.GetUsersList(users, ConstParameters.START_PAGE);
+            return Ok(new { usersList = usersList, countPages = countPages });
         }
 
         [HttpPost(ConstAuth.HTTP_POST_LOGOUT)]
@@ -314,6 +250,10 @@ namespace Web.Controllers
                        Request.Form.FirstOrDefault(i => i.Key == FormFields.NAME).Value : string.Empty,
                 Surname = !string.IsNullOrEmpty(Request.Form.FirstOrDefault(i => i.Key == FormFields.SURNAME).Value) ?
                           Request.Form.FirstOrDefault(i => i.Key == FormFields.SURNAME).Value : string.Empty,
+                Gender = !string.IsNullOrEmpty(Request.Form.FirstOrDefault(i => i.Key == FormFields.GENDER).Value) ?
+                          Request.Form.FirstOrDefault(i => i.Key == FormFields.GENDER).Value : string.Empty,
+                DateOfBirth = !string.IsNullOrEmpty(Request.Form.FirstOrDefault(i => i.Key == FormFields.DATE_OF_BIRTH).Value) ?
+                            DateTime.Parse(Request.Form.FirstOrDefault(i => i.Key == FormFields.DATE_OF_BIRTH).Value) : DateTime.MinValue,
                 Email = !string.IsNullOrEmpty(Request.Form.FirstOrDefault(i => i.Key == FormFields.EMAIL).Value) ?
                         Request.Form.FirstOrDefault(i => i.Key == FormFields.EMAIL).Value : string.Empty,
                 Phone = !string.IsNullOrEmpty(Request.Form.FirstOrDefault(i => i.Key == FormFields.PHONE).Value) ?

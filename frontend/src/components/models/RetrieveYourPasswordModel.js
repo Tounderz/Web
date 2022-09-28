@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
-import { retrievePassword } from '../../http/userApi';
+import { retrievePassword } from '../../http/retrievePasswordApi';
 import { useInput } from '../../http/validateApi';
 import '../../css/RetrieveYourPasswordModel.css'
 import { observer } from 'mobx-react-lite';

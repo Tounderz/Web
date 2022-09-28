@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, Container, Form, ModalFooter, Row } from "react-bootstrap";
-import { LOGIN_ROUTE, ZERO } from "../../utils/const";
+import { GENDERS, LOGIN_ROUTE, ZERO } from "../../utils/const";
 import { NavLink } from 'react-router-dom';
 import { formDataUser, register } from "../../http/userApi";
 import { useNavigate } from "react-router";
@@ -11,27 +11,32 @@ import '../../css/Auth.css'
 const Register = observer(() => {
     const name = useInput('', { minLength: {value: 3, name: 'Name'}});
     const surname = useInput('', {minLength: {value: 4, name: 'Surname'}});
+    const gender = useInput(0, {isNumberId: {name: 'Gender'}});
+    const dateOfBirth = useInput('', {minLength: {value: 1, name: 'DateOfBirth'}, age: {name: 'DateOfBirth'}} );
     const email = useInput('', {minLength: {value: 4, name: 'Email'}, isEmail: true});
     const phone = useInput('', {isPhone: true});
     const login = useInput('', {minLength: {value: 3, name: 'Login'}});
     const password = useInput('', {minLength: {value: 6, name: 'Password'}});
     const confirmPassword = useInput('', {minLength: {value: 6, name: 'Confirm Password'}, isConfirmPassword: {value: password.value}});
     const img = useInput(null);
-    const [messageError, setMessageError] = useState('')
-    const navigate = useNavigate()
+    const [messageError, setMessageError] = useState('');
+    const navigate = useNavigate();
 
     const click = async () => {
         try {
-            const formData = formDataUser(ZERO, name.value, surname.value, email.value, phone.value, login.value, password.value, img.value);
+            const formData = formDataUser(ZERO, name.value, surname.value, gender.value, dateOfBirth.value, email.value, phone.value, login.value, password.value, img.value);
             await register(formData);
             navigate(LOGIN_ROUTE);
         } catch (e) {
-            setMessageError(e.message)
+            setMessageError(e.response.data.message)
         }
         finally{
             name.onChange('');
             surname.onChange('');
             email.onChange('');
+            document.getElementById('genderRegisterSelect').value = '0';
+            gender.onChange(0);
+            dateOfBirth.onChange('');
             phone.onChange('');
             login.onChange('');
             password.onChange('');
@@ -65,6 +70,47 @@ const Register = observer(() => {
                         value={surname.value}
                         onChange={e => surname.onChange(e)}
                         onBlur={e => surname.onBlur(e)}
+                    />
+
+                    {(gender.isDirty && gender.isNumberError) && 
+                        <div className='error-message'>
+                            {gender.messageError}
+                        </div>}
+                    <Form.Select 
+                        id='genderRegisterSelect'
+                        className='formControlAuth'
+                        onChange={e => gender.onChange(e)}
+                        onBlur={e => gender.onBlur(e)}
+                    >
+                        <option 
+                            className='formControlAuth-select-option'
+                            key='0'
+                            value='0'
+                        >
+                            Choose a gender
+                        </option>
+                        {GENDERS.map(item => (
+                            <option
+                                className='formControlAuth-select-option'
+                                key={item}
+                                value={item}
+                            >
+                                {item}
+                            </option>
+                        ))}
+                    </Form.Select>
+
+                    {(dateOfBirth.isDirty && dateOfBirth.dateError) && 
+                        <div className='errorAuth'>
+                            {dateOfBirth.messageError}
+                        </div>}
+                    <Form.Control
+                        className='formControlAuth'
+                        value={dateOfBirth.value}
+                        placeholder='Date Of Birth'
+                        type='date'
+                        onChange={e => dateOfBirth.onChange(e)}
+                        onBlur={e => dateOfBirth.onBlur(e)}
                     />
 
                     {((email.isDirty && email.emailError) || (email.isDirty && email.isEmpty)) && <div className='errorAuth'>{email.messageError}</div>}

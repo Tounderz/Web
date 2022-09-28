@@ -37,5 +37,7 @@ namespace WebLibrary.ConstParameters
         public const string LOGIN = "Login";
         public const string PASSWORD = "Password";
         public const string PHONE = "Phone";
+        public const string DATE_OF_BIRTH = "DateOfBirth";
+        public const string GENDER = "Gender";
     }
 }

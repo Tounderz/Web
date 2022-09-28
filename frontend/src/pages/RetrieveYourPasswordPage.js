@@ -2,7 +2,7 @@ import { observer } from 'mobx-react-lite';
 import React, { useContext } from 'react';
 import { Button, Container, Form, Row } from 'react-bootstrap';
 import { useLocation, useNavigate } from 'react-router';
-import { createNewPassword } from '../http/userApi';
+import { createNewPassword } from '../http/retrievePasswordApi';
 import { useInput } from '../http/validateApi';
 import { LOGIN_ROUTE } from '../utils/const';
 import '../css/RetrieveYourPasswordPage.css'

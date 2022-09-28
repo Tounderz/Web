@@ -2,11 +2,13 @@ import { CONFIG_MULTIPART } from "../utils/const";
 import axiosApi from "./axiosApi";
 import { createRequest } from "./interceptor";
 
-export const formDataUser = ({id, name, surname, email, phone, login, password, img, role}) => {
+export const formDataUser = ({id, name, gender, dateOfBirth, surname, email, phone, login, password, img, role}) => {
     const formData = new FormData();
         formData.append('UserId', id);
         formData.append('Name', name);
         formData.append('Surname', surname);
+        formData.append('Gender', gender);
+        formData.append('DateOfBirth', dateOfBirth);
         formData.append('Email', email);
         formData.append('Phone', phone);
         formData.append('Login', login);
@@ -19,11 +21,6 @@ export const formDataUser = ({id, name, surname, email, phone, login, password, 
 
 export const register = async (formData) => {
     const {data} = await axiosApi.post(`/auth/register`, formData, CONFIG_MULTIPART);
-    return data;
-}
-
-export const confirmEmail = async (token) => {
-    const {data} = await axiosApi.get(`/auth/confirmEmail?token=${token}`);
     return data;
 }
 
@@ -65,16 +62,6 @@ export const updateUserByAdmin = async (formData) => {
 
 export const updateUserByUser = async (formData) => {
     const {data} = await createRequest().post('/auth/updateUserByUser', formData, CONFIG_MULTIPART);
-    return data;
-}
-
-export const retrievePassword = async (email) => {
-    const {data} = await axiosApi.get(`/auth/retrievePassword?email=${email}`);
-    return data;
-}
-
-export const createNewPassword = async (token, newPassword) => {
-    const {data} = await axiosApi.post(`/auth/createNewPassword`, {Token: token, NewPassword: newPassword} );
     return data;
 }
 

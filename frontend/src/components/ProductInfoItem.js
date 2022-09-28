@@ -50,7 +50,7 @@ const ProductInfoItem = ({id, info}) => {
                 {info.title}
             </td>
             <td style={ { width: '500px' } }>
-            {info.description}
+                {info.description}
             </td>
             <td style={ { width: '200px' } }>
                 {admin}

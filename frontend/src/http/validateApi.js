@@ -49,6 +49,7 @@ const useValidation = (value, validations) => {
     const [priceError, setPriceError] = useState(false);
     const [isRoleError, setIsRoleError] = useState(false);
     const [imgError, setImgError] = useState(false);
+    const [dateError, setDateError] = useState(false);
     const [messageError, setMessageError] = useState('');
     const [inputValid, setInputValid] = useState(false);
 
@@ -95,6 +96,13 @@ const useValidation = (value, validations) => {
                     value === null ? setImgError(true) : setImgError(false);
                     setMessageError(`The '${validations[validation].name}' field can't to empty.`);
                     break;
+                case 'age':
+                    const now = new Date();
+                    const date = new Date(value);
+                    const age = now.getFullYear() - date.getFullYear();
+                    (age > 90 || age < 12) ? setDateError(true) : setDateError(false);
+                    setMessageError(`You are either too young or you are already retired!`)
+                    break;
                 default:
                     break;
             }
@@ -104,12 +112,14 @@ const useValidation = (value, validations) => {
     useEffect(() => {
         if (minLengthError || emailError || phoneError || 
             passwordSecurityError || confirmPasswordError || multiSelectError || 
-            isNumberError || priceError || isRoleError || imgError) {
+            isNumberError || priceError || isRoleError || 
+            imgError || dateError
+            ) {
             setInputValid(false)
         } else {
             setInputValid(true)
         }
-    }, [minLengthError, emailError, phoneError, passwordSecurityError, confirmPasswordError, multiSelectError, isNumberError, priceError, isRoleError, imgError])
+    }, [minLengthError, emailError, phoneError, passwordSecurityError, confirmPasswordError, multiSelectError, isNumberError, priceError, isRoleError, imgError, dateError])
 
     return {
         minLengthError,
@@ -122,6 +132,7 @@ const useValidation = (value, validations) => {
         priceError,
         isRoleError,
         imgError,
+        dateError,
         messageError,
         inputValid
     }

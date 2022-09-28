@@ -10,8 +10,7 @@ namespace WebLibrary.Models
     {
         public int Id { get; set; }
         public string RetrievePasswordToken { get; set; }
-        public DateTime DateOfCreation { get; set; }
-        public DateTime DateExpires { get; set; }
+        public DateTime DateExpiresToken { get; set; }
         public string Email { get; set; }
     }
 }

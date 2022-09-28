@@ -28,12 +28,15 @@ namespace Web.Data.Repositories
             {
                 Name = model.Name,
                 Surname = model.Surname,
+                Gender = model.Gender,
+                DateOfBirth = model.DateOfBirth != DateTime.MinValue ? model.DateOfBirth.ToString("dd.MM.yyyy") : string.Empty,
                 Email = model.Email,
                 Phone = model.Phone,
                 Login = model.Login,
                 Password = BCrypt.Net.BCrypt.HashPassword(model.Password),
                 Img = model.Img != null ? _generalMethods.SaveImg(model.Img) : string.Empty,
                 Role = ConstParameters.USER_ROLE,
+                IsDeleted = false,
             };
 
             _context.Users.Add(user);
@@ -104,6 +107,8 @@ namespace Web.Data.Repositories
 
             user.Name = model.Name != string.Empty ? model.Name : user.Name;
             user.Surname = model.Surname != string.Empty ? model.Surname : user.Surname;
+            user.Gender = model.Gender != string.Empty ? model.Gender : user.Gender;
+            user.DateOfBirth = model.DateOfBirth != DateTime.MinValue ? model.DateOfBirth.ToString("dd.MM.yyyy") : user.DateOfBirth;
             user.Email = model.Email != string.Empty ? model.Email : user.Email;
             user.Phone = model.Phone != string.Empty ? model.Phone : user.Phone;
             user.Login = model.Login != string.Empty ? model.Login : user.Login;
@@ -127,7 +132,18 @@ namespace Web.Data.Repositories
         public void DeleteUser(int id)
         {
             var user = _context.Users.FirstOrDefault(i => i.Id == id);
-            _context.Users.Remove(user);
+            user.IsDeleted = true;
+            var deleteAccount = new DeletedAccountModel()
+            {
+                UserId = user.Id,
+                UserEmail = user.Email,
+                DateOfRemovalFromDb = DateTime.Now.AddMonths(6),
+                DateExpiresToken = DateTime.Now,
+                RestoringToken = string.Empty,
+            };
+
+            _context.DeletedAccounts.Add(deleteAccount);
+            _context.Users.Update(user);
             _context.SaveChanges();
         }
 

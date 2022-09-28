@@ -124,10 +124,7 @@ namespace Web.Migrations
                     b.Property<string>("ConfirmEmailToken")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("DateExpires")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DateOfCreation")
+                    b.Property<DateTime>("DateExpiresToken")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
@@ -136,6 +133,34 @@ namespace Web.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ConfirmEmails");
+                });
+
+            modelBuilder.Entity("WebLibrary.Models.DeletedAccountModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("DateExpiresToken")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateOfRemovalFromDb")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("RestoringToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DeletedAccounts");
                 });
 
             modelBuilder.Entity("WebLibrary.Models.OrderModel", b =>
@@ -279,9 +304,6 @@ namespace Web.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime>("Expires")
                         .HasColumnType("datetime2");
 
@@ -310,10 +332,7 @@ namespace Web.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<DateTime>("DateExpires")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DateOfCreation")
+                    b.Property<DateTime>("DateExpiresToken")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
@@ -357,11 +376,20 @@ namespace Web.Migrations
                     b.Property<bool>("ConfirmEmail")
                         .HasColumnType("bit");
 
+                    b.Property<string>("DateOfBirth")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Gender")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Img")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Login")
                         .HasColumnType("nvarchar(max)");

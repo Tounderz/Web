@@ -5,9 +5,9 @@ import { Button, Modal } from 'react-bootstrap';
 import { useNavigate } from 'react-router';
 import { cleanToCart, removeToCartItem } from '../../../http/basketApi';
 import { removeProduct } from '../../../http/productApi';
-import { removeUser } from '../../../http/userApi';
+import { logout, removeUser } from '../../../http/userApi';
 import { Context } from '../../../index';
-import { PAGE_FIRST, USERLIST_ROUTE } from '../../../utils/const';
+import { PAGE_FIRST, SHOP_ROUTE, USERLIST_ROUTE } from '../../../utils/const';
 
 const ConfirmRemoval = observer(({show, onHide}) => {
     const {product} = useContext(Context);
@@ -33,6 +33,11 @@ const ConfirmRemoval = observer(({show, onHide}) => {
                     onHide();
                     navigate(USERLIST_ROUTE);
                 break;
+            case 'userCabinet':
+                data = await removeUser(remove.removeObjeck.id);
+                    onHide();
+                    logOut();
+                break;
             case 'basketItem':
                 data = await removeToCartItem(remove.removeObjeck.id, user.user.login, PAGE_FIRST);
                     cart.setBaskets(data.baskets);
@@ -52,12 +57,22 @@ const ConfirmRemoval = observer(({show, onHide}) => {
         }
     }
 
+    const logOut = async () => {
+        const data = await logout();
+            user.setUser(data.user)
+            localStorage.removeItem('accessToken');
+        navigate(SHOP_ROUTE)
+    }
+
     let string;
     switch (remove.removeParameterName) {
         case 'product':
             string = `Are you sure you want to remove product: '${remove.removeObjeck.name}'?`
             break;
         case 'user':
+            string = `Are you sure you want to remove user: '${remove.removeObjeck.name}'?`
+            break;
+        case 'userCabinet':
             string = `Are you sure you want to remove user: '${remove.removeObjeck.name}'?`
             break;
         case 'basketItem':

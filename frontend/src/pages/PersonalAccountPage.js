@@ -4,7 +4,7 @@ import { Button, Card, Col, Image, ModalFooter, Nav, Row } from "react-bootstrap
 import { useNavigate } from "react-router";
 import UpdateUser from "../components/models/update/UpdateUser";
 import UpdatePassword from "../components/models/update/UpdatePassword";
-import { logout } from "../http/userApi";
+import { fetchUser, logout } from "../http/userApi";
 import { Context } from "../index";
 import { 
          SHOP_ROUTE, BASKET_ROUTE, 
@@ -17,6 +17,7 @@ import UpdatePhoto from "../components/models/update/UpdatePhoto";
 import { ordersList } from "../http/orderApi";
 import { fetchBaskets } from "../http/basketApi";
 import '../css/PersonalAccountPage.css'
+import ConfirmRemoval from "../components/models/remove/ConfirmRemoval";
 
 const PersonalAccountPage = observer(() => {
     const {user} = useContext(Context);
@@ -25,10 +26,12 @@ const PersonalAccountPage = observer(() => {
     const {cart} = useContext(Context);
     const {page} = useContext(Context);
     const {updates} = useContext(Context);
+    const {remove} = useContext(Context);
     const navigate = useNavigate();
     const [userUpdateVisible, setUserUpdateVisible] = useState(false);
     const [updatePasswordVisible, setUpdatePasswordVisible] = useState(false);
     const [updatePhotoVisible, setUpdatePhotoVisible] = useState(false);
+    const [removeVisible, setRemoveVisible] = useState(false);
     
     const logOut = async () => {
         const data = await logout();
@@ -75,8 +78,14 @@ const PersonalAccountPage = observer(() => {
                 page.setCountPages(0);
                 navigate(PURCHASES_STORY_ROUTE);
         }
-
     }
+
+    const userRemove = async () => {
+        setRemoveVisible(true);
+        const data = await fetchUser(user.user.login);
+            remove.setRemoveObjeck(data.user);
+        remove.setRemoveParameterName('userCabinet');
+    };
 
     return (
         <Row className='accountFonPage'>
@@ -129,6 +138,13 @@ const PersonalAccountPage = observer(() => {
                             >
                                 Purchases story
                             </Button>
+                            <Button
+                                className='buttonCardAccount'
+                                variant='outline-danger'
+                                onClick={userRemove}
+                            >
+                                Delete Account
+                            </Button>
                         </Card>
                     </Col>
                 </Row>
@@ -160,6 +176,7 @@ const PersonalAccountPage = observer(() => {
                 <UpdateUser show={userUpdateVisible} onHide={() => setUserUpdateVisible(false)}/>
                 <UpdatePassword show={updatePasswordVisible} onHide={() => setUpdatePasswordVisible(false)}/>
                 <UpdatePhoto show={updatePhotoVisible} onHide={() => setUpdatePhotoVisible(false)}/>
+                <ConfirmRemoval show={removeVisible} onHide={() => setRemoveVisible(false)}/>   
             </Col>
         </Row>
     );

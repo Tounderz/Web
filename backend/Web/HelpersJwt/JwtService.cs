@@ -87,7 +87,6 @@ namespace Web.HelpersJwt
                 if (comparisonResult < 1)
                 {
                     token.Token = refreshToken;
-                    token.Created = DateTime.Now;
                     token.Expires = DateTime.Now.AddDays(ConstParameters.EXPIRES_REFRESH_TOKEN_DAYS);
                     token.IsActive = true;
 
@@ -102,7 +101,6 @@ namespace Web.HelpersJwt
                     UserId = userId,
                     TokenId = new Random().Next(),
                     Token = refreshToken,
-                    Created = DateTime.Now,
                     Expires = DateTime.Now.AddDays(ConstParameters.EXPIRES_REFRESH_TOKEN_DAYS),
                     IsActive = true
                 };

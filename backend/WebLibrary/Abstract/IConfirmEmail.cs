@@ -9,7 +9,9 @@ namespace WebLibrary.Abstract
 {
     public interface IConfirmEmail
     {
+        bool CreateToken(string email);
         UserModel ConfirmEmailService(string token);
+        ConfirmEmailModel UpdatingToken(string email);
         void TokenRemotalFromBD(string token);
     }
 }

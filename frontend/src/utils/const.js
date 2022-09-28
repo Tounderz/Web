@@ -21,6 +21,7 @@ export const CATEGORIES_BY_BRAND_ROUTE = '/categoriesByBrand';
 export const SEARCH_ROUTE = '/search';
 export const PURCHASES_STORY_ROUTE = '/purchasesStory';
 export const ERROR_ROUTE = '/error';
+export const RESTORE_ROUTE = `/restore`
 export const NO_IMAGE = 'https://localhost:44315/img/noimage.jpg';
 export const LOCALHOST = 'https://localhost:44315';
 export const PAGE_FIRST = 1;
@@ -35,6 +36,7 @@ export const TYPES_SORT = [ 'Up', 'Down' ];
 export const IS_NUMBER = /^(0|-?[1-9]\d{0,5})$/;
 export const IS_EMAIL = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 export const IS_PHONE = /^(\s*)?(\+)?([- _():=+]?\d[- _():=+]?){10,14}(\s*)?$/;
+export const GENDERS = ['Man', 'Woman'];
 export const ERROR_MESSAGE_SEARCH = 'According to the search criteria, nothing was found.';
 
 export const CONFIG_MULTIPART = {

@@ -1,5 +1,17 @@
 .form-update-user {
+    text-align: center;
     margin-top: 2%;
+}
+
+.form-update-user-select {
+    text-align: center;
+    margin-top: 2%;
+    color: #000000;
+}
+
+.form-update-user-select-option {
+    text-align: center;
+    color: #000000;
 }
 
 .button-update-user {
