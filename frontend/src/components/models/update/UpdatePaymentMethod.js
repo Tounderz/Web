@@ -16,18 +16,24 @@ const UpdatePaymentMethod = observer(({show, onHide}) => {
         try {
             const data = await updatePaymentMethods(methodId.value, name.value);
                 paymentMethod.setPaymentMethods(data.paymentMethods);
-                document.getElementById('updateSelectMethod').value = '0';
-                name.onChange('');
-                onHide();
+                close();
         } catch (e) {
             setMessageError(e.message)
         }
     }
 
+    const close = () => {
+        document.getElementById('updateSelectMethod').value = '0';
+        methodId.onChange('');
+        name.onChange('');
+        setMessageError('');
+        onHide();
+    }
+
     return (
         <Modal
             show={show}
-            onHide={onHide}
+            onHide={close}
             centered
         >
             <Modal.Header closeButton>
@@ -90,7 +96,7 @@ const UpdatePaymentMethod = observer(({show, onHide}) => {
                 <Button
                     className='button-update-method'
                     variant='outline-danger'
-                    onClick={onHide}
+                    onClick={close}
                 >
                     Close
                 </Button>

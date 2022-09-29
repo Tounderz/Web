@@ -14,19 +14,24 @@ const CreateInfoProduct = ({show, onHide, productId}) => {
     const click = async () => {
         try {
             const data = await createInfoProduct(productId, title.value, descriprion.value)
-                title.onChange('');
-                descriprion.onChange('');
                 product.setInfoProduct(data.info);
-                onHide();
+                close();
         } catch (e) {
             setMessageError(e.message)
         }
+    }
+    
+    const close = () => {
+        title.onChange('');
+        descriprion.onChange('');
+        setMessageError('');
+        onHide();
     }
 
     return (
         <Modal
             show={show}
-            onHide={onHide}
+            onHide={close}
             size="lg"
             centered
         >
@@ -74,7 +79,7 @@ const CreateInfoProduct = ({show, onHide, productId}) => {
                 <Button
                     className='button-create-info-product'
                     variant='outline-danger'
-                    onClick={onHide}
+                    onClick={close}
                 >
                     Close
                 </Button>

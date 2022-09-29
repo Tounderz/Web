@@ -93,6 +93,12 @@ namespace Web.Data.Repositories
                 case "Surname":
                     users = SortUsersBySurname(model.TypeSort);
                     break;
+                case "Gender":
+                    users = SortUsersByGender(model.TypeSort);
+                    break;
+                case "DateOfBirth":
+                    users = SortUsersByDateOfBirth(model.TypeSort);
+                    break;
                 case "Email":
                     users = SortUsersByEmail(model.TypeSort);
                     break;
@@ -105,6 +111,13 @@ namespace Web.Data.Repositories
                 case "Role":
                     users = SortUsersByRole(model.TypeSort);
                     break;
+                case "ConfirmEmail":
+                    users = SortUsersByConfirmEmail(model.TypeSort);
+                    break;
+                case "IsDeleted":
+                    users = SortUsersByIsDeleted(model.TypeSort);
+                    break;
+
                 default:
                     break;
             }
@@ -247,6 +260,32 @@ namespace Web.Data.Repositories
             return users;
         }
 
+        private List<UserModel> SortUsersByGender(string typeSort)
+        {
+            var users = new List<UserModel>();
+            if (typeSort.ToLower() == "down")
+            {
+                users = Users.OrderByDescending(i => i.Gender).ToList();
+                return users;
+            }
+
+            users = Users.OrderBy(i => i.Gender).ToList();
+            return users;
+        }
+
+        private List<UserModel> SortUsersByDateOfBirth(string typeSort)
+        {
+            var users = new List<UserModel>();
+            if (typeSort.ToLower() == "down")
+            {
+                users = Users.OrderByDescending(i => DateTime.Parse(i.DateOfBirth)).ToList();
+                return users;
+            }
+
+            users = Users.OrderBy(i => DateTime.Parse(i.DateOfBirth)).ToList();
+            return users;
+        }
+
         private List<UserModel> SortUsersByEmail(string typeSort)
         {
             var users = new List<UserModel>();
@@ -296,6 +335,32 @@ namespace Web.Data.Repositories
             }
 
             users = Users.OrderBy(i => i.Role).ToList();
+            return users;
+        }
+
+        private List<UserModel> SortUsersByConfirmEmail(string typeSort)
+        {
+            var users = new List<UserModel>();
+            if (typeSort.ToLower() == "down")
+            {
+                users = Users.OrderByDescending(i => i.ConfirmEmail).ToList();
+                return users;
+            }
+
+            users = Users.OrderBy(i => !i.ConfirmEmail).ToList();
+            return users;
+        }
+
+        private List<UserModel> SortUsersByIsDeleted(string typeSort)
+        {
+            var users = new List<UserModel>();
+            if (typeSort.ToLower() == "down")
+            {
+                users = Users.OrderByDescending(i => !i.IsDeleted).ToList();
+                return users;
+            }
+
+            users = Users.OrderBy(i => i.IsDeleted).ToList();
             return users;
         }
     }

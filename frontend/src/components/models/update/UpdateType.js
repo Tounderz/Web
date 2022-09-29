@@ -18,20 +18,26 @@ const UpdateType = observer(({show, onHide}) => {
         try {
             const data = await updateType(typeId.value, name.value, categoryId.value);
                 type.setTypes(data.types);
-                document.getElementById('updateSelectType').value = '0';
-                name.onChange('');
-                document.getElementById('updateSelectCategoryByType').value = '0';
-            onHide();
+                close();
         } catch (error) {
             setMessageError(error.message)
         }
-        
+    }
+
+    const close = () => {
+        document.getElementById('updateSelectType').value = '0';
+        typeId.onChange('');
+        name.onChange('');
+        document.getElementById('updateSelectCategoryByType').value = '0';
+        categoryId.onChange('');
+        setMessageError('');
+        onHide();
     }
 
     return (
         <Modal
             show={show}
-            onHide={onHide}
+            onHide={close}
             centered
         >
             <Modal.Header closeButton>
@@ -125,7 +131,7 @@ const UpdateType = observer(({show, onHide}) => {
                 <Button
                     className='button-update-type'
                     variant='outline-danger'
-                    onClick={onHide}
+                    onClick={close}
                 >
                     Close
                 </Button>

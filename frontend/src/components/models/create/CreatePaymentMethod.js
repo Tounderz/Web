@@ -10,19 +10,23 @@ const CreatePaymentMethod = ({show, onHide}) => {
 
     const click = async () => {
         try {
-            createPaymentMethods(name.value)
-                name.onChange('')
-                onHide()
+            createPaymentMethods(name.value);
+            close();
         } catch (e) {
-            setMessageError(e.message)
+            setMessageError(e.message);
         }
-        
+    }
+
+    const close = () => {
+        name.onChange('');
+        setMessageError('');
+        onHide();
     }
 
     return (
         <Modal
             show={show}
-            onHide={onHide}
+            onHide={close}
             centered
         >
             <Modal.Header closeButton>
@@ -60,7 +64,7 @@ const CreatePaymentMethod = ({show, onHide}) => {
                 <Button 
                     className='button-create-method'
                     variant='outline-danger'
-                    onClick={onHide}
+                    onClick={close}
                 >
                     Close
                 </Button>

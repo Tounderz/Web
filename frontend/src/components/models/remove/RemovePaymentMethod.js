@@ -13,14 +13,19 @@ const RemovePaymentMethod = observer(({show, onHide}) => {
     const click = async () => {
         const data = await removePaymentMethods(methodId.value);
             paymentMethod.setPaymentMethods(data.paymentMethods);
-            document.getElementById('removeSelectMethod').value = '0';
+        close();
+    }
+
+    const close  =() => {
+        document.getElementById('removeSelectMethod').value = '0';
+        methodId.onChange('');
         onHide();
     }
 
     return (
         <Modal
             show={show}
-            onHide={onHide}
+            onHide={close}
             centered
         >
             <Modal.Header closeButton>
@@ -69,7 +74,7 @@ const RemovePaymentMethod = observer(({show, onHide}) => {
                 <Button 
                     className='button-method-remove'
                     variant='outline-danger'
-                    onClick={onHide}
+                    onClick={close}
                 >
                     Close
                 </Button>

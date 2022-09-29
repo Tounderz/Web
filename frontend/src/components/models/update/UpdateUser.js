@@ -115,6 +115,7 @@ const UpdateUser = observer(({show, onHide}) => {
         document.getElementById('roleTag').value = '0';
         role.onChange('');
         img.saveImg(null);
+        setMessageError('');
         onHide();
     }
 

@@ -49,6 +49,7 @@ const UpdateCategory = observer(({show, onHide}) => {
         shortDescription.onChange('');
         brandsId.onSelect([]);
         img.saveImg(null);
+        setMessageError('');
         onHide();
     }
 

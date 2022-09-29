@@ -29,7 +29,7 @@ const SortForm = observer(({show, onHide, parameter}) => {
                             page.setCountPages(data.countPages);
                             sort.setFieldName(fieldName.value);
                             sort.setTypeSort(typeSort.value);
-                            onHide();
+                            cleacnSortParameter();
                     } catch (e) {
                         cleaningUpDueToAnErrorProduct();
                         messages.setMessageError(e.message);
@@ -44,7 +44,7 @@ const SortForm = observer(({show, onHide, parameter}) => {
                             page.setCountPages(data.countPages);
                             sort.setFieldName(fieldName.value);
                             sort.setTypeSort(typeSort.value);
-                            onHide();
+                            cleacnSortParameter();
                     } catch (e) {
                         cleaningUpDueToAnErrorUser();
                         messages.setMessageError(e.message);
@@ -75,10 +75,19 @@ const SortForm = observer(({show, onHide, parameter}) => {
         search.setSearchBy('');
         search.setSelectedSearchParameter('');
     }
+
+    const cleacnSortParameter = () => {
+        document.getElementById('selectedFieldName').value = '0';
+        fieldName.onChange('');
+        document.getElementById('selectedTypeSort').value = '0';
+        typeSort.onChange('');
+        onHide();
+    }
+
     return (
         <Modal
             show={show}
-            onHide={onHide}
+            onHide={cleacnSortParameter}
             centered
         >
             <Modal.Header closeButton>
@@ -88,13 +97,14 @@ const SortForm = observer(({show, onHide, parameter}) => {
             </Modal.Header>
             <Modal.Body>
                 <Form.Select
+                    id='selectedFieldName'
                     onChange={e => fieldName.onChange(e)}
                     onBlur={e => fieldName.onBlur(e)}
                     className='m-2'
                 >
                     <option
-                        key=''
-                        value=''
+                        key='0'
+                        value='0'
                     >
                         Select a field name
                     </option>
@@ -108,13 +118,14 @@ const SortForm = observer(({show, onHide, parameter}) => {
                     )}
                 </Form.Select>
                 <Form.Select
+                    id='selectedTypeSort'
                     onChange={e => typeSort.onChange(e)}
                     onBlur={e => typeSort.onBlur(e)}
                     className='m-2'
                 >
                     <option
-                        key=''
-                        value=''
+                        key='0'
+                        value='0'
                     >
                         Select a type sort
                     </option>
@@ -148,7 +159,7 @@ const SortForm = observer(({show, onHide, parameter}) => {
                         cursor: 'pointer',
                         borderRadius: '5px'
                     }}
-                    onClick={onHide}
+                    onClick={cleacnSortParameter}
                 >
                     Close
                 </Button>

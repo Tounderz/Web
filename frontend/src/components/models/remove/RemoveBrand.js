@@ -13,14 +13,19 @@ const RemoveBrand = observer(({show, onHide}) => {
     const click = async () => {
         const data = await removeBrand(brandId.value);
             brand.setBrands(data.brands);
-            document.getElementById('removeSelectBrand').value = '0';
+            close();
+    }
+
+    const close  =() => {
+        document.getElementById('removeSelectBrand').value = '0';
+        brandId.onChange('');
         onHide();
     }
 
     return (
         <Modal
             show={show}
-            onHide={onHide}
+            onHide={close}
             centered
         >
             <Modal.Header closeButton>
@@ -69,7 +74,7 @@ const RemoveBrand = observer(({show, onHide}) => {
                 <Button 
                     className='button-brand-remove'
                     variant='outline-danger'
-                    onClick={onHide}
+                    onClick={close}
                 >
                     Close
                 </Button>

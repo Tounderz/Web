@@ -14,18 +14,24 @@ const CreateType = ({show, onHide}) => {
     const click = async () => {
         try {
             createType(name.value, categoryId.value);
-                name.onChange('');
-                document.getElementById('createSelectTypeCategory').value = '0';
-                onHide();
+                close();
         } catch (e) {
             setMessageError(e.message)
         }
     }
 
+    const close = () => {
+        name.onChange('');
+        document.getElementById('createSelectTypeCategory').value = '0';
+        categoryId.onChange('');
+        setMessageError('');
+        onHide();
+    }
+
     return (
         <Modal
             show={show}
-            onHide={onHide}
+            onHide={close}
             centered
         >
             <Modal.Header closeButton>
@@ -89,7 +95,7 @@ const CreateType = ({show, onHide}) => {
                 <Button
                     className='button-create-type'
                     variant='outline-danger'
-                    onClick={onHide}
+                    onClick={close}
                 >
                     Close
                 </Button>

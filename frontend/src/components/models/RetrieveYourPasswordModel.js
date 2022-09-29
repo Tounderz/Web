@@ -23,6 +23,7 @@ const RetrieveYourPasswordModel = observer(({show, onHide}) => {
 
     const close = () => {
         email.onChange('');
+        setMessageError('');
         onHide();
     }
 

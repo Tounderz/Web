@@ -58,6 +58,7 @@ const UpdateBrand = observer(({show, onHide}) => {
         info.onChange('');
         categoriesId.onSelect([]);
         img.saveImg(null);
+        setMessageError('');
         onHide();
     }
 

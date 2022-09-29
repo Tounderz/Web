@@ -13,14 +13,19 @@ const RemoveType = observer(({show, onHide}) => {
     const click = async () => {
         const data = await removeType(typeId.value);
             type.setTypes(data.types);
-            document.getElementById('removeSelectType').value = '0';
+        close();
+    }
+
+    const close  = () => {
+        document.getElementById('removeSelectType').value = '0';
+        typeId.onChange('');
         onHide();
     }
 
     return (
         <Modal
             show={show}
-            onHide={onHide}
+            onHide={close}
             centered
         >
             <Modal.Header closeButton>
@@ -69,7 +74,7 @@ const RemoveType = observer(({show, onHide}) => {
                 <Button 
                     className='button-type-remove'
                     variant='outline-danger'
-                    onClick={onHide}
+                    onClick={close}
                 >
                     Close
                 </Button>

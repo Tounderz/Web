@@ -37,27 +37,35 @@ const UpdateProduct = observer(({show, onHide}) => {
                 page.setCurrentPage(PAGE_FIRST);
                 page.setCountPages(data.countPages);
                 product.setSelectedProduct({});
-
-                onHide();
+                close();
         } catch (e) {
             setMessageError(e.message)
-        } finally {
-            name.onChange('');
-            document.getElementById('updateProductSelectCategory').value = '0';
-            document.getElementById('updateProductSelectType').value = '0';
-            document.getElementById('updateProductSelectBrand').value = '0';
-            document.getElementById('updateProductSelectIsFavourite').value = '0';
-            document.getElementById('updateProductSelectAvailable').value = '0';
-            shortDescription.onChange('');
-            price.onChange('');
-            img.saveImg(null);
         }
+    }
+
+    const close = () => {
+        name.onChange('');
+        document.getElementById('updateProductSelectCategory').value = '0';
+        categoryId.onChange('');
+        document.getElementById('updateProductSelectType').value = '0';
+        typeId.onChange('');
+        document.getElementById('updateProductSelectBrand').value = '0';
+        brandId.onChange('');
+        document.getElementById('updateProductSelectIsFavourite').value = '0';
+        isFavourite.onChange('');
+        document.getElementById('updateProductSelectAvailable').value = '0';
+        available.onChange('');
+        shortDescription.onChange('');
+        price.onChange('');
+        img.saveImg(null);
+        setMessageError('');
+        onHide();
     }
 
     return (
         <Modal
             show={show}
-            onHide={onHide}
+            onHide={close}
             size="lg"
             centered
         >
@@ -276,7 +284,7 @@ const UpdateProduct = observer(({show, onHide}) => {
                 <Button 
                     className='button-update-product'
                     variant='outline-danger'
-                    onClick={onHide}
+                    onClick={close}
                 >
                     Close
                 </Button>

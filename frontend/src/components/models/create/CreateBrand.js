@@ -23,21 +23,25 @@ const CreateBrand = observer(({show, onHide}) => {
             const formData = formDataBrand(ZERO, name.value, info.value, categoriesId.value, img.value);
             const data = await createBrand(formData);
                 brand.setBrands(data.brands);
-                name.onChange('');
-                categoriesId.onChange([]);
-                info.onSelect('');
-                img.saveImg(null);
-                onHide();
+                close();
         } catch (e) {
             setMessageError(e.message);
         }
-        
+    }
+
+    const close = () => {
+        name.onChange('');
+        categoriesId.onChange([]);
+        info.onSelect('');
+        img.saveImg(null);
+        setMessageError('');
+        onHide();
     }
 
     return (
         <Modal
             show={show}
-            onHide={onHide}
+            onHide={close}
             centered
         >
             <Modal.Header closeButton>
@@ -115,7 +119,7 @@ const CreateBrand = observer(({show, onHide}) => {
                 <Button 
                     className='button-create-brand'
                     variant='outline-danger'
-                    onClick={onHide}
+                    onClick={close}
                 >
                     Close
                 </Button>

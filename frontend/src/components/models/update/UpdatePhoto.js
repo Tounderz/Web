@@ -18,17 +18,22 @@ const UpdatePhoto = observer(({show, onHide}) => {
                 formData.append('Img', img.value);
             const data = await updateUserByUser(formData);
                 user.setSelectedUser(data.user);
-                img.saveImg(null);
-                onHide();
+                close();
         } catch (e) {
             setMessageError(e.message);
         }
     }
 
+    const close = () => {
+        img.saveImg(null);
+        setMessageError('');
+        onHide();
+    }
+
     return (
         <Modal
             show={show}
-            onHide={onHide}
+            onHide={close}
             size="lg"
             centered
         >
@@ -66,7 +71,7 @@ const UpdatePhoto = observer(({show, onHide}) => {
                 <Button
                     className='button-update-photo'
                     variant='outline-danger'
-                    onClick={onHide}
+                    onClick={close}
                 >
                     Close
                 </Button>

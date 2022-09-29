@@ -5,7 +5,7 @@ import { useNavigate } from "react-router";
 import Remove from '../components/models/remove/Remove';
 import Create from '../components/models/create/Create';
 import Update from '../components/models/update/Update';
-import { PAGE_FIRST, PRODUCTS_LIST_ROUTE, USERLIST_ROUTE } from '../utils/const';
+import { FIELD_NAMES_PRODUCTS, FIELD_NAMES_USERS_SEARCH, PAGE_FIRST, PRODUCTS_LIST_ROUTE, USERLIST_ROUTE } from '../utils/const';
 import { fetchUsers } from '../http/userApi';
 import { fetchProducts } from '../http/productApi';
 import '../css/AdminPage.css'
@@ -38,6 +38,7 @@ const Admin = observer(() => {
         const data = await fetchUsers(PAGE_FIRST);
             user.setUsersList(data.usersList);
             pageParameters(data.countPages);
+            search.setFieldNames(FIELD_NAMES_USERS_SEARCH);
             cleanSearchAndSort();
             navigate(USERLIST_ROUTE)
     }
@@ -46,6 +47,7 @@ const Admin = observer(() => {
         const data = await fetchProducts(PAGE_FIRST);
             product.setProducts(data.products);
             pageParameters(data.countPages);
+            search.setFieldNames(FIELD_NAMES_PRODUCTS)
             cleanSearchAndSort();
             navigate(PRODUCTS_LIST_ROUTE)
     }

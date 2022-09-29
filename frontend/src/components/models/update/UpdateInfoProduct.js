@@ -15,18 +15,23 @@ const UpdateInfoProduct = ({info, show, onHide}) => {
         try {
             const data = await updateInfoProduct(info.id, title.value, descriprion.value);
                 product.setInfoProduct(data.info)
-                title.onChange('');
-                descriprion.onChange('');
-                onHide();
+                close();
         } catch (e) {
             setMessageError(e.message)
         }
     }
 
+    const close = () => {
+        title.onChange('');
+        descriprion.onChange('');
+        setMessageError('');
+        onHide();
+    }
+
     return (
         <Modal
             show={show}
-            onHide={onHide}
+            onHide={close}
             size="lg"
             centered
         >
@@ -82,7 +87,7 @@ const UpdateInfoProduct = ({info, show, onHide}) => {
                 <Button 
                     className='button-update-info'
                     variant='outline-danger'
-                    onClick={onHide}
+                    onClick={close}
                 >
                     Close
                 </Button>

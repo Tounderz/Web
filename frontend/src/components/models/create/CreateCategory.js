@@ -23,22 +23,26 @@ const CreateCategory = observer(({show, onHide}) => {
             const formData = formDataCategory(ZERO, name.value, shortDescription.value, info.value, img.value, brandsId.value);
             const data = await createCategory(formData);
                 category.setCategories(data.categories)
-                name.onChange('');
-                info.onChange('');
-                shortDescription.onChange('');
-                brandsId.onSelect([]);
-                img.saveImg(null);
-                onHide();
+                close();
         } catch (error) {
             setMessageError(error.message);
         }
-        
+    }
+
+    const close = () => {
+        name.onChange('');
+        info.onChange('');
+        shortDescription.onChange('');
+        brandsId.onSelect([]);
+        img.saveImg(null);
+        setMessageError('');
+        onHide();
     }
 
     return (
         <Modal
             show={show}
-            onHide={onHide}
+            onHide={close}
             centered
         >
             <Modal.Header closeButton>
@@ -127,7 +131,7 @@ const CreateCategory = observer(({show, onHide}) => {
                 <Button 
                     className='button-create-category'
                     variant='outline-danger'
-                    onClick={onHide}
+                    onClick={close}
                 >
                     Close
                 </Button>

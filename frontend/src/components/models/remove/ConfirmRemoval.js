@@ -7,7 +7,7 @@ import { cleanToCart, removeToCartItem } from '../../../http/basketApi';
 import { removeProduct } from '../../../http/productApi';
 import { logout, removeUser } from '../../../http/userApi';
 import { Context } from '../../../index';
-import { PAGE_FIRST, SHOP_ROUTE, USERLIST_ROUTE } from '../../../utils/const';
+import { PAGE_FIRST, PRODUCTS_LIST_ROUTE, SHOP_ROUTE, USERLIST_ROUTE } from '../../../utils/const';
 
 const ConfirmRemoval = observer(({show, onHide}) => {
     const {product} = useContext(Context);
@@ -24,18 +24,19 @@ const ConfirmRemoval = observer(({show, onHide}) => {
                 data = await removeProduct(remove.removeObjeck.id);
                     product.setProducts(data.products);
                     page.setCountPages(data.countPages);
-                    onHide();
+                    close();
+                    navigate(PRODUCTS_LIST_ROUTE);
                     break;
             case 'user':
                 data = await removeUser(remove.removeObjeck.id);
                     user.setUsersList(data.usersList);
                     page.setCountPages(data.countPages);
-                    onHide();
+                    close();
                     navigate(USERLIST_ROUTE);
                 break;
             case 'userCabinet':
                 data = await removeUser(remove.removeObjeck.id);
-                    onHide();
+                    close();
                     logOut();
                 break;
             case 'basketItem':
@@ -43,14 +44,14 @@ const ConfirmRemoval = observer(({show, onHide}) => {
                     cart.setBaskets(data.baskets);
                     cart.setTotalAmount(data.sum);
                     page.setCountPages(data.countPages);
-                    onHide();
+                    close();
                 break;
             case 'cleanCart':
                 data = await cleanToCart(user.user.login, PAGE_FIRST);
                     cart.setBaskets(data.baskets);
                     cart.setTotalAmount(data.sum);
                     page.setCountPages(data.countPages);
-                    onHide();
+                    close();
                 break;
             default:
                 break;
@@ -85,10 +86,16 @@ const ConfirmRemoval = observer(({show, onHide}) => {
             break;
     }
 
+    const close = () => {
+        remove.setRemoveObjeck({});
+        remove.setRemoveParameterName('');
+        onHide();
+    }
+
     return (
         <Modal
             show={show}
-            onHide={onHide}
+            onHide={close}
             size='lg'
             centered
         >
@@ -110,7 +117,7 @@ const ConfirmRemoval = observer(({show, onHide}) => {
                 <Button 
                     className='button-brand-confirm-removal'
                     variant='outline-danger'
-                    onClick={onHide}
+                    onClick={close}
                 >
                     No
                 </Button>

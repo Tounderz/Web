@@ -4,6 +4,7 @@ export default class SearchStore {
     constructor() {
         this._selectedSearchParameter = '';
         this._searchBy = '';
+        this._fielNames = [];
 
         makeAutoObservable(this)
     }
@@ -20,5 +21,12 @@ export default class SearchStore {
     }
     get searchBy() {
         return this._searchBy
+    }
+
+    setFieldNames(fieldNames) {
+        this._fieldNames = fieldNames
+    }
+    get fieldNames() {
+        return this._fieldNames
     }
 }

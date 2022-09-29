@@ -30,25 +30,35 @@ const CreateProduct = ({show, onHide}) => {
             );
 
             await createProduct(formData);
-                name.onChange('');
-                categoryId.onChange(0);
-                brandId.onChange(0);
-                typeId.onChange(0);
-                shortDescription.onChange('');
-                img.saveImg(null);
-                available.saveImg(0);
-                isFavourite.onChange(0);
-                onHide();
+                close();
         } catch (e) {
             setMessageError(e.message)
         }
         
     }
 
+    const close = () => {
+        name.onChange('');
+        document.getElementById('createSelectCategory').value = '0';
+        categoryId.onChange('');
+        document.getElementById('createSelectBrand').value = '0';
+        brandId.onChange('');
+        document.getElementById('createSelectType').value = '0';
+        typeId.onChange('');
+        shortDescription.onChange('');
+        img.saveImg(null);
+        document.getElementById('createSelectAvailable').value = '0';
+        available.onChange('');
+        document.getElementById('createSelectIsFavourite').value = '0';
+        isFavourite.onChange('');
+        setMessageError('');
+        onHide();
+    }
+
     return (  
         <Modal
             show={show}
-            onHide={onHide}
+            onHide={close}
             size="lg"
             centered
         >
@@ -67,11 +77,15 @@ const CreateProduct = ({show, onHide}) => {
                             {categoryId.messageError}
                         </div>}
                     <Form.Select 
+                        id='createSelectCategory'
                         className='form-control-create-product'
                         onChange={e => categoryId.onChange(e)}
                         onBlur={e => categoryId.onBlur(e)}
                     >
-                        <option value={0}>
+                        <option
+                            value='0'
+                            key='0'
+                        >
                             Select a category
                         </option>
                             {category.categories.map(category => (
@@ -89,11 +103,15 @@ const CreateProduct = ({show, onHide}) => {
                             {typeId.messageError}
                         </div>}
                     <Form.Select
+                        id='createSelectType'
                         className='form-control-create-product'
                         onChange={e => typeId.onChange(e)}
                         onBlur={e => typeId.onBlur(e)}
                     >
-                        <option value={0}>
+                        <option 
+                            key='0' 
+                            value='0'
+                        >
                             Select a type
                         </option>
                             {type.types.map(type => (
@@ -111,11 +129,15 @@ const CreateProduct = ({show, onHide}) => {
                             {brandId.messageError}
                         </div>}
                     <Form.Select
+                        id='createSelectBrand'
                         className='form-control-create-product'
                         onChange={e => brandId.onChange(e)}
                         onBlur={e => brandId.onBlur(e)}
                     >
-                        <option key={0} value={0}>
+                        <option 
+                            key='0'
+                            value='0'
+                        >
                             Select a brand
                         </option>
                             {brand.brands.map(brand => (
@@ -156,13 +178,14 @@ const CreateProduct = ({show, onHide}) => {
                             {isFavourite.messageError}
                         </div>}
                     <Form.Select 
+                        id='createSelectIsFavourite'
                         className='form-control-create-product'
                         onChange={e =>isFavourite.onChange(e)}
                         onBlur={e => isFavourite.onBlur(e)}
                     >
                         <option 
-                            key={0}
-                            value={0}
+                            key='0'
+                            value='0'
                         >
                             IsFavourite
                         </option>
@@ -181,13 +204,14 @@ const CreateProduct = ({show, onHide}) => {
                             {available.messageError}
                         </div>}
                     <Form.Select 
+                        id='createSelectAvailable'
                         className='form-control-create-product'
                         onChange={e =>available.onChange(e)}
                         onBlur={e => available.onBlur(e)}
                     >
                         <option 
-                            key={0}
-                            value={0}
+                            key='0'
+                            value='0'
                         >
                             Available
                         </option>
@@ -243,7 +267,7 @@ const CreateProduct = ({show, onHide}) => {
                 <Button
                     className='button-create-product'
                     variant='outline-danger'
-                    onClick={onHide}
+                    onClick={close}
                 >
                     Close
                 </Button>

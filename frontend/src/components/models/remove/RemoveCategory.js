@@ -13,15 +13,19 @@ const RemoveCategory = observer(({show, onHide}) => {
     const click = async () =>  {
         const data = await removeCategory(categoryId.value);
             category.setCategories(data.categories);
-            document.getElementById('removeSelectCategory').value = '0';
-            
+        close();
+    }
+
+    const close  =() => {
+        document.getElementById('removeSelectCategory').value = '0';
+        categoryId.onChange(''); 
         onHide();
     }
     
     return (
         <Modal
             show={show}
-            onHide={onHide}
+            onHide={close}
             centered
         >
             <Modal.Header closeButton>
@@ -70,7 +74,7 @@ const RemoveCategory = observer(({show, onHide}) => {
                 <Button 
                     className='button-category-remove'
                     variant='outline-danger'
-                    onClick={onHide}
+                    onClick={close}
                 >
                     Close
                 </Button>

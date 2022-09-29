@@ -17,20 +17,24 @@ const UpdatePassword = observer(({show, onHide}) => {
         try {
             const data = await updatePassword(oldPassword.value, newPassword.value, user.idUser);
                 user.setSelectedUser(data.user);
-                oldPassword.onChange('');
-                newPassword.onChange('');
-                confirmPassword.onChange('');
-                setMessageError('')
-                onHide();
+                close();
         } catch (e) {
             setMessageError(e.message);
         }
     }
 
+    const close = () => {
+        oldPassword.onChange('');
+        newPassword.onChange('');
+        confirmPassword.onChange('');
+        setMessageError('')
+        onHide();
+    }
+
     return (
         <Modal
             show={show}
-            onHide={onHide}
+            onHide={close}
             size="lg"
             centered
         >
@@ -104,7 +108,7 @@ const UpdatePassword = observer(({show, onHide}) => {
                 <Button 
                     className='button-update-password'
                     variant='outline-danger'
-                    onClick={onHide}
+                    onClick={close}
                 >
                     Close
                 </Button>

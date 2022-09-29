@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { Context } from '../index';
 import { useInput } from '../http/validateApi';
-import { ERROR_MESSAGE_SEARCH, FIELD_NAMES_PRODUCTS, FIELD_NAMES_USERS, PAGE_FIRST, PRODUCTS_LIST_ROUTE, USERLIST_ROUTE } from '../utils/const';
+import { ERROR_MESSAGE_SEARCH, PAGE_FIRST, PRODUCTS_LIST_ROUTE, USERLIST_ROUTE } from '../utils/const';
 import { useNavigate } from 'react-router';
 import { observer } from 'mobx-react-lite';
 import { SearchTableProduct } from '../functions/SearchTableProduct';
@@ -20,24 +20,13 @@ const SearchFormProductAndUserList = observer(({parameter}) => {
     const searchParameter = useInput('', {minLength: {value: 1, name: 'Search'}});
     const searchBy = useInput('', { minLength: {value: 2, name: 'Search by'}});
 
-    let searchByArray;
-    switch (parameter) {
-        case 'productAdmin':
-            searchByArray = FIELD_NAMES_PRODUCTS;
-            break;
-        case 'user':
-            searchByArray = FIELD_NAMES_USERS;
-            break;
-        default:
-            break;
-    }
-
     const clean = () => {
         searchParameter.onChange('');
         sort.setFieldNames([]);
         sort.setFieldName('');
         sort.setTypeSort('');
-        document.getElementById('selectTag').value = '0';
+        document.getElementById('selectSearchBy').value = '0';
+        searchBy.onChange('');
     }
 
     const cleaningUpDueToAnErrorProduct = () => {
@@ -118,7 +107,7 @@ const SearchFormProductAndUserList = observer(({parameter}) => {
     return (
         <div className='div-search'>
             <Form.Select
-                id = 'selectTag' 
+                id = 'selectSearchBy' 
                 className='form-select-search'
                 onChange={e => searchBy.onChange(e)}
                 onBlur={e => searchBy.onBlur(e)}
@@ -129,7 +118,7 @@ const SearchFormProductAndUserList = observer(({parameter}) => {
                 >
                     Search by
                 </option>
-                {searchByArray.map(item => 
+                {search.fieldNames.map(item => 
                      <option
                         value={item}
                         key={item}
