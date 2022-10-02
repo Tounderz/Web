@@ -8,4 +8,4 @@ settings.dev.json
 build
 temp
 package-lock.json
-appsettings.json
+*/appsettings.json
