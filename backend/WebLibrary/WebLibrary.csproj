@@ -306,6 +306,7 @@
     <Compile Include="Models\Dtos\UserRegisterModel.cs" />
     <Compile Include="Models\Dtos\ViewDtoModel.cs" />
     <Compile Include="Models\EmailConfiguration.cs" />
+    <Compile Include="Models\JWTConfiguration.cs" />
     <Compile Include="Models\OrderModel.cs" />
     <Compile Include="Models\PaymentMethodModel.cs" />
     <Compile Include="Models\ProductInfoModel.cs" />

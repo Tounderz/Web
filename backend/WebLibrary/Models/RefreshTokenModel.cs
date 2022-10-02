@@ -10,9 +10,8 @@ namespace WebLibrary.Models
     {
         public int Id { get; set; }
         public int UserId { get; set; }
-        public int TokenId { get; set; }
         public string Token { get; set; }
-        public DateTime Expires { get; set; } //дата окончания действия refreshToken
+        public DateTime TokenExpires { get; set; } //дата окончания действия refreshToken
         public bool IsActive { get; set; }
     }
 }

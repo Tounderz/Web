@@ -12,6 +12,7 @@ using WebLibrary.Abstract;
 using System.Security.Cryptography;
 using Web.Data;
 using WebLibrary.ConstParameters;
+using Newtonsoft.Json.Linq;
 
 namespace Web.HelpersJwt
 {
@@ -19,18 +20,21 @@ namespace Web.HelpersJwt
     {
         private readonly IConfiguration _configuration;
         private readonly AppDBContext _context;
+        private readonly JWTConfiguration _jwtConfig;
 
         public IEnumerable<RefreshTokenModel> RefreshTokens => _context.RefreshTokens;
 
-        public JwtService(IConfiguration configuration, AppDBContext context)
+        public JwtService(IConfiguration configuration, AppDBContext context, JWTConfiguration jwtConfig)
         {
             _configuration = configuration;
             _context = context;
+            _jwtConfig = jwtConfig;
         }
 
         public string GenerateJwt(UserModel model)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            /*var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));*/
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfig.Key));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var claims = new[]
@@ -40,12 +44,16 @@ namespace Web.HelpersJwt
                 new Claim(ClaimTypes.Role, model.Role)
             };
 
+            var now = DateTime.Now;
             var securityToken = new JwtSecurityToken
                 (
-                    _configuration["Jwt:Issuer"],
-                    _configuration["Jwt:Audience"],
-                    claims,
-                    expires: DateTime.Now.AddMinutes(ConstParameters.EXPIRES_ACCESS_TOKEN_HOUR),
+                    /*_configuration["Jwt:Issuer"],
+                    _configuration["Jwt:Audience"],*/
+                    issuer: _jwtConfig.Issuer,
+                    audience: _jwtConfig.Audience,
+                    notBefore: now,
+                    claims: claims,
+                    expires: now.AddMinutes(ConstParameters.EXPIRES_ACCESS_TOKEN_HOUR),
                     signingCredentials: credentials
                 );
 
@@ -57,15 +65,18 @@ namespace Web.HelpersJwt
         public JwtSecurityToken Verify(string jwtToken)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]);
+            /*var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]);*/
+            var key = Encoding.UTF8.GetBytes(_jwtConfig.Key);
             tokenHandler.ValidateToken(jwtToken, new TokenValidationParameters
             {
                 IssuerSigningKey = new SymmetricSecurityKey(key),
                 ValidateIssuerSigningKey = true,
                 ValidateIssuer = true,
                 ValidateAudience = true,
-                ValidIssuer = _configuration["Jwt:Issuer"],
-                ValidAudience = _configuration["Jwt:Audience"],
+                /*ValidIssuer = _configuration["Jwt:Issuer"],
+                ValidAudience = _configuration["Jwt:Audience"],*/
+                ValidIssuer = _jwtConfig.Issuer,
+                ValidAudience = _jwtConfig.Audience,
             },
                 out SecurityToken securityToken);
 
@@ -80,44 +91,44 @@ namespace Web.HelpersJwt
             using var randomNumberGenerator = RandomNumberGenerator.Create();
             randomNumberGenerator.GetBytes(randomNumber);
             var refreshToken = Convert.ToBase64String(randomNumber);
-            var token = RefreshTokens.FirstOrDefault(i => i.UserId == userId);
-            if (token != null)
+            var refreshTokenModel = RefreshTokens.FirstOrDefault(i => i.UserId == userId);
+            if (refreshTokenModel != null)
             {
-                var comparisonResult = DateTime.Compare(token.Expires, DateTime.Now);
+                var comparisonResult = DateTime.Compare(refreshTokenModel.TokenExpires, DateTime.Now);
                 if (comparisonResult < 1)
                 {
-                    token.Token = refreshToken;
-                    token.Expires = DateTime.Now.AddDays(ConstParameters.EXPIRES_REFRESH_TOKEN_DAYS);
-                    token.IsActive = true;
+                    refreshTokenModel.Token = refreshToken;
+                    refreshTokenModel.TokenExpires = DateTime.Now.AddDays(ConstParameters.EXPIRES_REFRESH_TOKEN_DAYS);
+                    refreshTokenModel.IsActive = true;
 
-                    _context.RefreshTokens.Update(token);
+                    _context.RefreshTokens.Update(refreshTokenModel);
                     _context.SaveChanges();
                 }
             }
             else
             {
-                token = new RefreshTokenModel
+                refreshTokenModel = new RefreshTokenModel
                 {
                     UserId = userId,
-                    TokenId = new Random().Next(),
                     Token = refreshToken,
-                    Expires = DateTime.Now.AddDays(ConstParameters.EXPIRES_REFRESH_TOKEN_DAYS),
-                    IsActive = true
+                    TokenExpires = DateTime.Now.AddDays(ConstParameters.EXPIRES_REFRESH_TOKEN_DAYS),
+                    IsActive = true,
                 };
 
-                _context.RefreshTokens.Add(token);
+                _context.RefreshTokens.Add(refreshTokenModel);
                 _context.SaveChanges();
             }
 
-            return token.Token;
+            return refreshTokenModel.Token;
         }
 
         public RefreshTokenModel GetRefreshToken(int userId)
         {
             var refreshTokenModel = RefreshTokens.FirstOrDefault(i => i.UserId == userId);
-            if (refreshTokenModel.Expires == DateTime.Now)
+            var comparisonResult = DateTime.Compare(refreshTokenModel.TokenExpires, DateTime.Now);
+            if (comparisonResult < 1)
             {
-                return null;
+                refreshTokenModel.IsActive = false;
             }
 
             return refreshTokenModel;

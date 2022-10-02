@@ -100,7 +100,7 @@ namespace Web.Controllers
         }
 
         [Authorize]
-        [HttpPost(ConstAuth.HTTP_POST_REFRESH_TOKEN)]
+        [HttpGet(ConstAuth.HTTP_POST_REFRESH_TOKEN)]
         public IActionResult RefreshToken()
         {
             var jwtToken = "";
@@ -122,9 +122,9 @@ namespace Web.Controllers
 
             var user = _auth.GetByUserFromToken(token);
             var refreshTokenModel = _jwtService.GetRefreshToken(user.Id);
-            if (refreshTokenModel == null)
+            if (!refreshTokenModel.IsActive)
             {
-                return Unauthorized();
+                return BadRequest(new { isRefreshToken = refreshTokenModel.IsActive } );
             }
 
             var accessToken = _jwtService.GenerateJwt(user);
