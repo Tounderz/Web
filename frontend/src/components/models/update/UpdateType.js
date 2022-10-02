@@ -19,8 +19,9 @@ const UpdateType = observer(({show, onHide}) => {
             const data = await updateType(typeId.value, name.value, categoryId.value);
                 type.setTypes(data.types);
                 close();
-        } catch (error) {
-            setMessageError(error.message)
+        } catch (e) {
+            // setMessageError(e.message)
+            setMessageError(e.response.data.message);
         }
     }
 

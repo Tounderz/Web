@@ -1,11 +1,12 @@
 import axiosApi from "./axiosApi";
+import $api from "./interceptorsApi";
 
 export const confirmEmail = async (token) => {
-    const {data} = await axiosApi.get(`/confirmEmails/confirmEmail?token=${token}`);
+    const {data} = await $api.get(`/confirmEmails/confirmEmail?token=${token}`);
     return data;
 }
 
 export const updateTokenConfirm = async (email) => {
-    const {data} = await axiosApi.get(`/confirmEmails/updateToken?email=${email}`);
+    const {data} = await $api.get(`/confirmEmails/updateToken?email=${email}`);
     return data;
 }

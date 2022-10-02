@@ -66,7 +66,8 @@ const SearchFormProductAndUserList = observer(({parameter}) => {
                 } catch (e) {
                     clean();
                     cleaningUpDueToAnErrorUser();
-                    messages.setMessageError(e.message);
+                    // messages.setMessageError(e.message);
+                    messages.setMessageError(e.response.data.message);
                 }
 
                 navigate(USERLIST_ROUTE);
@@ -88,7 +89,8 @@ const SearchFormProductAndUserList = observer(({parameter}) => {
                 } catch (e) {
                     clean();
                     cleaningUpDueToAnErrorProduct();
-                    messages.setMessageError(e.message);
+                    // messages.setMessageError(e.message);
+                    messages.setMessageError(e.response.data.message);
                 }
                 
                 navigate(PRODUCTS_LIST_ROUTE);

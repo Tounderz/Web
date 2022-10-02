@@ -26,7 +26,8 @@ const UpdateCategory = observer(({show, onHide}) => {
                 category.setCategories(data.categories);
                 close();
         } catch (e) {
-            setMessageError(e.message)
+            // setMessageError(e.message)
+            setMessageError(e.response.data.message);
         }
     }
 

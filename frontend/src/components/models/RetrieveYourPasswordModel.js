@@ -15,6 +15,7 @@ const RetrieveYourPasswordModel = observer(({show, onHide}) => {
             await retrievePassword(email.value);
                 onHide();
         } catch (e) {
+            // setMessageError(e.response.data.message);
             setMessageError(e.response.data.message);
         } finally {
             email.onChange('');

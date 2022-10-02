@@ -24,7 +24,8 @@ const SearchForm = observer(() => {
                 search.setSelectedSearchParameter(searchParameter.value);
                 navigate(SEARCH_ROUTE);
         } catch (e) {
-            messages.setMessageError(e.message);
+            // messages.setMessageError(e.message);
+            messages.setMessageError(e.response.data.message);
                 navigate(ERROR_ROUTE);
         } finally {
             searchParameter.onChange('');

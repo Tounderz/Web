@@ -35,7 +35,8 @@ const CategoryDropdown = observer(({categoryItem}) => {
 
             navigate(CATEGORY_ROUTE)
         } catch (e) {
-            messages.setMessageError(e.message)
+            // messages.setMessageError(e.message)
+            messages.setMessageError(e.response.data.message);
             navigate(ERROR_ROUTE)
         }
     }

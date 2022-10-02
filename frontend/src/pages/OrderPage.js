@@ -46,7 +46,8 @@ const OrderPage = observer(() => {
     
             navigate(COMPLETED_ROUTE)
         } catch (e) {
-            messages.setMessageError(e.message);
+            // messages.setMessageError(e.message);
+            messages.setMessageError(e.response.data.message);
         }
         
     }

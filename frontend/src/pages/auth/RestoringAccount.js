@@ -20,8 +20,8 @@ const RestoringAccount = observer(() => {
         try {
             const data = await restoring(email.value);
                 messages.setMessage(data.message);
-        } catch (error) {
-            messages.setMessageError(error.response.data.message);
+        } catch (e) {
+            messages.setMessageError(e.response.data.message);
         }
     }
 

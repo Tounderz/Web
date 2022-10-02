@@ -24,8 +24,9 @@ const CreateCategory = observer(({show, onHide}) => {
             const data = await createCategory(formData);
                 category.setCategories(data.categories)
                 close();
-        } catch (error) {
-            setMessageError(error.message);
+        } catch (e) {
+            // setMessageError(error.message);
+            setMessageError(e.response.data.message);
         }
     }
 

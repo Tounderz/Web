@@ -71,7 +71,8 @@ const PersonalAccountPage = observer(() => {
                 page.setCountPages(data.countPages);
                 navigate(PURCHASES_STORY_ROUTE);
         } catch (e) {
-            messages.setMessageError(e.message);
+            // messages.setMessageError(e.message);
+            messages.setMessageError(e.response.data.message);
                 order.setOrdersList([]);
                 order.setTotalAmount(0);
                 page.setCurrentPage(PAGE_FIRST);

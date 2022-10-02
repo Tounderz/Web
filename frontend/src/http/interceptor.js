@@ -21,7 +21,7 @@ export function createRequest() {
   //Чтобы не писать везде в header bearer token
   request.interceptors.request.use((config) => {
     config.headers.accept = 'application/json';
-    config.headers.Authorization = `Bearer ${accessToken}`;
+    config.headers.Authorization = `Bearer ${localStorage.getItem('accessToken')}`;
     config.baseURL = BASE_URL;
     return config;
   });
@@ -31,9 +31,9 @@ export function createRequest() {
         if (error.isAxiosError) {
             console.log(error.response?.status);
             if (error.response?.status === 401) {
-                const { data } = await axiosApi.post('auth/refreshToken');
+                const { response } = await axiosApi.post('auth/refreshToken');
                 localStorage.removeItem('accessToken')
-                localStorage.setItem('accessToken', data.accessToken);
+                localStorage.setItem('accessToken', response.accessToken);
 
         error.config.headers.accept = 'application/json';
         error.config.headers.authorization = `Bearer ${accessToken}`;

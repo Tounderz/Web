@@ -66,7 +66,8 @@ const UpdateUser = observer(({show, onHide}) => {
                     close();
             }
         } catch (e) {
-            setMessageError(e.message);
+            // setMessageError(e.message);
+            setMessageError(e.response.data.message);
         }
     }
 

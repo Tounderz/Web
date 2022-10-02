@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite';
 import Multiselect from 'multiselect-react-dropdown';
 import React, { useContext } from 'react';
-import { Button, Card, Col, Row, Spinner } from 'react-bootstrap';
+import { Button, Card, Col, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router';
 import ProductItem from '../components/ProductItem';
 import { fetchProductsBrand, fetchProductsBrandByCategory } from '../http/brandApi';
@@ -20,14 +20,9 @@ const BrandPage = observer(() => {
     const {type} = useContext(Context);
     const {user} = useContext(Context);
     const {messages} = useContext(Context);
-    const {loading} = useContext(Context);
     const {page} = useContext(Context);
     const navigate = useNavigate();
     const categoriesId = useInput([]);
-
-    if (loading.isLoading) {
-        return <Spinner animation={'grow'}/>
-    }
     
     const paginationClick = async () => {
         const data = await fetchProductsBrand(brand.selectedBrand.id, user.user.role, page.currentPage);
@@ -49,7 +44,8 @@ const BrandPage = observer(() => {
         
             navigate(CATEGORIES_BY_BRAND_ROUTE)
         } catch (e) {
-            messages.setMessageError(e.message);
+            // messages.setMessageError(e.message);
+            messages.setMessageError(e.response.data.message);
             navigate(ERROR_ROUTE)
         }
     }

@@ -17,7 +17,8 @@ const UpdateInfoProduct = ({info, show, onHide}) => {
                 product.setInfoProduct(data.info)
                 close();
         } catch (e) {
-            setMessageError(e.message)
+            // setMessageError(e.message)
+            setMessageError(e.response.data.message);
         }
     }
 

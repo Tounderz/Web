@@ -47,7 +47,8 @@ const CategoryPage = observer(() => {
 
             navigate(BRANDS_BY_CATEGORY_ROUTE)
         } catch (e) {
-            messages.setMessageError(e.message);
+            // messages.setMessageError(e.message);
+            messages.setMessageError(e.response.data.message);
             navigate(ERROR_ROUTE)
         }
     }

@@ -13,7 +13,8 @@ const CreatePaymentMethod = ({show, onHide}) => {
             createPaymentMethods(name.value);
             close();
         } catch (e) {
-            setMessageError(e.message);
+            // setMessageError(e.message);
+            setMessageError(e.response.data.message);
         }
     }
 

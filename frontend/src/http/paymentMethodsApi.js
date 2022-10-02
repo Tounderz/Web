@@ -1,21 +1,22 @@
 import { createRequest } from './interceptor';
+import $api from './interceptorsApi';
 
 export const fetchPaymentMethods = async () => {
-    const {data} = await createRequest().get(`/paymentMethods/list`);
+    const {data} = await $api.get(`/paymentMethods/list`);
     return data;
 }
 
 export const createPaymentMethods = async (name) => {
-    const {data} = await createRequest().post('/paymentMethods/create', {name: name});
+    const {data} = await $api.post('/paymentMethods/create', {name: name});
     return data;
 }
 
 export const updatePaymentMethods = async (id, name) => {
-    const {data} = await createRequest().post('/paymentMethods/update', {Id: id, Name: name});
+    const {data} = await $api.post('/paymentMethods/update', {Id: id, Name: name});
     return data;
 }
 
 export const removePaymentMethods = async (id) => {
-    const {data} = await createRequest().delete(`/paymentMethods/delete?id=${id}`);
+    const {data} = await $api.delete(`/paymentMethods/delete?id=${id}`);
     return data;
 }

@@ -18,7 +18,8 @@ const UpdatePaymentMethod = observer(({show, onHide}) => {
                 paymentMethod.setPaymentMethods(data.paymentMethods);
                 close();
         } catch (e) {
-            setMessageError(e.message)
+            // setMessageError(e.message)
+            setMessageError(e.response.data.message);
         }
     }
 

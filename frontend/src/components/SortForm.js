@@ -47,7 +47,8 @@ const SortForm = observer(({show, onHide, parameter}) => {
                             cleacnSortParameter();
                     } catch (e) {
                         cleaningUpDueToAnErrorUser();
-                        messages.setMessageError(e.message);
+                        // messages.setMessageError(e.message);
+                        messages.setMessageError(e.response.data.message);
                     }
                         navigate(USERLIST_ROUTE);
                     break;

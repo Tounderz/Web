@@ -30,7 +30,8 @@ const BrandDropdown = observer(({brandItem}) => {
 
                 navigate(BRAND_ROUTE)
         } catch (e) {
-            messages.setMessageError(e.message);
+            // messages.setMessageError(e.message);
+            messages.setMessageError(e.response.data.message);
                 navigate(ERROR_ROUTE);
         }
     }
