@@ -23,8 +23,8 @@ const RetrieveYourPasswordPage = observer(() => {
                 messages.setMessage(data.message);
                 messages.setMessageError('');
                 navigate(LOGIN_ROUTE);
-        } catch (error) {
-            messages.setMessageError(error.response.data.message);
+        } catch (e) {
+            messages.setMessageError(e.response.data.message);
             messages.setMessage('');
         } finally {
             newPassword.onChange('');

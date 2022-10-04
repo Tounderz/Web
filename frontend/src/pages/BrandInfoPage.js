@@ -6,8 +6,9 @@ import { fetchCategoriesByBrand } from '../http/categoryApi';
 import { Context } from '../index';
 import { BRAND_ROUTE, LOCALHOST, NO_IMAGE } from '../utils/const';
 import '../css/InfoPage.css'
+import { observer } from 'mobx-react-lite';
 
-const BrandInfoPage = () => {
+const BrandInfoPage = observer(() => {
     const {product} = useContext(Context);
     const {brand} = useContext(Context);
     const {category} = useContext(Context);
@@ -21,10 +22,10 @@ const BrandInfoPage = () => {
             category.setSelectedCategory(dataProducts.categoriesId);
             page.setCountPages(dataProducts.countPages);
 
-        const dataCategories = await fetchCategoriesByBrand(category.selectedCategory)
-            category.setCategoriesByBrand(dataCategories.categoriesByBrand)
+        const dataCategories = await fetchCategoriesByBrand(category.selectedCategory);
+            category.setCategoriesByBrand(dataCategories.categoriesByBrand);
 
-        navigate(BRAND_ROUTE)
+        navigate(BRAND_ROUTE);
     }
 
     let img;
@@ -70,6 +71,6 @@ const BrandInfoPage = () => {
             </Nav.Link>
         </Row>
     );
-};
+});
 
 export default BrandInfoPage;

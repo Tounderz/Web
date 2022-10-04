@@ -25,7 +25,6 @@ const CreateCategory = observer(({show, onHide}) => {
                 category.setCategories(data.categories)
                 close();
         } catch (e) {
-            // setMessageError(error.message);
             setMessageError(e.response.data.message);
         }
     }

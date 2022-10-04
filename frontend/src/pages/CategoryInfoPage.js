@@ -7,8 +7,9 @@ import { fetchTypes } from '../http/typeApi';
 import { Context } from '../index';
 import { CATEGORY_ROUTE, LOCALHOST, NO_IMAGE, PAGE_FIRST } from '../utils/const';
 import '../css/InfoPage.css'
+import { observer } from 'mobx-react-lite';
 
-const CategoryInfoPage = () => {
+const CategoryInfoPage = observer(() => {
     const {product} = useContext(Context);
     const {category} = useContext(Context);
     const {type} = useContext(Context);
@@ -26,17 +27,17 @@ const CategoryInfoPage = () => {
             brand.setSelectedBrand(dataProducts.brandsId);
             page.setCountPages(dataProducts.countPages);            
 
-        const dataBrands = await fetchBrandsByCategory(brand.selectedBrand)
-            brand.setBrandsByCategory(dataBrands.brandsByCategory)
+        const dataBrands = await fetchBrandsByCategory(brand.selectedBrand);
+            brand.setBrandsByCategory(dataBrands.brandsByCategory);
 
-        navigate(CATEGORY_ROUTE)
+        navigate(CATEGORY_ROUTE);
     }
 
     let img;
     if (category.selectedCategory.img === null) {
-        img = (NO_IMAGE)
+        img = (NO_IMAGE);
     } else {
-        img = (LOCALHOST + category.selectedCategory.img)
+        img = (LOCALHOST + category.selectedCategory.img);
     }
 
     return (
@@ -71,6 +72,6 @@ const CategoryInfoPage = () => {
             </Nav.Link>
         </Row>
     );
-};
+});
 
 export default CategoryInfoPage;

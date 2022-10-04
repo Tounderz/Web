@@ -25,7 +25,6 @@ const CreateBrand = observer(({show, onHide}) => {
                 brand.setBrands(data.brands);
                 close();
         } catch (e) {
-            // setMessageError(e.message);
             setMessageError(e.response.data.message);
         }
     }

@@ -39,50 +39,50 @@ const RestoringAccount = observer(() => {
 
     return (
         <Row className='loginFonPage'>
-        <Container className='containerAuth'>
-            <Form
-                className='formAuth'
-            >
-                <div 
-                    className='errorAuth' 
-                    style={{ textName: 'italic' }}
+            <Container className='containerAuth'>
+                <Form
+                    className='formAuth'
                 >
-                    {messages.messageError}
-                </div>
-                <div 
-                    className='errorAuth' 
-                    style={{ textName: 'italic' }}
-                >
-                    {messages.message}
-                </div>
-                {((email.isDirty && email.minLengthError) || 
-                    (email.isDirty && email.emailError)) && 
-                    <div className='errorAuth'>
-                        {email.messageError}
-                    </div>}
-                <Form.Control
-                    className='formControlAuth'
-                    placeholder='Email'
-                    value={email.value}
-                    onChange={e => email.onChange(e)}
-                    onBlur={e => email.onBlur(e)}
-                />
-                
-                <ModalFooter 
-                    className='modalFooterAuth'
-                >
-                    <Button 
-                        className='buttonAuth'
-                        variant='outline-primary'
-                        disabled={!email.inputValid}
-                        onClick={click}
+                    <div 
+                        className='errorAuth' 
+                        style={{ textName: 'italic' }}
                     >
-                        Restore
-                    </Button>
-                </ModalFooter>
-            </Form>
-        </Container>
-    </Row>
+                        {messages.messageError}
+                    </div>
+                    <div 
+                        className='errorAuth' 
+                        style={{ textName: 'italic' }}
+                    >
+                        {messages.message}
+                    </div>
+                    {((email.isDirty && email.minLengthError) || 
+                        (email.isDirty && email.emailError)) && 
+                        <div className='errorAuth'>
+                            {email.messageError}
+                        </div>}
+                    <Form.Control
+                        className='formControlAuth'
+                        placeholder='Email'
+                        value={email.value}
+                        onChange={e => email.onChange(e)}
+                        onBlur={e => email.onBlur(e)}
+                    />
+                    
+                    <ModalFooter 
+                        className='modalFooterAuth'
+                    >
+                        <Button 
+                            className='buttonAuth'
+                            variant='outline-primary'
+                            disabled={!email.inputValid}
+                            onClick={click}
+                        >
+                            Restore
+                        </Button>
+                    </ModalFooter>
+                </Form>
+            </Container>
+        </Row>
     );
 });
 

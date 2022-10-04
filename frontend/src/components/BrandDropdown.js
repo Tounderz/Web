@@ -28,9 +28,8 @@ const BrandDropdown = observer(({brandItem}) => {
             const dataCatgories = await fetchCategoriesByBrand(brand.selectedBrand.id);
                 category.setCategoriesByBrand(dataCatgories.categoriesByBrand);
 
-                navigate(BRAND_ROUTE)
+                navigate(BRAND_ROUTE);
         } catch (e) {
-            // messages.setMessageError(e.message);
             messages.setMessageError(e.response.data.message);
                 navigate(ERROR_ROUTE);
         }

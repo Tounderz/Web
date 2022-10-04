@@ -11,17 +11,17 @@ import { SvgSelector } from '../components/Svg/SvgSelector';
 import '../css/ProductPage.css'
 
 const ProductPage = observer(() => {
-    const {user} = useContext(Context)
-    const {product} = useContext(Context)
-    const navigate = useNavigate()
-    const [createInfoProduct, setCreateInfoProduct] = useState(false)
+    const {user} = useContext(Context);
+    const {product} = useContext(Context);
+    const navigate = useNavigate();
+    const [createInfoProduct, setCreateInfoProduct] = useState(false);
 
     const onClick = async () => {
         if(user.user.isAuth) {
             await addToCart(product.selectedProduct.id, user.user.login);
-            navigate(SHOP_ROUTE)
+            navigate(SHOP_ROUTE);
         } else {
-            navigate(LOGIN_ROUTE)
+            navigate(LOGIN_ROUTE);
         }
     }
 

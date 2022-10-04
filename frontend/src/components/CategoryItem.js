@@ -33,11 +33,10 @@ const CategoryItem = observer(({categoryItem}) => {
             const dataBrands = await fetchBrandsByCategory(categoryItem.id);
                 brand.setBrandsByCategory(dataBrands.brandsByCategory);
 
-            navigate(CATEGORY_ROUTE)
+            navigate(CATEGORY_ROUTE);
         } catch (e) {
-            // messages.setMessageError(e.message)
             messages.setMessageError(e.response.data.message);
-            navigate(ERROR_ROUTE)
+                navigate(ERROR_ROUTE);
         }
     }
 

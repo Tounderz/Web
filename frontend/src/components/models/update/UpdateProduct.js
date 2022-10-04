@@ -39,7 +39,6 @@ const UpdateProduct = observer(({show, onHide}) => {
                 product.setSelectedProduct({});
                 close();
         } catch (e) {
-            // setMessageError(e.message)
             setMessageError(e.response.data.message);
         }
     }

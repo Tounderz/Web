@@ -24,12 +24,13 @@ namespace Web.Data.Repositories
 
         public UserModel CreateUser(UserRegisterModel model)
         {
+            var resultDate = DateTime.Compare(model.DateOfBirth, ConstParameters.DATE_MIN);
             var user = new UserModel
             {
                 Name = model.Name,
                 Surname = model.Surname,
                 Gender = model.Gender,
-                DateOfBirth = model.DateOfBirth != DateTime.MinValue ? model.DateOfBirth.ToString("dd.MM.yyyy") : string.Empty,
+                DateOfBirth = resultDate == 1 ? model.DateOfBirth.ToString("dd.MM.yyyy") : string.Empty,
                 Email = model.Email,
                 Phone = model.Phone,
                 Login = model.Login,
@@ -105,10 +106,12 @@ namespace Web.Data.Repositories
                 return null;
             }
 
+            var resultDate = DateTime.Compare(model.DateOfBirth, ConstParameters.DATE_MIN);
+
             user.Name = model.Name != string.Empty ? model.Name : user.Name;
             user.Surname = model.Surname != string.Empty ? model.Surname : user.Surname;
             user.Gender = model.Gender != string.Empty ? model.Gender : user.Gender;
-            user.DateOfBirth = model.DateOfBirth != DateTime.MinValue ? model.DateOfBirth.ToString("dd.MM.yyyy") : user.DateOfBirth;
+            user.DateOfBirth = resultDate == 1 ? model.DateOfBirth.ToString("dd.MM.yyyy") : user.DateOfBirth;
             user.Email = model.Email != string.Empty ? model.Email : user.Email;
             user.Phone = model.Phone != string.Empty ? model.Phone : user.Phone;
             user.Login = model.Login != string.Empty ? model.Login : user.Login;

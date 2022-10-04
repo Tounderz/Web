@@ -20,7 +20,6 @@ const UpdatePhoto = observer(({show, onHide}) => {
                 user.setSelectedUser(data.user);
                 close();
         } catch (e) {
-            // setMessageError(e.message);
             setMessageError(e.response.data.message);
         }
     }

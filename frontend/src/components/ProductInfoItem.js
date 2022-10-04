@@ -1,10 +1,11 @@
+import { observer } from 'mobx-react-lite';
 import React, { useContext, useState } from 'react';
 import { Button, Col } from 'react-bootstrap';
 import { removeInfoProduct } from '../http/infoProductApi';
 import { Context } from '../index';
 import UpdateInfoProduct from './models/update/UpdateInfoProduct';
 
-const ProductInfoItem = ({id, info}) => {
+const ProductInfoItem = observer(({id, info}) => {
     const {user} = useContext(Context);
     const [updateInfoVisible, setUpdateInfoVisible] = useState(false);
 
@@ -57,6 +58,6 @@ const ProductInfoItem = ({id, info}) => {
             </td>         
         </tr>
     );
-};
+});
 
 export default ProductInfoItem;

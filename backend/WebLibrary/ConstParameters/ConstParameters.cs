@@ -34,6 +34,8 @@ namespace WebLibrary.ConstParameters
         public const string INVALID_CREDENTIALS_ERROR = "Invalid Credentials";
 
         public const int EXPIRES_REFRESH_TOKEN_DAYS = 7;
-        public const int EXPIRES_ACCESS_TOKEN_HOUR = 1;
+        public const int EXPIRES_ACCESS_TOKEN_MINUTES = 15;
+
+        public readonly static DateTime DATE_MIN = new DateTime(01 / 01 / 1000);
     }
 }

@@ -36,7 +36,6 @@ const UpdateBrand = observer(({show, onHide}) => {
                     setMessageError('Error')
                 }
         } catch (e) {
-            // setMessageError(e.message);
             setMessageError(e.response.data.message);
         }
     }

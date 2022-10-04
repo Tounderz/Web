@@ -1,3 +1,4 @@
+import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useState } from 'react';
 import { useContext } from 'react';
@@ -8,7 +9,7 @@ import { ADMIN_NAME, PAGE_FIRST, ROLE_ARRAY } from '../utils/const';
 import ConfirmRemoval from './models/remove/ConfirmRemoval';
 import UpdateUser from './models/update/UpdateUser';
 
-const UserListItem = ({item}) => {
+const UserListItem = observer(({item}) => {
     const { remove } = useContext(Context);
     const { updates } = useContext(Context);
     const { user } = useContext(Context);
@@ -101,6 +102,6 @@ const UserListItem = ({item}) => {
             <ConfirmRemoval show={removeVisible} onHide={() => setRemoveVisible(false)}/>       
         </tr>
     );
-};
+});
 
 export default UserListItem;

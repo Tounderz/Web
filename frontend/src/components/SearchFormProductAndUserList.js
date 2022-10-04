@@ -66,7 +66,6 @@ const SearchFormProductAndUserList = observer(({parameter}) => {
                 } catch (e) {
                     clean();
                     cleaningUpDueToAnErrorUser();
-                    // messages.setMessageError(e.message);
                     messages.setMessageError(e.response.data.message);
                 }
 
@@ -89,7 +88,6 @@ const SearchFormProductAndUserList = observer(({parameter}) => {
                 } catch (e) {
                     clean();
                     cleaningUpDueToAnErrorProduct();
-                    // messages.setMessageError(e.message);
                     messages.setMessageError(e.response.data.message);
                 }
                 

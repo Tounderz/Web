@@ -16,7 +16,6 @@ const CreateType = ({show, onHide}) => {
             createType(name.value, categoryId.value);
                 close();
         } catch (e) {
-            // setMessageError(e.message)
             setMessageError(e.response.data.message);
         }
     }

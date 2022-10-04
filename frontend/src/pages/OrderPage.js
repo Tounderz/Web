@@ -21,7 +21,7 @@ const OrderPage = observer(() => {
     const flat = useInput('', {isNumberId: {name: 'Flat'}});
     const commentsOrder = useInput('', {minLength: {value: 3, name: 'Comments Order'}});
     const method = useInput(0, {isNumberId: {name: 'Payment Method'}});
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const click = async () => {
         try {
@@ -41,15 +41,13 @@ const OrderPage = observer(() => {
                 );
                     order.setSelectedOrderId(data.orderId);
     
-                await cleanToCart(user.user.login)
+                await cleanToCart(user.user.login);
             }
     
-            navigate(COMPLETED_ROUTE)
+            navigate(COMPLETED_ROUTE);
         } catch (e) {
-            // messages.setMessageError(e.message);
             messages.setMessageError(e.response.data.message);
         }
-        
     }
 
     return (

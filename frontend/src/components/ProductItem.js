@@ -5,8 +5,9 @@ import { useNavigate } from 'react-router';
 import { PICTURE, PRODUCT_ROUTE } from '../utils/const';
 import { fetchInfoProduct } from '../http/infoProductApi';
 import '../css/ProductItem.css'
+import { observer } from 'mobx-react-lite';
 
-const ProductItem = ({prod}) => {
+const ProductItem = observer(({prod}) => {
     const {product} = useContext(Context);
     const {brand} = useContext(Context);
     const navigate = useNavigate()
@@ -14,15 +15,15 @@ const ProductItem = ({prod}) => {
     const getProduct = async () => {
         product.setSelectedProduct(prod);
         const data = await fetchInfoProduct(product.selectedProduct.id);
-            product.setInfoProduct(data.infoProducts)
-        navigate(PRODUCT_ROUTE)
+            product.setInfoProduct(data.infoProducts);
+        navigate(PRODUCT_ROUTE);
     }
 
     let available;
     if (prod.available) {
-        available = 'Available in stock'
+        available = 'Available in stock';
     } else {
-        available = 'Out of stock'
+        available = 'Out of stock';
     }
     
     return (
@@ -67,6 +68,6 @@ const ProductItem = ({prod}) => {
             </Card>
         </Col>       
     );
-};
+});
 
 export default ProductItem;

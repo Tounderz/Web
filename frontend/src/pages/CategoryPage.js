@@ -34,8 +34,8 @@ const CategoryPage = observer(() => {
 
     const viewBrand = async () => {
         try {
-            brand.setBrandsByCategory(brandsId.value)
-            brand.setBrandsByType(brandsId.value)
+            brand.setBrandsByCategory(brandsId.value);
+            brand.setBrandsByType(brandsId.value);
             const dataProducts = await fetchProductsCategoryByBrand(category.selectedCategory.id, brandsId.value, PAGE_FIRST);
                 product.setProducts(dataProducts.products);
                 page.setCountPages(dataProducts.countPages);
@@ -43,18 +43,17 @@ const CategoryPage = observer(() => {
                 type.setSelectedType(dataProducts.typesId);
 
             const dataTypes = await fetchTypesByBrand(type.selectedType);
-                type.setTypes(dataTypes.typesByBrand)
+                type.setTypes(dataTypes.typesByBrand);
 
-            navigate(BRANDS_BY_CATEGORY_ROUTE)
+            navigate(BRANDS_BY_CATEGORY_ROUTE);
         } catch (e) {
-            // messages.setMessageError(e.message);
             messages.setMessageError(e.response.data.message);
             navigate(ERROR_ROUTE)
         }
     }
 
     const infoCategory = () => {
-        navigate(CATEGORY_INFO_ROUTE)
+        navigate(CATEGORY_INFO_ROUTE);
     }
 
     return (

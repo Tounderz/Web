@@ -18,22 +18,19 @@ namespace Web.HelpersJwt
 {
     public class JwtService : IJwt
     {
-        private readonly IConfiguration _configuration;
         private readonly AppDBContext _context;
         private readonly JWTConfiguration _jwtConfig;
 
         public IEnumerable<RefreshTokenModel> RefreshTokens => _context.RefreshTokens;
 
-        public JwtService(IConfiguration configuration, AppDBContext context, JWTConfiguration jwtConfig)
+        public JwtService( AppDBContext context, JWTConfiguration jwtConfig)
         {
-            _configuration = configuration;
             _context = context;
             _jwtConfig = jwtConfig;
         }
 
         public string GenerateJwt(UserModel model)
         {
-            /*var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));*/
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfig.Key));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
@@ -47,13 +44,11 @@ namespace Web.HelpersJwt
             var now = DateTime.Now;
             var securityToken = new JwtSecurityToken
                 (
-                    /*_configuration["Jwt:Issuer"],
-                    _configuration["Jwt:Audience"],*/
                     issuer: _jwtConfig.Issuer,
                     audience: _jwtConfig.Audience,
                     notBefore: now,
                     claims: claims,
-                    expires: now.AddMinutes(ConstParameters.EXPIRES_ACCESS_TOKEN_HOUR),
+                    expires: now.AddMinutes(ConstParameters.EXPIRES_ACCESS_TOKEN_MINUTES),
                     signingCredentials: credentials
                 );
 
@@ -65,7 +60,6 @@ namespace Web.HelpersJwt
         public JwtSecurityToken Verify(string jwtToken)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            /*var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]);*/
             var key = Encoding.UTF8.GetBytes(_jwtConfig.Key);
             tokenHandler.ValidateToken(jwtToken, new TokenValidationParameters
             {
@@ -73,8 +67,6 @@ namespace Web.HelpersJwt
                 ValidateIssuerSigningKey = true,
                 ValidateIssuer = true,
                 ValidateAudience = true,
-                /*ValidIssuer = _configuration["Jwt:Issuer"],
-                ValidAudience = _configuration["Jwt:Audience"],*/
                 ValidIssuer = _jwtConfig.Issuer,
                 ValidAudience = _jwtConfig.Audience,
             },

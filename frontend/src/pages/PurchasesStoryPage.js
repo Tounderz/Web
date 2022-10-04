@@ -23,9 +23,9 @@ const PurchasesStoryPage = observer(() => {
     const imgProduct = (productImg) => {
         let img;
         if (productImg === null) {
-            img = NO_IMAGE
+            img = NO_IMAGE;
         } else {
-            img = LOCALHOST + productImg
+            img = LOCALHOST + productImg;
         }
         
         return img;

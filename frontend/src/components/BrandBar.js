@@ -15,11 +15,9 @@ const BrandBar = observer(({brandItem}) => {
     const {user} = useContext(Context);
     const {messages} = useContext(Context);
     const {page} = useContext(Context);
-    const {loading} = useContext(Context);
     const navigate = useNavigate();
 
     const getBrand = async () => {
-        loading.setIsLoading(true)
         try {
             brand.setSelectedBrand(brandItem);
             const dataProducts = await fetchProductsBrand(brand.selectedBrand.id, user.user.role, PAGE_FIRST);
@@ -30,13 +28,10 @@ const BrandBar = observer(({brandItem}) => {
             const dataCatgories = await fetchCategoriesByBrand(brand.selectedBrand.id);
                 category.setCategoriesByBrand(dataCatgories.categoriesByBrand);
 
-                navigate(BRAND_ROUTE)
+                navigate(BRAND_ROUTE);
         } catch (e) {
-            // messages.setMessageError(e.message);
             messages.setMessageError(e.response.data.message);
                 navigate(ERROR_ROUTE);
-        } finally {
-            loading.setIsLoading(false)
         }
     }
 

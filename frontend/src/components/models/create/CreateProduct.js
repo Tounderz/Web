@@ -32,7 +32,6 @@ const CreateProduct = ({show, onHide}) => {
             await createProduct(formData);
                 close();
         } catch (e) {
-            // setMessageError(e.message)
             setMessageError(e.response.data.message);
         }
         

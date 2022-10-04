@@ -46,10 +46,10 @@ const BasketPage = observer(() => {
     }
 
     const payAllImets = async () => {
-        product.setSelectedProduct({})
+        product.setSelectedProduct({});
         const data  = await fetchPaymentMethods();
             paymentMethod.setPaymentMethods(data.paymentMethods);
-        navigate(ORDER_ROUTE)
+        navigate(ORDER_ROUTE);
     }
 
     return (

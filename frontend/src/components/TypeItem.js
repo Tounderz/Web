@@ -23,11 +23,10 @@ const TypeItem = observer(({typeItem, brandsId}) => {
                 page.setCountPages(data.countPages);
                 brand.setBrandsByType(brandsId);
         
-            navigate(TYPE_ROUTE)
+            navigate(TYPE_ROUTE);
         } catch (e) {
-            // messages.setMessageError(e.message)
             messages.setMessageError(e.response.data.message);
-            navigate(ERROR_ROUTE)
+            navigate(ERROR_ROUTE);
         }
     }
 

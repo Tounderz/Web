@@ -20,7 +20,6 @@ const UpdateType = observer(({show, onHide}) => {
                 type.setTypes(data.types);
                 close();
         } catch (e) {
-            // setMessageError(e.message)
             setMessageError(e.response.data.message);
         }
     }

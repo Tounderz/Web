@@ -32,7 +32,7 @@ const SortForm = observer(({show, onHide, parameter}) => {
                             cleacnSortParameter();
                     } catch (e) {
                         cleaningUpDueToAnErrorProduct();
-                        messages.setMessageError(e.message);
+                        messages.setMessageError(e.response.data.message);
                     }
                         navigate(PRODUCTS_LIST_ROUTE);
                     break;
@@ -47,7 +47,6 @@ const SortForm = observer(({show, onHide, parameter}) => {
                             cleacnSortParameter();
                     } catch (e) {
                         cleaningUpDueToAnErrorUser();
-                        // messages.setMessageError(e.message);
                         messages.setMessageError(e.response.data.message);
                     }
                         navigate(USERLIST_ROUTE);

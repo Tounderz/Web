@@ -40,16 +40,16 @@ const Admin = observer(() => {
             pageParameters(data.countPages);
             search.setFieldNames(FIELD_NAMES_USERS_SEARCH);
             cleanSearchAndSort();
-            navigate(USERLIST_ROUTE)
+            navigate(USERLIST_ROUTE);
     }
 
     const productList = async () => {
         const data = await fetchProducts(PAGE_FIRST);
             product.setProducts(data.products);
             pageParameters(data.countPages);
-            search.setFieldNames(FIELD_NAMES_PRODUCTS)
+            search.setFieldNames(FIELD_NAMES_PRODUCTS);
             cleanSearchAndSort();
-            navigate(PRODUCTS_LIST_ROUTE)
+            navigate(PRODUCTS_LIST_ROUTE);
     }
 
     return (

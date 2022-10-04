@@ -39,19 +39,18 @@ const BrandPage = observer(() => {
                 page.setCurrentPage(PAGE_FIRST);
                 type.setSelectedType(dataProducts.typesId);
 
-            const dataTypes = await fetchTypesByBrand(type.selectedType)
-                type.setTypes(dataTypes.typesByBrand)
+            const dataTypes = await fetchTypesByBrand(type.selectedType);
+                type.setTypes(dataTypes.typesByBrand);
         
-            navigate(CATEGORIES_BY_BRAND_ROUTE)
+            navigate(CATEGORIES_BY_BRAND_ROUTE);
         } catch (e) {
-            // messages.setMessageError(e.message);
             messages.setMessageError(e.response.data.message);
             navigate(ERROR_ROUTE)
         }
     }
 
     const infoBrand = () => {
-        navigate(BRAND_INFO_ROUTE)
+        navigate(BRAND_INFO_ROUTE);
     }
 
     return (

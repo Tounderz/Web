@@ -253,7 +253,7 @@ namespace Web.Controllers
                 Gender = !string.IsNullOrEmpty(Request.Form.FirstOrDefault(i => i.Key == FormFields.GENDER).Value) ?
                           Request.Form.FirstOrDefault(i => i.Key == FormFields.GENDER).Value : string.Empty,
                 DateOfBirth = !string.IsNullOrEmpty(Request.Form.FirstOrDefault(i => i.Key == FormFields.DATE_OF_BIRTH).Value) ?
-                            DateTime.Parse(Request.Form.FirstOrDefault(i => i.Key == FormFields.DATE_OF_BIRTH).Value) : DateTime.MinValue,
+                            DateTime.Parse(Request.Form.FirstOrDefault(i => i.Key == FormFields.DATE_OF_BIRTH).Value) : ConstParameters.DATE_MIN,
                 Email = !string.IsNullOrEmpty(Request.Form.FirstOrDefault(i => i.Key == FormFields.EMAIL).Value) ?
                         Request.Form.FirstOrDefault(i => i.Key == FormFields.EMAIL).Value : string.Empty,
                 Phone = !string.IsNullOrEmpty(Request.Form.FirstOrDefault(i => i.Key == FormFields.PHONE).Value) ?
